@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ABOUD WEB — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f7fb;--card:rgba(255,255,255,.72);--card2:rgba(255,255,255,.9);
+  --text:#14141f;--muted:#77778b;--line:rgba(20,20,31,.09);
+  --blue:#4c7cff;--purple:#8b5cf6;--pink:#f0629e;--green:#22a06b;--red:#e5484d;
+  --shadow:0 24px 70px -35px rgba(30,30,60,.3);--radius:24px;
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'IBM Plex Sans Arabic',sans-serif;color:var(--text)}
+body{background:
+ radial-gradient(circle at 10% 0%,rgba(76,124,255,.13),transparent 28%),
+ radial-gradient(circle at 90% 10%,rgba(139,92,246,.12),transparent 28%),var(--bg)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+.app{min-height:100vh;display:flex}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:270px;padding:22px;z-index:20}
+.side-inner{height:100%;background:rgba(255,255,255,.62);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);border-radius:28px;padding:20px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:12px;padding:8px 4px 25px}
+.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));display:grid;place-items:center;color:#fff;font:800 24px 'Bricolage Grotesque'}
+.brand b{font:800 20px 'Bricolage Grotesque';letter-spacing:-.04em}.brand small{display:block;color:var(--muted);font-size:11px}
+.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:var(--muted);padding:13px 14px;border-radius:15px;text-align:right;display:flex;align-items:center;gap:11px;transition:.2s}.nav button:hover,.nav button.active{background:#fff;color:var(--text);box-shadow:0 10px 25px -22px #000}.nav .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.side-bottom{margin-top:auto}.status{padding:13px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.5);font-size:12px;color:var(--muted);margin-bottom:10px}.status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:7px}
+.logout{width:100%;border:0;border-radius:15px;padding:12px;background:#15151d;color:#fff}
+
+.main{width:calc(100% - 270px);margin-right:270px;padding:28px 34px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}.eyebrow{font-size:12px;color:var(--purple);font-weight:700}.topbar h1{margin:3px 0 0;font-size:30px;letter-spacing:-.04em}.preview{border:1px solid var(--line);background:rgba(255,255,255,.72);padding:11px 17px;border-radius:999px;text-decoration:none;color:var(--text);font-size:13px}
+.view{display:none}.view.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:22px;padding:20px;box-shadow:var(--shadow)}.stat span{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:30px;margin-top:7px}.stat em{font-style:normal;font-size:11px;color:var(--purple)}
+.panel{margin-top:20px;background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel h2{margin:0;font-size:20px}.muted{color:var(--muted);font-size:13px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap}.search,.select{border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:14px;padding:11px 13px;outline:none}.search{min-width:230px}
+.primary{border:0;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));color:#fff;border-radius:14px;padding:11px 17px;font-weight:700}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px;padding:17px}.item-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.tag{font-size:11px;padding:5px 9px;border-radius:999px;background:#efeff8;color:var(--purple)}.item h3{margin:8px 0 5px;font-size:16px}.item p{margin:0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:7px;margin-top:14px}.actions button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:11px;font-size:12px}.actions .del{color:var(--red)}
+.empty{text-align:center;color:var(--muted);padding:45px 15px}
+.overlay{position:fixed;inset:0;background:rgba(15,15,25,.35);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.overlay.show{display:flex}.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:28px;padding:25px;box-shadow:0 35px 100px -35px #000}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#f1f1f6;width:36px;height:36px;border-radius:50%}.form{display:grid;gap:13px;margin-top:18px}.form label{font-size:12px;color:var(--muted)}.form input,.form textarea,.form select{width:100%;border:1px solid var(--line);background:#fafafe;border-radius:14px;padding:12px;outline:none}.form textarea{min-height:110px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:min(430px,100%);background:rgba(255,255,255,.76);backdrop-filter:blur(25px);border:1px solid #fff;border-radius:30px;padding:32px;box-shadow:var(--shadow)}.login-logo{margin:auto auto 18px}.login-card h1{text-align:center;margin:0;font:800 30px 'Bricolage Grotesque'}.login-card p{text-align:center;color:var(--muted);font-size:13px}.login-card input{width:100%;padding:14px;margin-top:10px;border:1px solid var(--line);border-radius:14px;outline:none}.login-card button{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));color:#fff;font-weight:700}.msg{text-align:center!important;min-height:22px;color:var(--red)!important}
+.toast{position:fixed;left:24px;bottom:24px;background:#171720;color:#fff;padding:12px 17px;border-radius:14px;box-shadow:0 15px 35px -20px #000;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;z-index:100;font-size:13px}.toast.show{transform:none;opacity:1}
+@media(max-width:900px){.sidebar{width:82px;padding:10px}.side-inner{padding:12px;border-radius:22px}.brand div:not(.logo),.nav span,.status,.logout{display:none}.brand{justify-content:center}.nav button{justify-content:center}.main{width:calc(100% - 82px);margin-right:82px;padding:20px}.cards{grid-template-columns:1fr 1fr}.content-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.topbar{align-items:flex-start}.topbar h1{font-size:23px}.preview{font-size:11px}.cards{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:15px}.stat strong{font-size:24px}.panel{padding:16px}.two{grid-template-columns:1fr}.search{min-width:100%}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-wrap">
+  <div class="login-card">
+    <div class="logo login-logo">A</div>
+    <h1>ABOUD WEB</h1>
+    <p>لوحة التحكم الخاصة بالموقع</p>
+    <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="username">
+    <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button id="loginBtn">تسجيل الدخول</button>
+    <p id="loginMsg" class="msg"></p>
+  </div>
+</div>
+
+<div id="adminApp" class="app hidden">
+  <aside class="sidebar">
+    <div class="side-inner">
+      <div class="brand"><div class="logo">A</div><div><b>ABOUD</b><small>WEB ADMIN</small></div></div>
+      <nav class="nav">
+        <button class="active" data-view="overview"><i class="dot"></i><span>نظرة عامة</span></button>
+        <button data-view="content"><i class="dot"></i><span>محتوى الموقع</span></button>
+        <button data-view="projects"><i class="dot"></i><span>المشاريع</span></button>
+        <button data-view="services"><i class="dot"></i><span>الخدمات</span></button>
+        <button data-view="settings"><i class="dot"></i><span>الإعدادات</span></button>
+      </nav>
+      <div class="side-bottom">
+        <div class="status"><i></i> Supabase متصل</div>
+        <button class="logout" id="logoutBtn">تسجيل الخروج</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><div class="eyebrow">ABOUD WEB / ADMIN</div><h1 id="pageTitle">نظرة عامة</h1></div>
+      <a class="preview" href="https://aboudweb.onrender.com" target="_blank">فتح الموقع ↗</a>
+    </header>
+
+    <section id="overview" class="view active">
+      <div class="cards">
+        <div class="stat"><span>إجمالي المحتوى</span><strong id="statTotal">0</strong><em>عنصر</em></div>
+        <div class="stat"><span>الأقسام</span><strong id="statSections">0</strong><em>قسم</em></div>
+        <div class="stat"><span>العربي</span><strong id="statAr">0%</strong><em>اكتمال</em></div>
+        <div class="stat"><span>English</span><strong id="statEn">0%</strong><em>اكتمال</em></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>آخر التعديلات</h2><div class="muted">آخر عناصر المحتوى المحفوظة</div></div><button class="primary" id="quickAdd">+ إضافة محتوى</button></div>
+        <div id="recentList" class="content-grid"></div>
+      </div>
+    </section>
+
+    <section id="content" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>إدارة المحتوى</h2><div class="muted">عدّل النصوص العربية والإنجليزية واحفظها مباشرة.</div></div><button class="primary" id="addBtn">+ إضافة محتوى</button></div>
+        <div class="toolbar"><input id="search" class="search" placeholder="ابحث بالقسم أو المفتاح..."><select id="sectionFilter" class="select"><option value="">كل الأقسام</option></select></div>
+        <div id="contentList" class="content-grid" style="margin-top:15px"></div>
+      </div>
+    </section>
+
+    <section id="projects" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>المشاريع</h2><div class="muted">إدارة المشاريع الموجودة في جدول المحتوى.</div></div><button class="primary" id="projectAdd">+ مشروع جديد</button></div>
+        <div id="projectList" class="content-grid"></div>
+      </div>
+    </section>
+
+    <section id="services" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>الخدمات</h2><div class="muted">عناصر الخدمات التي يتم تخزينها في Supabase.</div></div><button class="primary" id="serviceAdd">+ خدمة جديدة</button></div>
+        <div id="serviceList" class="content-grid"></div>
+      </div>
+    </section>
+
+    <section id="settings" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>الإعدادات</h2><div class="muted">إعدادات لوحة التحكم.</div></div></div>
+        <p class="muted">الموقع: <b>aboudweb.onrender.com</b></p>
+        <p class="muted">قاعدة البيانات: <b>Supabase</b></p>
+        <p class="muted">الجلسة الحالية محمية بواسطة Supabase Auth.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modalOverlay" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><h2 id="modalTitle">إضافة محتوى</h2><button class="close" id="closeModal">×</button></div>
+    <div class="form">
+      <div class="two">
+        <div><label>القسم</label><input id="fSection" placeholder="hero"></div>
+        <div><label>المفتاح</label><input id="fKey" placeholder="title"></div>
+      </div>
+      <div><label>العربي</label><textarea id="fAr"></textarea></div>
+      <div><label>English</label><textarea id="fEn"></textarea></div>
+      <button class="primary" id="saveBtn">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const SUPABASE_URL="https://ywjwfbvkyrisrxbiqffa.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_e__qknAiR8Rqtx4dMS-2Yg_S9FjfjxR";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let rows=[], editingId=null;
+
+const $=id=>document.getElementById(id);
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2200)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+async function login(){
+  $("loginMsg").textContent="جاري تسجيل الدخول...";
+  const email=$("email").value.trim(), password=$("password").value;
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error){$("loginMsg").textContent=error.message;return}
+  if(!data.session){$("loginMsg").textContent="تعذر إنشاء الجلسة.";return}
+  showAdmin();
+}
+async function showAdmin(){
+  $("loginScreen").classList.add("hidden");$("adminApp").classList.remove("hidden");
+  await load();
+}
+async function load(){
+  const {data,error}=await db.from("site_content").select("*").order("updated_at",{ascending:false});
+  if(error){console.error(error);toast("تعذر تحميل المحتوى");return}
+  rows=data||[];render();updateStats();
+}
+function updateStats(){
+  $("statTotal").textContent=rows.length;
+  $("statSections").textContent=new Set(rows.map(x=>x.section)).size;
+  $("statAr").textContent=rows.length?Math.round(rows.filter(x=>x.ar?.trim()).length/rows.length*100)+"%":"0%";
+  $("statEn").textContent=rows.length?Math.round(rows.filter(x=>x.en?.trim()).length/rows.length*100)+"%":"0%";
+}
+function card(r){
+ return `<article class="item">
+  <div class="item-head"><span class="tag">${esc(r.section)}</span><span class="muted">#${r.id}</span></div>
+  <h3>${esc(r.key)}</h3><p>${esc(r.ar||r.en||"لا يوجد محتوى")}</p>
+  <div class="actions"><button onclick="editRow(${r.id})">تعديل</button><button class="del" onclick="deleteRow(${r.id})">حذف</button></div>
+ </article>`
+}
+function render(){
+  const q=$("search").value.trim().toLowerCase(), sec=$("sectionFilter").value;
+  const filtered=rows.filter(r=>(!q||(r.section+" "+r.key+" "+(r.ar||"")+" "+(r.en||"")).toLowerCase().includes(q))&&(!sec||r.section===sec));
+  $("contentList").innerHTML=filtered.length?filtered.map(card).join():'<div class="empty">لا يوجد محتوى مطابق.</div>';
+  const recent=rows.slice(0,6);
+  $("recentList").innerHTML=recent.length?recent.map(card).join():'<div class="empty">لا يوجد محتوى بعد.</div>';
+  const sections=[...new Set(rows.map(r=>r.section))].sort();
+  const old=sec;$("sectionFilter").innerHTML='<option value="">كل الأقسام</option>'+sections.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join();$("sectionFilter").value=sections.includes(old)?old:"";
+  $("projectList").innerHTML=rows.filter(r=>r.section.toLowerCase().includes("project")||r.section.toLowerCase().includes("work")||r.section.includes("مشروع")).map(card).join()||'<div class="empty">لا توجد عناصر مشاريع بعد.</div>';
+  $("serviceList").innerHTML=rows.filter(r=>r.section.toLowerCase().includes("service")||r.section.includes("خدم")).map(card).join()||'<div class="empty">لا توجد عناصر خدمات بعد.</div>';
+}
+function openModal(r=null){
+  editingId=r?.id??null;$("modalTitle").textContent=r?"تعديل المحتوى":"إضافة محتوى";
+  $("fSection").value=r?.section||"";$("fKey").value=r?.key||"";$("fAr").value=r?.ar||"";$("fEn").value=r?.en||"";
+  $("modalOverlay").classList.add("show");
+}
+function closeModal(){$("modalOverlay").classList.remove("show");editingId=null}
+async function save(){
+  const section=$("fSection").value.trim(),key=$("fKey").value.trim(),ar=$("fAr").value,en=$("fEn").value;
+  if(!section||!key){toast("القسم والمفتاح مطلوبان");return}
+  const payload={section,key,ar,en,updated_at:new Date().toISOString()};
+  let error;
+  if(editingId){({error}=await db.from("site_content").update({ar,en,updated_at:payload.updated_at}).eq("id",editingId))}
+  else {({error}=await db.from("site_content").insert(payload))}
+  if(error){console.error(error);toast(error.message);return}
+  closeModal();toast(editingId?"تم التعديل ✓":"تمت الإضافة ✓");await load();
+}
+async function deleteRow(id){
+  if(!confirm("حذف هذا العنصر نهائياً؟"))return;
+  const {error}=await db.from("site_content").delete().eq("id",id);
+  if(error){toast(error.message);return}
+  toast("تم الحذف");await load();
+}
+function editRow(id){openModal(rows.find(r=>r.id===id))}
+async function logout(){await db.auth.signOut();location.reload()}
+
+$("loginBtn").onclick=login;
+$("password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+$("logoutBtn").onclick=logout;
+$("addBtn").onclick=()=>openModal();
+$("quickAdd").onclick=()=>openModal();
+$("projectAdd").onclick=()=>openModal({section:"projects",key:""});
+$("serviceAdd").onclick=()=>openModal({section:"services",key:""});
+$("closeModal").onclick=closeModal;
+$("modalOverlay").addEventListener("click",e=>{if(e.target===$("modalOverlay"))closeModal()});
+$("saveBtn").onclick=save;
+$("search").oninput=render;
+$("sectionFilter").onchange=render;
+
+document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+ $(btn.dataset.view).classList.add("active");
+ const titles={overview:"نظرة عامة",content:"محتوى الموقع",projects:"المشاريع",services:"الخدمات",settings:"الإعدادات"};
+ $("pageTitle").textContent=titles[btn.dataset.view];
+});
+
+(async()=>{
+ const {data}=await db.auth.getSession();
+ if(data.session)showAdmin();
+})();
+</script>
+</body>
+</html>
