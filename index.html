@@ -545,21 +545,13 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
 .magnetic{transform-origin:center;}
 
 ::selection{background:var(--iris);color:#fff;}
-
-
-
 </style>
-   ‏ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-‏
-‏<script>
-‏const SUPABASE_URL = "https://pblbdxocvnkmakrpomsb.supabase.co";
-‏const SUPABASE_ANON_KEY = "sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
-‏
-‏const supabaseClient = supabase.createClient(
-‏  SUPABASE_URL,
-‏  SUPABASE_ANON_KEY
-‏);
-‏</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://pblbdxocvnkmakrpomsb.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 </head>
 <body>
 
@@ -655,7 +647,85 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
         <p class="kicker" data-i18n="work_kicker">Selected Work</p>
         <h2 data-i18n="work_title">Projects built to perform</h2>
       </div>
-      <div id="projectsGrid" class="portfolio-grid"></div>
+      <div class="portfolio-grid">
+
+        <article class="project-card project-featured reveal">
+          <div class="project-preview preview-featured">
+            <div class="mock-browser" aria-hidden="true">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-nav"></div>
+                <div class="mock-hero"></div>
+                <div class="mock-grid"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-cat" data-i18n="proj1_cat">Business Website</span>
+            <h3 data-i18n="proj1_title">Al-Haytham Electric Workshop</h3>
+            <p data-i18n="proj1_desc">A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers.</p>
+            <a href="#" class="project-link">
+              <span data-i18n="proj_btn">View Project</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-2">
+            <div class="mock-browser" aria-hidden="true">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-nav"></div>
+                <div class="mock-hero"></div>
+                <div class="mock-grid"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
+            <h3 data-i18n="proj2_title">E-Commerce Store</h3>
+            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-3">
+            <div class="mock-browser" aria-hidden="true">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-nav"></div>
+                <div class="mock-hero"></div>
+                <div class="mock-grid"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
+            <h3 data-i18n="proj3_title">Restaurant & Hospitality</h3>
+            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview preview-4">
+            <div class="mock-browser" aria-hidden="true">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-nav"></div>
+                <div class="mock-hero"></div>
+                <div class="mock-grid"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
+            <h3 data-i18n="proj4_title">Personal Portfolio</h3>
+            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
+          </div>
+        </article>
+
+      </div>
     </div>
   </section>
 
@@ -666,10 +736,65 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
         <h2 data-i18n="services_title">Services</h2>
         <p class="sub" data-i18n="services_sub">Everything you need to launch and grow online, handled end to end.</p>
       </div>
-      <div id="servicesGrid" class="services-grid reveal"></div>
+      <div class="services-grid reveal">
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="12" height="12" rx="2.5"/><rect x="9" y="9" width="12" height="12" rx="2.5"/></svg></div>
+            <span class="service-num">01</span>
+          </div>
+          <h3 data-i18n="svc1_title">Website Design</h3>
+          <p data-i18n="svc1_desc">Clean, modern interfaces crafted around your brand and your users.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7L3 12l5 5M16 7l5 5-5 5"/></svg></div>
+            <span class="service-num">02</span>
+          </div>
+          <h3 data-i18n="svc2_title">Website Development</h3>
+          <p data-i18n="svc2_desc">Fast, reliable builds using modern, scalable technology.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1 11H7L6 9z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></div>
+            <span class="service-num">03</span>
+          </div>
+          <h3 data-i18n="svc3_title">E-commerce</h3>
+          <p data-i18n="svc3_desc">Online stores designed to convert visitors into customers.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></div>
+            <span class="service-num">04</span>
+          </div>
+          <h3 data-i18n="svc4_title">Custom Web Development</h3>
+          <p data-i18n="svc4_desc">Tailored solutions for unique business requirements.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M20 20l-5-5"/></svg></div>
+            <span class="service-num">05</span>
+          </div>
+          <h3 data-i18n="svc5_title">SEO</h3>
+          <p data-i18n="svc5_desc">Structured, optimized foundations that help you get found.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-top">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <span class="service-num">06</span>
+          </div>
+          <h3 data-i18n="svc6_title">Website Maintenance</h3>
+          <p data-i18n="svc6_desc">Ongoing support to keep your site fast, secure and current.</p>
+        </div>
+
+      </div>
     </div>
   </section>
-
 
   <section id="pricing" class="section pricing">
     <div class="container">
@@ -694,7 +819,7 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="price1_f4">Basic SEO setup</span></li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="price1_f5">WhatsApp integration</span></li>
           </ul>
-          <a href="#" id="pricingGetStartedBtn" class="btn btn-primary magnetic" data-i18n="price1_btn" target="_blank" rel="noopener">Get Started</a>
+          <a href="#contact" class="btn btn-primary magnetic" data-i18n="price1_btn">Get Started</a>
         </div>
 
         <div class="price-card price-plain">
@@ -739,7 +864,7 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
           <span data-i18n="contact_btn">Contact me on WhatsApp</span>
         </a>
         <div class="contact-socials">
-          <a href="https://www.instagram.com/abudweb" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
           <a href="#" aria-label="Behance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="9" height="10" rx="2"/><path d="M2 11h6M14 12c1-2 3-3 5-3 3 0 4.5 2 4.5 5.5H13.5c0 2 1.5 3 3.5 3 1.3 0 2.2-.5 3-1.3M14 12c0-2.5 1.7-4 4-4M13.5 14.5h8"/></svg></a>
           <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"/><line x1="11" y1="10" x2="11" y2="17"/></svg></a>
         </div>
@@ -772,7 +897,7 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
         <h4 data-i18n="footer_contact_title">Contact</h4>
         <ul>
           <li><a href="#" id="whatsappFooterLink" target="_blank" rel="noopener">WhatsApp</a></li>
-          <li><a href="https://www.instagram.com/abudweb" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a></li>
+          <li><a href="#" aria-label="Instagram">Instagram</a></li>
         </ul>
       </div>
     </div>
@@ -858,7 +983,6 @@ var translations = {
     svc4_title:"Custom Web Development",svc4_desc:"Tailored solutions for unique business requirements.",
     svc5_title:"SEO",svc5_desc:"Structured, optimized foundations that help you get found.",
     svc6_title:"Website Maintenance",svc6_desc:"Ongoing support to keep your site fast, secure and current.",
-
     pricing_kicker:"Pricing",pricing_title:"Simple, transparent pricing",
     pricing_sub:"One clear starting price. No hidden surprises.",
     price1_title:"Professional Website",price1_prefix:"Starting from",
@@ -895,7 +1019,6 @@ var translations = {
     svc4_title:"تطوير مخصص",svc4_desc:"حلول مصممة خصيصًا لمتطلبات عملك الفريدة.",
     svc5_title:"تحسين محركات البحث",svc5_desc:"أسس منظمة ومحسّنة تساعدك على الظهور.",
     svc6_title:"صيانة المواقع",svc6_desc:"دعم مستمر ليبقى موقعك سريعًا وآمنًا ومحدثًا.",
-
     pricing_kicker:"الأسعار",pricing_title:"أسعار بسيطة وواضحة",
     pricing_sub:"سعر واضح للانطلاق، بدون مفاجآت.",
     price1_title:"موقع احترافي",price1_prefix:"يبدأ من",
@@ -921,26 +1044,51 @@ var whatsappMsg = {
   ar:"مرحبا عبود! حابب احكيلك عن مشروع موقعي."
 };
 var currentLang = "en";
-var siteContentCache = [];
-
-
-
-function contentVal(map,key,lang,fb){var x=map[key];if(!x)return fb||"";return (lang==="ar"?x.ar:x.en)||(lang==="ar"?x.en:x.ar)||fb||"";}
-function htmlEsc(v){return String(v??"").replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#039;"}[m]||m;});}
-function renderProjects(data){var g=document.getElementById("projectsGrid");if(!g)return;var m={};(data||[]).forEach(function(x){m[x.key]=x});var ids=[];(data||[]).forEach(function(x){var z=/^proj(\d+)_title$/.exec(x.key||"");if(z)ids.push(z[1])});ids=[...new Set(ids)].sort((a,b)=>+a-+b);g.innerHTML=ids.map(function(n,i){var title=contentVal(m,"proj"+n+"_title",currentLang,"");if(!title)return"";var desc=contentVal(m,"proj"+n+"_desc",currentLang,"");var cat=contentVal(m,"proj"+n+"_cat",currentLang,"Coming Soon");var url=contentVal(m,"proj"+n+"_url",currentLang,"");return '<article class="project-card '+(i===0?'project-featured ':'')+'reveal"><div class="project-preview preview-'+(i===0?'featured':Math.min(i+1,4))+'"><div class="mock-browser" aria-hidden="true"><div class="mock-bar"><span></span><span></span><span></span></div><div class="mock-body"><div class="mock-nav"></div><div class="mock-hero"></div><div class="mock-grid"><div></div><div></div><div></div></div></div></div></div><div class="project-info"><span class="project-cat">'+htmlEsc(cat)+'</span><h3>'+htmlEsc(title)+'</h3><p>'+htmlEsc(desc)+'</p>'+(url?'<a href="'+htmlEsc(url)+'" class="project-link" target="_blank" rel="noopener"><span>'+htmlEsc(contentVal(m,"proj_btn",currentLang,"View Project"))+'</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>':'')+'</div></article>';}).join("");initCardSprings();}
-function renderServices(data){var g=document.getElementById("servicesGrid");if(!g)return;var m={};(data||[]).forEach(function(x){m[x.key]=x});var ids=[];(data||[]).forEach(function(x){var z=/^svc(\d+)_title$/.exec(x.key||"");if(z)ids.push(z[1])});ids=[...new Set(ids)].sort((a,b)=>+a-+b);g.innerHTML=ids.map(function(n,i){var title=contentVal(m,"svc"+n+"_title",currentLang,"");if(!title)return"";return '<div class="service-card"><div class="service-top"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="12" height="12" rx="2.5"/><rect x="9" y="9" width="12" height="12" rx="2.5"/></svg></div><span class="service-num">'+String(i+1).padStart(2,"0")+'</span></div><h3>'+htmlEsc(title)+'</h3><p>'+htmlEsc(contentVal(m,"svc"+n+"_desc",currentLang,""))+'</p></div>';}).join("");initServiceIconSprings();}
 
 async function loadSiteContent() {
   try {
-    const { data, error } = await supabaseClient.from("site_content").select("section,key,ar,en");
-    if (error) { console.error("Failed to load site content:", error); return; }
-    siteContentCache=data||[];
-    siteContentCache.forEach(function(item){if(item.key){if(item.en)translations.en[item.key]=item.en;if(item.ar)translations.ar[item.key]=item.ar;}});
-    renderProjects(siteContentCache.filter(x=>/project|work/i.test(x.section||"")||String(x.section||"").includes("مشروع")));
-    renderServices(siteContentCache.filter(x=>/service/i.test(x.section||"")||String(x.section||"").includes("خدم")));
+    const { data, error } = await supabaseClient
+      .from("site_content")
+      .select("section,key,ar,en");
+    if (error) {
+      console.error("Failed to load site content:", error);
+      return;
+    }
+    if (!data || !data.length) return;
+    data.forEach(function(item) {
+      if (!item.key) return;
+      if (item.en) translations.en[item.key] = item.en;
+      if (item.ar) translations.ar[item.key] = item.ar;
+    });
     applyLanguage(currentLang);
-  } catch(err){console.error("Site content error:",err);}
+  } catch (err) {
+    console.error("Site content error:", err);
+  }
 }
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  var dict = translations[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+  document.title = (lang === "ar")
+    ? "أبود ويب — استوديو تصميم وتطوير المواقع"
+    : "ABOUD WEB — Web Design & Development Studio";
+  document.querySelectorAll("[data-i18n]").forEach(function(n) {
+    var k = n.getAttribute("data-i18n");
+    if (dict[k]) n.textContent = dict[k];
+  });
+  document.querySelectorAll(".lang-btn").forEach(function(b) {
+    b.classList.toggle("is-active", b.getAttribute("data-lang") === lang);
+  });
+  var waText  = encodeURIComponent(whatsappMsg[lang]);
+  var waUrl   = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + waText;
+  var waBtn   = document.getElementById("whatsappBtn");
+  var waFooter = document.getElementById("whatsappFooterLink");
+  if (waBtn) waBtn.setAttribute("href", waUrl);
+  if (waFooter) waFooter.setAttribute("href", waUrl);
+}
+
 function initLangSwitch() {
   document.querySelectorAll(".lang-btn").forEach(function(b) {
     b.addEventListener("click", function() { applyLanguage(this.getAttribute("data-lang")); });
@@ -1310,7 +1458,7 @@ function supportsWebGL() {
   } catch(e) { return false; }
 }
 
-function buildFallbackA() {
+function buildLetterA() {
   var shape = new THREE.Shape();
   shape.moveTo(0, 1.3); shape.lineTo(0.95, -1.3); shape.lineTo(0.38, -1.3);
   shape.lineTo(0.16, -0.1); shape.lineTo(-0.16, -0.1); shape.lineTo(-0.38, -1.3);
@@ -1321,40 +1469,6 @@ function buildFallbackA() {
   });
   geo.center();
   return geo;
-}
-
-function loadBrandText(letterGroup, glassMat, isMobile) {
-  var fontUrl = 'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json';
-  var loader = new THREE.FontLoader();
-  loader.load(fontUrl, function(font) {
-    var topSize  = isMobile ? 0.62 : 0.80;
-    var botSize  = isMobile ? 0.44 : 0.56;
-    var depth    = 0.30;
-
-    var aboudGeo = new THREE.TextGeometry('ABOUD', {
-      font: font, size: topSize, height: depth,
-      bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.025,
-      bevelSegments: 4, curveSegments: 8
-    });
-    aboudGeo.center();
-    var aboudMesh = new THREE.Mesh(aboudGeo, glassMat);
-    aboudMesh.position.y = topSize * 0.72;
-    letterGroup.add(aboudMesh);
-
-    var webGeo = new THREE.TextGeometry('WEB', {
-      font: font, size: botSize, height: depth * 0.75,
-      bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.018,
-      bevelSegments: 3, curveSegments: 8
-    });
-    webGeo.center();
-    var webMesh = new THREE.Mesh(webGeo, glassMat);
-    webMesh.position.y = -(botSize * 0.72);
-    letterGroup.add(webMesh);
-
-  }, undefined, function() {
-    // Fallback to single A if font fails to load
-    letterGroup.add(new THREE.Mesh(buildFallbackA(), glassMat));
-  });
 }
 
 function initHero3D() {
@@ -1396,12 +1510,12 @@ function initHero3D() {
     var vL  = new THREE.PointLight(0x8b5cf6, 0.7, 20); vL.position.set(0, 3, -3); scene.add(vL);
 
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color:0xffffff, transparent:true, opacity:0.60, roughness:0.14, metalness:0.05,
-      clearcoat:1, clearcoatRoughness:0.10, reflectivity:0.95, side:THREE.DoubleSide
+      color:0xffffff, transparent:true, opacity:0.55, roughness:0.18, metalness:0.05,
+      clearcoat:1, clearcoatRoughness:0.12, reflectivity:0.9, side:THREE.DoubleSide
     });
     var letterGroup = new THREE.Group();
+    letterGroup.add(new THREE.Mesh(buildLetterA(), glassMat));
     scene.add(letterGroup);
-    loadBrandText(letterGroup, glassMat, isMobile);
 
     var shapeCount = isMobile ? 2 : 4;
     var shapeGeos  = [
@@ -1494,6 +1608,7 @@ function initFooterYear() {
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function() {
   loadSiteContent();
+  applyLanguage("en");
   initLangSwitch();
   initLoader();
   initCursor();
