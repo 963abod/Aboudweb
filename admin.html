@@ -222,6 +222,19 @@ async function deleteRow(id){
   toast("تم الحذف");await load();
 }
 function editRow(id){openModal(rows.find(r=>r.id===id))}
+async function addGrouped(type){var prefix=type==='projects'?'proj':'svc';var nums=rows.map(function(r){var m=new RegExp('^'+prefix+'(\\d+)_title$').exec(r.key||'');return m?Number(m[1]):0});var n=Math.max.apply(null,[0].concat(nums))+1;var title=prompt(type==='projects'?'اسم المشروع بالعربي:':'اسم الخدمة بالعربي:');if(title===null||!title.trim())return;var en=prompt(type==='projects'?'اسم المشروع بالإنجليزية:':'اسم الخدمة بالإنجليزية:');if(en===null||!en.trim())return;var desc=prompt(type==='projects'?'وصف المشروع بالعربي:':'وصف الخدمة بالعربي:')||'';var descEn=prompt(type==='projects'?'وصف المشروع بالإنجليزية:':'وصف الخدمة بالإنجليزية:')||'';var payload=[{section:type,key:prefix+n+'_title',ar:title.trim(),en:en.trim()},{section:type,key:prefix+n+'_desc',ar:desc,en:descEn}];if(type==='projects'){var cat=prompt('تصنيف المشروع بالعربي (اختياري):');if(cat&&cat.trim()){var catEn=prompt('تصنيف المشروع بالإنجليزية (اختياري):')||'';payload.push({section:type,key:prefix+n+'_cat',ar:cat.trim(),en:catEn.trim()})}var url=prompt('رابط المشروع (اختياري):');if(url&&url.trim())payload.push({section:type,key:prefix+n+'_url',ar:url.trim(),en:url.trim()})}var res=await db.from('site_content').insert(payload);if(res.error){console.error(res.error);toast(res.error.message);return}toast(type==='projects'?'تمت إضافة المشروع ✓':'تمت إضافة الخدمة ✓');await load()}
+async function addGrouped(type){
+  var prefix=type==='projects'?'proj':'svc';
+  var nums=rows.map(function(r){var m=new RegExp('^'+prefix+'(\\d+)_title$').exec(r.key||'');return m?Number(m[1]):0;});
+  var n=Math.max.apply(null,[0].concat(nums))+1;
+  var title=prompt(type==='projects'?'اسم المشروع بالعربي:':'اسم الخدمة بالعربي:'); if(title===null||!title.trim())return;
+  var en=prompt(type==='projects'?'اسم المشروع بالإنجليزية:':'اسم الخدمة بالإنجليزية:'); if(en===null||!en.trim())return;
+  var desc=prompt(type==='projects'?'وصف المشروع بالعربي:':'وصف الخدمة بالعربي:')||'';
+  var descEn=prompt(type==='projects'?'وصف المشروع بالإنجليزية:':'وصف الخدمة بالإنجليزية:')||'';
+  var payload=[{section:type,key:prefix+n+'_title',ar:title.trim(),en:en.trim()},{section:type,key:prefix+n+'_desc',ar:desc,en:descEn}];
+  if(type==='projects'){var cat=prompt('تصنيف المشروع بالعربي (اختياري):');if(cat&&cat.trim()){var catEn=prompt('تصنيف المشروع بالإنجليزية (اختياري):')||'';payload.push({section:type,key:prefix+n+'_cat',ar:cat.trim(),en:catEn.trim()});}var url=prompt('رابط المشروع (اختياري):');if(url&&url.trim())payload.push({section:type,key:prefix+n+'_url',ar:url.trim(),en:url.trim()});}
+  var res=await db.from('site_content').insert(payload); if(res.error){console.error(res.error);toast(res.error.message);return;} toast(type==='projects'?'تمت إضافة المشروع ✓':'تمت إضافة الخدمة ✓'); await load();
+}
 async function logout(){await db.auth.signOut();location.reload()}
 
 $("loginBtn").onclick=login;
@@ -229,8 +242,8 @@ $("password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 $("logoutBtn").onclick=logout;
 $("addBtn").onclick=()=>openModal();
 $("quickAdd").onclick=()=>openModal();
-$("projectAdd").onclick=()=>openModal({section:"projects",key:""});
-$("serviceAdd").onclick=()=>openModal({section:"services",key:""});
+$("projectAdd").onclick=()=>addGrouped("projects");
+$("serviceAdd").onclick=()=>addGrouped("services");
 $("closeModal").onclick=closeModal;
 $("modalOverlay").addEventListener("click",e=>{if(e.target===$("modalOverlay"))closeModal()});
 $("saveBtn").onclick=save;
