@@ -1058,7 +1058,31 @@ var currentLang = "en";
 
 
 
+async function loadSiteContent() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("site_content")
+      .select("section,key,ar,en");
 
+    if (error) {
+      console.error("Failed to load site content:", error);
+      return;
+    }
+
+    if (!data || !data.length) return;
+
+    data.forEach(function(item) {
+      if (!item.key) return;
+
+      if (item.en) translations.en[item.key] = item.en;
+      if (item.ar) translations.ar[item.key] = item.ar;
+    });
+
+    applyLanguage(currentLang);
+  } catch (err) {
+    console.error("Site content error:", err);
+  }
+}
 function applyLanguage(lang) {
   currentLang = lang;
   var dict = translations[lang];
