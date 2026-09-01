@@ -12,7 +12,7 @@
 :root{
   --bg:#f7f7fb;--card:rgba(255,255,255,.72);--card2:rgba(255,255,255,.9);
   --text:#14141f;--muted:#77778b;--line:rgba(20,20,31,.09);
-  --blue:#4c7cff;--purple:#8b5cf6;--pink:#f0629e;--green:#22a06b;--red:#e5484d;
+  --blue:#4c7cff;--purple:#8b5cf6;--pink:#f0629e;--green:#22a06b;--red:#e5484d;--amber:#f4a63d;
   --shadow:0 24px 70px -35px rgba(30,30,60,.3);--radius:24px;
 }
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'IBM Plex Sans Arabic',sans-serif;color:var(--text)}
@@ -35,12 +35,23 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}.eyebrow{font-size:12px;color:var(--purple);font-weight:700}.topbar h1{margin:3px 0 0;font-size:30px;letter-spacing:-.04em}.preview{border:1px solid var(--line);background:rgba(255,255,255,.72);padding:11px 17px;border-radius:999px;text-decoration:none;color:var(--text);font-size:13px}
 .view{display:none}.view.active{display:block}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:22px;padding:20px;box-shadow:var(--shadow)}.stat span{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:30px;margin-top:7px}.stat em{font-style:normal;font-size:11px;color:var(--purple)}
+.stat.warn em{color:var(--amber)}
 .panel{margin-top:20px;background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
 .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel h2{margin:0;font-size:20px}.muted{color:var(--muted);font-size:13px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap}.search,.select{border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:14px;padding:11px 13px;outline:none}.search{min-width:230px}
 .primary{border:0;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));color:#fff;border-radius:14px;padding:11px 17px;font-weight:700}
-.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px;padding:17px}.item-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.tag{font-size:11px;padding:5px 9px;border-radius:999px;background:#efeff8;color:var(--purple)}.item h3{margin:8px 0 5px;font-size:16px}.item p{margin:0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:7px;margin-top:14px}.actions button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:11px;font-size:12px}.actions .del{color:var(--red)}
+.amber-btn{border:0;background:linear-gradient(135deg,var(--amber),var(--pink));color:#fff;border-radius:14px;padding:11px 17px;font-weight:700}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.item{background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px;padding:17px}
+/* Default (unseeded) items */
+.item-default{background:rgba(255,243,205,.55);border-color:rgba(244,166,61,.25);}
+.item-head{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.tag{font-size:11px;padding:5px 9px;border-radius:999px;background:#efeff8;color:var(--purple)}
+.badge-default{font-size:10px;padding:4px 9px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;white-space:nowrap}
+.item h3{margin:8px 0 5px;font-size:16px}.item p{margin:0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:7px;margin-top:14px}.actions button{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:11px;font-size:12px}.actions .del{color:var(--red)}.actions .seed-btn{background:#fff8e1;border-color:rgba(244,166,61,.3);color:#7a5c00}
 .empty{text-align:center;color:var(--muted);padding:45px 15px}
+.seed-banner{background:rgba(255,243,205,.7);border:1px solid rgba(244,166,61,.3);border-radius:18px;padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.seed-banner p{margin:0;font-size:13px;color:#7a5c00}
 .overlay{position:fixed;inset:0;background:rgba(15,15,25,.35);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.overlay.show{display:flex}.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:28px;padding:25px;box-shadow:0 35px 100px -35px #000}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#f1f1f6;width:36px;height:36px;border-radius:50%}.form{display:grid;gap:13px;margin-top:18px}.form label{font-size:12px;color:var(--muted)}.form input,.form textarea,.form select{width:100%;border:1px solid var(--line);background:#fafafe;border-radius:14px;padding:12px;outline:none}.form textarea{min-height:110px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:min(430px,100%);background:rgba(255,255,255,.76);backdrop-filter:blur(25px);border:1px solid #fff;border-radius:30px;padding:32px;box-shadow:var(--shadow)}.login-logo{margin:auto auto 18px}.login-card h1{text-align:center;margin:0;font:800 30px 'Bricolage Grotesque'}.login-card p{text-align:center;color:var(--muted);font-size:13px}.login-card input{width:100%;padding:14px;margin-top:10px;border:1px solid var(--line);border-radius:14px;outline:none}.login-card button{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));color:#fff;font-weight:700}.msg{text-align:center!important;min-height:22px;color:var(--red)!important}
 .toast{position:fixed;left:24px;bottom:24px;background:#171720;color:#fff;padding:12px 17px;border-radius:14px;box-shadow:0 15px 35px -20px #000;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;z-index:100;font-size:13px}.toast.show{transform:none;opacity:1}
 @media(max-width:900px){.sidebar{width:82px;padding:10px}.side-inner{padding:12px;border-radius:22px}.brand div:not(.logo),.nav span,.status,.logout{display:none}.brand{justify-content:center}.nav button{justify-content:center}.main{width:calc(100% - 82px);margin-right:82px;padding:20px}.cards{grid-template-columns:1fr 1fr}.content-grid{grid-template-columns:1fr}}
@@ -87,35 +98,48 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 
     <section id="overview" class="view active">
       <div class="cards">
-        <div class="stat"><span>إجمالي المحتوى</span><strong id="statTotal">0</strong><em>عنصر</em></div>
-        <div class="stat"><span>الأقسام</span><strong id="statSections">0</strong><em>قسم</em></div>
+        <div class="stat"><span>في قاعدة البيانات</span><strong id="statTotal">0</strong><em>عنصر محفوظ</em></div>
+        <div class="stat warn"><span>غير مرفوع بعد</span><strong id="statUnsynced">0</strong><em>محتوى افتراضي</em></div>
         <div class="stat"><span>العربي</span><strong id="statAr">0%</strong><em>اكتمال</em></div>
         <div class="stat"><span>English</span><strong id="statEn">0%</strong><em>اكتمال</em></div>
       </div>
+      <div id="seedBannerOverview" class="seed-banner hidden">
+        <p>⚠️ يوجد محتوى افتراضي للموقع غير مرفوع لقاعدة البيانات — لن تتمكن من تعديله حتى يُرفع.</p>
+        <button class="amber-btn" onclick="importAllDefaults()">رفع المحتوى الافتراضي</button>
+      </div>
       <div class="panel">
-        <div class="panel-head"><div><h2>آخر التعديلات</h2><div class="muted">آخر عناصر المحتوى المحفوظة</div></div><button class="primary" id="quickAdd">+ إضافة محتوى</button></div>
+        <div class="panel-head"><div><h2>آخر التعديلات</h2><div class="muted">آخر عناصر المحتوى المحفوظة في قاعدة البيانات</div></div><button class="primary" id="quickAdd">+ إضافة محتوى</button></div>
         <div id="recentList" class="content-grid"></div>
       </div>
     </section>
 
     <section id="content" class="view">
       <div class="panel">
-        <div class="panel-head"><div><h2>إدارة المحتوى</h2><div class="muted">عدّل النصوص العربية والإنجليزية واحفظها مباشرة.</div></div><button class="primary" id="addBtn">+ إضافة محتوى</button></div>
-        <div class="toolbar"><input id="search" class="search" placeholder="ابحث بالقسم أو المفتاح..."><select id="sectionFilter" class="select"><option value="">كل الأقسام</option></select></div>
+        <div class="panel-head">
+          <div><h2>إدارة المحتوى</h2><div class="muted">العناصر الصفراء هي المحتوى الافتراضي — اضغط "تعديل وحفظ" لرفعها للقاعدة.</div></div>
+          <div style="display:flex;gap:10px">
+            <button class="amber-btn" id="importAllBtn" onclick="importAllDefaults()">رفع الكل للقاعدة</button>
+            <button class="primary" id="addBtn">+ إضافة محتوى</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <input id="search" class="search" placeholder="ابحث بالقسم أو المفتاح...">
+          <select id="sectionFilter" class="select"><option value="">كل الأقسام</option></select>
+        </div>
         <div id="contentList" class="content-grid" style="margin-top:15px"></div>
       </div>
     </section>
 
     <section id="projects" class="view">
       <div class="panel">
-        <div class="panel-head"><div><h2>المشاريع</h2><div class="muted">إدارة المشاريع الموجودة في جدول المحتوى.</div></div><button class="primary" id="projectAdd">+ مشروع جديد</button></div>
+        <div class="panel-head"><div><h2>المشاريع</h2><div class="muted">إدارة المشاريع.</div></div><button class="primary" id="projectAdd">+ مشروع جديد</button></div>
         <div id="projectList" class="content-grid"></div>
       </div>
     </section>
 
     <section id="services" class="view">
       <div class="panel">
-        <div class="panel-head"><div><h2>الخدمات</h2><div class="muted">عناصر الخدمات التي يتم تخزينها في Supabase.</div></div><button class="primary" id="serviceAdd">+ خدمة جديدة</button></div>
+        <div class="panel-head"><div><h2>الخدمات</h2><div class="muted">عناصر الخدمات المخزنة في Supabase.</div></div><button class="primary" id="serviceAdd">+ خدمة جديدة</button></div>
         <div id="serviceList" class="content-grid"></div>
       </div>
     </section>
@@ -126,6 +150,9 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
         <p class="muted">الموقع: <b>aboudweb.onrender.com</b></p>
         <p class="muted">قاعدة البيانات: <b>Supabase</b></p>
         <p class="muted">الجلسة الحالية محمية بواسطة Supabase Auth.</p>
+        <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
+        <p class="muted" style="margin-bottom:12px"><b>استيراد المحتوى الافتراضي:</b> انقر الزر أدناه لرفع كل نصوص الموقع الأصلية لقاعدة البيانات حتى تتمكن من تعديلها.</p>
+        <button class="amber-btn" onclick="importAllDefaults()">رفع المحتوى الافتراضي للقاعدة</button>
       </div>
     </section>
   </main>
@@ -137,7 +164,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
     <div class="form">
       <div class="two">
         <div><label>القسم</label><input id="fSection" placeholder="hero"></div>
-        <div><label>المفتاح</label><input id="fKey" placeholder="title"></div>
+        <div><label>المفتاح</label><input id="fKey" placeholder="title" id="fKey"></div>
       </div>
       <div><label>العربي</label><textarea id="fAr"></textarea></div>
       <div><label>English</label><textarea id="fEn"></textarea></div>
@@ -154,9 +181,94 @@ const SUPABASE_ANON_KEY="sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 let rows=[], editingId=null;
 
+/* ===== كل المحتوى الافتراضي من index.html ===== */
+const DEFAULT_CONTENT=[
+  // nav
+  {section:"nav",key:"nav_home",ar:"الرئيسية",en:"Home"},
+  {section:"nav",key:"nav_work",ar:"أعمالي",en:"Work"},
+  {section:"nav",key:"nav_services",ar:"الخدمات",en:"Services"},
+  {section:"nav",key:"nav_about",ar:"من أنا",en:"About"},
+  {section:"nav",key:"nav_contact",ar:"تواصل",en:"Contact"},
+  // hero
+  {section:"hero",key:"hero_kicker",ar:"استوديو تصميم وتطوير المواقع",en:"Web Design & Development Studio"},
+  {section:"hero",key:"hero_sub",ar:"نصنع تجارب رقمية تجعل مشروعك يظهر بشكل أقوى.",en:"We build digital experiences that make your business stand out."},
+  {section:"hero",key:"hero_btn_work",ar:"شاهد أعمالي",en:"View My Work"},
+  {section:"hero",key:"hero_btn_contact",ar:"لنعمل معًا",en:"Let's Work Together"},
+  // work
+  {section:"work",key:"work_kicker",ar:"أعمال مختارة",en:"Selected Work"},
+  {section:"work",key:"work_title",ar:"مشاريع مبنية لتحقق نتائج",en:"Projects built to perform"},
+  // projects
+  {section:"projects",key:"proj1_cat",ar:"موقع أعمال",en:"Business Website"},
+  {section:"projects",key:"proj1_title",ar:"ورشة الهيثم للكهرباء",en:"Al-Haytham Electric Workshop"},
+  {section:"projects",key:"proj1_desc",ar:"حضور رقمي احترافي وواضح لورشة كهرباء، مصمم ليكسب ثقة الزوار ويجلب عملاء جدد.",en:"A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers."},
+  {section:"projects",key:"proj_btn",ar:"عرض المشروع",en:"View Project"},
+  {section:"projects",key:"proj_soon",ar:"قريبًا",en:"Coming Soon"},
+  {section:"projects",key:"proj2_title",ar:"متجر إلكتروني",en:"E-Commerce Store"},
+  {section:"projects",key:"proj3_title",ar:"مطاعم وضيافة",en:"Restaurant & Hospitality"},
+  {section:"projects",key:"proj4_title",ar:"موقع شخصي",en:"Personal Portfolio"},
+  {section:"projects",key:"proj_placeholder_desc",ar:"قريبًا سيتم عرض مشروع جديد هنا.",en:"A new project will be featured here soon."},
+  // services
+  {section:"services",key:"services_kicker",ar:"ماذا أقدّم",en:"What I Do"},
+  {section:"services",key:"services_title",ar:"الخدمات",en:"Services"},
+  {section:"services",key:"services_sub",ar:"كل ما تحتاجه لإطلاق مشروعك ونموه أونلاين، من الألف إلى الياء.",en:"Everything you need to launch and grow online, handled end to end."},
+  {section:"services",key:"svc1_title",ar:"تصميم المواقع",en:"Website Design"},
+  {section:"services",key:"svc1_desc",ar:"واجهات نظيفة وعصرية مبنية حول علامتك ومستخدميك.",en:"Clean, modern interfaces crafted around your brand and your users."},
+  {section:"services",key:"svc2_title",ar:"تطوير المواقع",en:"Website Development"},
+  {section:"services",key:"svc2_desc",ar:"بناء سريع وموثوق باستخدام تقنيات حديثة وقابلة للتوسع.",en:"Fast, reliable builds using modern, scalable technology."},
+  {section:"services",key:"svc3_title",ar:"المتاجر الإلكترونية",en:"E-commerce"},
+  {section:"services",key:"svc3_desc",ar:"متاجر إلكترونية مصممة لتحويل الزوار إلى عملاء.",en:"Online stores designed to convert visitors into customers."},
+  {section:"services",key:"svc4_title",ar:"تطوير مخصص",en:"Custom Web Development"},
+  {section:"services",key:"svc4_desc",ar:"حلول مصممة خصيصًا لمتطلبات عملك الفريدة.",en:"Tailored solutions for unique business requirements."},
+  {section:"services",key:"svc5_title",ar:"تحسين محركات البحث",en:"SEO"},
+  {section:"services",key:"svc5_desc",ar:"أسس منظمة ومحسّنة تساعدك على الظهور.",en:"Structured, optimized foundations that help you get found."},
+  {section:"services",key:"svc6_title",ar:"صيانة المواقع",en:"Website Maintenance"},
+  {section:"services",key:"svc6_desc",ar:"دعم مستمر ليبقى موقعك سريعًا وآمنًا ومحدثًا.",en:"Ongoing support to keep your site fast, secure and current."},
+  // pricing
+  {section:"pricing",key:"pricing_kicker",ar:"الأسعار",en:"Pricing"},
+  {section:"pricing",key:"pricing_title",ar:"أسعار بسيطة وواضحة",en:"Simple, transparent pricing"},
+  {section:"pricing",key:"pricing_sub",ar:"سعر واضح للانطلاق، بدون مفاجآت.",en:"One clear starting price. No hidden surprises."},
+  {section:"pricing",key:"price1_title",ar:"موقع احترافي",en:"Professional Website"},
+  {section:"pricing",key:"price1_prefix",ar:"يبدأ من",en:"Starting from"},
+  {section:"pricing",key:"price1_desc",ar:"موقع إلكتروني كامل ومصمم باحترافية، متجاوب وسريع وجاهز لتمثيل عملك على الإنترنت.",en:"A complete, professionally designed website — responsive, fast, and ready to represent your business online."},
+  {section:"pricing",key:"price1_f1",ar:"تصميم مخصص",en:"Custom design"},
+  {section:"pricing",key:"price1_f2",ar:"متجاوب مع الجوال",en:"Mobile responsive"},
+  {section:"pricing",key:"price1_f3",ar:"أداء سريع",en:"Fast performance"},
+  {section:"pricing",key:"price1_f4",ar:"إعداد SEO أساسي",en:"Basic SEO setup"},
+  {section:"pricing",key:"price1_f5",ar:"ربط مع واتساب",en:"WhatsApp integration"},
+  {section:"pricing",key:"price1_btn",ar:"ابدأ الآن",en:"Get Started"},
+  {section:"pricing",key:"price2_title",ar:"عرض سعر مخصص",en:"Custom Quote"},
+  {section:"pricing",key:"price2_desc",ar:"للمشاريع الأكبر أو المتاجر الإلكترونية أو الميزات المتقدمة، كل عرض سعر يُصمم خصيصًا لأهدافك.",en:"For larger projects, online stores, or advanced functionality — every quote is tailored to your goals."},
+  {section:"pricing",key:"price2_btn",ar:"اطلب عرض سعر",en:"Request a Quote"},
+  // about
+  {section:"about",key:"about_role",ar:"مصمم ومطوّر مواقع",en:"Web Designer & Developer"},
+  {section:"about",key:"about_title",ar:"أنا عبود.",en:"I'm Aboud."},
+  {section:"about",key:"about_body",ar:"أصمم وأطوّر مواقع إلكترونية وتجارب رقمية عصرية للأعمال التي تريد أن تتميز على الإنترنت. كل مشروع ينال نفس الاهتمام بالتفاصيل، من أول فكرة حتى آخر سطر برمجي.",en:"I design and build modern websites and digital experiences for businesses that want to stand out online. Every project gets the same attention to detail — from the first sketch to the final line of code."},
+  // contact
+  {section:"contact",key:"contact_kicker",ar:"تواصل",en:"Contact"},
+  {section:"contact",key:"contact_title",ar:"جاهز نخلي مشروعك يظهر بشكل أقوى؟",en:"Ready to build something better?"},
+  {section:"contact",key:"contact_sub",ar:"احكيلي عن مشروعك عبر واتساب، بجاوب عادة خلال ساعات قليلة.",en:"Tell me about your project on WhatsApp — I usually reply within a few hours."},
+  {section:"contact",key:"contact_btn",ar:"تواصل معي عبر واتساب",en:"Contact me on WhatsApp"},
+  // footer
+  {section:"footer",key:"footer_tagline",ar:"تجارب رقمية تجعل مشروعك يظهر بشكل أقوى.",en:"Digital experiences that make your business stand out."},
+  {section:"footer",key:"footer_contact_title",ar:"تواصل",en:"Contact"},
+  {section:"footer",key:"footer_rights",ar:"جميع الحقوق محفوظة.",en:"All rights reserved."},
+];
+
 const $=id=>document.getElementById(id);
-function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2200)}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2800)}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+/* ===== حساب العناصر الافتراضية غير المرفوعة ===== */
+function getUnsyncedDefaults(){
+  const dbKeys=new Set(rows.map(r=>r.key));
+  return DEFAULT_CONTENT.filter(d=>!dbKeys.has(d.key));
+}
+
+/* ===== دمج الصفوف ===== */
+function getMergedRows(){
+  const unsynced=getUnsyncedDefaults().map(d=>({...d,id:null,_isDefault:true}));
+  return [...rows,...unsynced];
+}
 
 async function login(){
   $("loginMsg").textContent="جاري تسجيل الدخول...";
@@ -173,57 +285,144 @@ async function showAdmin(){
 async function load(){
   const {data,error}=await db.from("site_content").select("*").order("updated_at",{ascending:false});
   if(error){console.error(error);toast("تعذر تحميل المحتوى");return}
-  rows=data||[];render();updateStats();
+  rows=data||[];
+  render();
+  updateStats();
 }
+
 function updateStats(){
+  const unsynced=getUnsyncedDefaults();
   $("statTotal").textContent=rows.length;
-  $("statSections").textContent=new Set(rows.map(x=>x.section)).size;
+  $("statUnsynced").textContent=unsynced.length;
   $("statAr").textContent=rows.length?Math.round(rows.filter(x=>x.ar?.trim()).length/rows.length*100)+"%":"0%";
   $("statEn").textContent=rows.length?Math.round(rows.filter(x=>x.en?.trim()).length/rows.length*100)+"%":"0%";
+  // Banner تحذيري
+  const banner=$("seedBannerOverview");
+  if(unsynced.length>0){banner.classList.remove("hidden")}else{banner.classList.add("hidden")}
 }
+
+/* ===== بطاقة العنصر ===== */
 function card(r){
- return `<article class="item">
-  <div class="item-head"><span class="tag">${esc(r.section)}</span><span class="muted">#${r.id}</span></div>
-  <h3>${esc(r.key)}</h3><p>${esc(r.ar||r.en||"لا يوجد محتوى")}</p>
-  <div class="actions"><button onclick="editRow(${r.id})">تعديل</button><button class="del" onclick="deleteRow(${r.id})">حذف</button></div>
- </article>`
+  if(r._isDefault){
+    return `<article class="item item-default">
+      <div class="item-head"><span class="tag">${esc(r.section)}</span><span class="badge-default">افتراضي — غير محفوظ</span></div>
+      <h3>${esc(r.key)}</h3>
+      <p title="${esc(r.ar||r.en||'')}">${esc(r.ar||r.en||'لا يوجد محتوى')}</p>
+      <div class="actions">
+        <button class="seed-btn" onclick="editDefaultRow('${esc(r.key)}')">✏️ تعديل وحفظ</button>
+      </div>
+    </article>`;
+  }
+  return `<article class="item">
+    <div class="item-head"><span class="tag">${esc(r.section)}</span><span class="muted">#${r.id}</span></div>
+    <h3>${esc(r.key)}</h3>
+    <p title="${esc(r.ar||r.en||'')}">${esc(r.ar||r.en||'لا يوجد محتوى')}</p>
+    <div class="actions">
+      <button onclick="editRow(${r.id})">تعديل</button>
+      <button class="del" onclick="deleteRow(${r.id})">حذف</button>
+    </div>
+  </article>`;
 }
+
 function render(){
-  const q=$("search").value.trim().toLowerCase(), sec=$("sectionFilter").value;
-  const filtered=rows.filter(r=>(!q||(r.section+" "+r.key+" "+(r.ar||"")+" "+(r.en||"")).toLowerCase().includes(q))&&(!sec||r.section===sec));
-  $("contentList").innerHTML=filtered.length?filtered.map(card).join():'<div class="empty">لا يوجد محتوى مطابق.</div>';
+  const q=$("search").value.trim().toLowerCase();
+  const sec=$("sectionFilter").value;
+  const allRows=getMergedRows();
+
+  const filtered=allRows.filter(r=>
+    (!q||(r.section+" "+r.key+" "+(r.ar||"")+" "+(r.en||"")).toLowerCase().includes(q))&&
+    (!sec||r.section===sec)
+  );
+  $("contentList").innerHTML=filtered.length
+    ?filtered.map(card).join('')
+    :'<div class="empty">لا يوجد محتوى مطابق.</div>';
+
+  // آخر التعديلات: فقط من قاعدة البيانات
   const recent=rows.slice(0,6);
-  $("recentList").innerHTML=recent.length?recent.map(card).join():'<div class="empty">لا يوجد محتوى بعد.</div>';
-  const sections=[...new Set(rows.map(r=>r.section))].sort();
-  const old=sec;$("sectionFilter").innerHTML='<option value="">كل الأقسام</option>'+sections.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join();$("sectionFilter").value=sections.includes(old)?old:"";
-  $("projectList").innerHTML=rows.filter(r=>r.section.toLowerCase().includes("project")||r.section.toLowerCase().includes("work")||r.section.includes("مشروع")).map(card).join()||'<div class="empty">لا توجد عناصر مشاريع بعد.</div>';
-  $("serviceList").innerHTML=rows.filter(r=>r.section.toLowerCase().includes("service")||r.section.includes("خدم")).map(card).join()||'<div class="empty">لا توجد عناصر خدمات بعد.</div>';
+  $("recentList").innerHTML=recent.length
+    ?recent.map(card).join('')
+    :'<div class="empty">لا يوجد محتوى محفوظ بعد.</div>';
+
+  // الأقسام من الكل
+  const sections=[...new Set(allRows.map(r=>r.section))].sort();
+  const old=sec;
+  $("sectionFilter").innerHTML='<option value="">كل الأقسام</option>'+sections.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  $("sectionFilter").value=sections.includes(old)?old:"";
+
+  // المشاريع
+  $("projectList").innerHTML=allRows.filter(r=>
+    r.section.toLowerCase().includes("project")||
+    r.section.toLowerCase().includes("work")||
+    r.section.includes("مشروع")
+  ).map(card).join('')||'<div class="empty">لا توجد عناصر مشاريع.</div>';
+
+  // الخدمات
+  $("serviceList").innerHTML=allRows.filter(r=>
+    r.section.toLowerCase().includes("service")||
+    r.section.includes("خدم")
+  ).map(card).join('')||'<div class="empty">لا توجد عناصر خدمات.</div>';
 }
-function openModal(r=null){
-  editingId=r?.id??null;$("modalTitle").textContent=r?"تعديل المحتوى":"إضافة محتوى";
-  $("fSection").value=r?.section||"";$("fKey").value=r?.key||"";$("fAr").value=r?.ar||"";$("fEn").value=r?.en||"";
+
+/* ===== فتح المودال ===== */
+function openModal(r=null, customTitle=null){
+  editingId=r?.id??null;
+  $("modalTitle").textContent=customTitle||(editingId?"تعديل المحتوى":"إضافة محتوى");
+  $("fSection").value=r?.section||"";
+  $("fKey").value=r?.key||"";
+  $("fAr").value=r?.ar||"";
+  $("fEn").value=r?.en||"";
   $("modalOverlay").classList.add("show");
 }
 function closeModal(){$("modalOverlay").classList.remove("show");editingId=null}
+
+/* ===== تعديل عنصر افتراضي (INSERT) ===== */
+function editDefaultRow(key){
+  const d=DEFAULT_CONTENT.find(x=>x.key===key);
+  if(d) openModal(d,"تعديل وحفظ في قاعدة البيانات");
+}
+
+/* ===== حفظ ===== */
 async function save(){
   const section=$("fSection").value.trim(),key=$("fKey").value.trim(),ar=$("fAr").value,en=$("fEn").value;
   if(!section||!key){toast("القسم والمفتاح مطلوبان");return}
-  const payload={section,key,ar,en,updated_at:new Date().toISOString()};
+  const now=new Date().toISOString();
   let error;
-  if(editingId){({error}=await db.from("site_content").update({ar,en,updated_at:payload.updated_at}).eq("id",editingId))}
-  else {({error}=await db.from("site_content").insert(payload))}
+  if(editingId){
+    ({error}=await db.from("site_content").update({ar,en,updated_at:now}).eq("id",editingId));
+  }else{
+    ({error}=await db.from("site_content").insert({section,key,ar,en,updated_at:now}));
+  }
   if(error){console.error(error);toast(error.message);return}
-  closeModal();toast(editingId?"تم التعديل ✓":"تمت الإضافة ✓");await load();
+  closeModal();
+  toast(editingId?"تم التعديل ✓":"تم الحفظ في قاعدة البيانات ✓");
+  await load();
 }
+
+/* ===== حذف ===== */
 async function deleteRow(id){
   if(!confirm("حذف هذا العنصر نهائياً؟"))return;
   const {error}=await db.from("site_content").delete().eq("id",id);
   if(error){toast(error.message);return}
   toast("تم الحذف");await load();
 }
+
 function editRow(id){openModal(rows.find(r=>r.id===id))}
+
+/* ===== رفع كل المحتوى الافتراضي دفعة واحدة ===== */
+async function importAllDefaults(){
+  const unsynced=getUnsyncedDefaults();
+  if(!unsynced.length){toast("كل المحتوى موجود بالفعل في قاعدة البيانات ✓");return}
+  if(!confirm(`سيتم رفع ${unsynced.length} عنصراً افتراضياً لقاعدة البيانات. هل تريد المتابعة؟`))return;
+  const toInsert=unsynced.map(d=>({...d,updated_at:new Date().toISOString()}));
+  const {error}=await db.from("site_content").insert(toInsert);
+  if(error){console.error(error);toast(error.message);return}
+  toast(`تم رفع ${toInsert.length} عنصر بنجاح ✓`);
+  await load();
+}
+
 async function logout(){await db.auth.signOut();location.reload()}
 
+/* ===== ربط الأزرار ===== */
 $("loginBtn").onclick=login;
 $("password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 $("logoutBtn").onclick=logout;
@@ -238,16 +437,17 @@ $("search").oninput=render;
 $("sectionFilter").onchange=render;
 
 document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>{
- document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
- document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
- $(btn.dataset.view).classList.add("active");
- const titles={overview:"نظرة عامة",content:"محتوى الموقع",projects:"المشاريع",services:"الخدمات",settings:"الإعدادات"};
- $("pageTitle").textContent=titles[btn.dataset.view];
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+  $(btn.dataset.view).classList.add("active");
+  const titles={overview:"نظرة عامة",content:"محتوى الموقع",projects:"المشاريع",services:"الخدمات",settings:"الإعدادات"};
+  $("pageTitle").textContent=titles[btn.dataset.view];
 });
 
 (async()=>{
- const {data}=await db.auth.getSession();
- if(data.session)showAdmin();
+  const {data}=await db.auth.getSession();
+  if(data.session)showAdmin();
 })();
 </script>
 </body>
