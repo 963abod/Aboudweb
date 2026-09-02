@@ -81,6 +81,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
         <button data-view="content"><i class="dot"></i><span>محتوى الموقع</span></button>
         <button data-view="projects"><i class="dot"></i><span>المشاريع</span></button>
         <button data-view="services"><i class="dot"></i><span>الخدمات</span></button>
+        <button data-view="social"><i class="dot"></i><span>روابط التواصل</span></button>
         <button data-view="settings"><i class="dot"></i><span>الإعدادات</span></button>
       </nav>
       <div class="side-bottom">
@@ -144,6 +145,13 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
       </div>
     </section>
 
+    <section id="social" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>روابط التواصل</h2><div class="muted">تحكم بواتساب، انستغرام، وأي رابط تواصل تاني بيظهر بالموقع — ضيف، عدّل، احذف أو أوقف مؤقتًا.</div></div><button class="primary" id="socialAdd">+ رابط جديد</button></div>
+        <div id="socialList" class="content-grid"></div>
+      </div>
+    </section>
+
     <section id="settings" class="view">
       <div class="panel">
         <div class="panel-head"><div><h2>الإعدادات</h2><div class="muted">إعدادات لوحة التحكم.</div></div></div>
@@ -173,6 +181,60 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
   </div>
 </div>
 
+<div id="projectModalOverlay" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><h2 id="projectModalTitle">مشروع جديد</h2><button class="close" id="closeProjectModal">×</button></div>
+    <div class="form">
+      <div class="two">
+        <div><label>العنوان (عربي)</label><input id="pTitleAr" placeholder="اسم المشروع"></div>
+        <div><label>Title (English)</label><input id="pTitleEn" placeholder="Project name"></div>
+      </div>
+      <div class="two">
+        <div><label>التصنيف (عربي)</label><input id="pCatAr" placeholder="موقع أعمال"></div>
+        <div><label>Category (English)</label><input id="pCatEn" placeholder="Business Website"></div>
+      </div>
+      <div><label>الوصف (عربي)</label><textarea id="pDescAr"></textarea></div>
+      <div><label>Description (English)</label><textarea id="pDescEn"></textarea></div>
+      <div class="two">
+        <div><label>رابط الصورة (اختياري)</label><input id="pImage" placeholder="https://..."></div>
+        <div><label>رابط الموقع المنفذ</label><input id="pLink" placeholder="https://..."></div>
+      </div>
+      <div class="two">
+        <div>
+          <label>حالة المشروع</label>
+          <select id="pStatus">
+            <option value="live">منشور — له رابط يظهر</option>
+            <option value="soon">قريبًا — بدون رابط</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:26px">
+          <input type="checkbox" id="pFeatured" style="width:auto">
+          <label style="margin:0">مشروع مميز (بطاقة كبيرة بالأعلى)</label>
+        </div>
+      </div>
+      <button class="primary" id="saveProjectBtn">حفظ المشروع</button>
+    </div>
+  </div>
+</div>
+
+<div id="socialModalOverlay" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><h2 id="socialModalTitle">رابط جديد</h2><button class="close" id="closeSocialModal">×</button></div>
+    <div class="form">
+      <div class="two">
+        <div><label>اسم المنصة</label><input id="sPlatform" placeholder="واتساب"></div>
+        <div><label>نوع الأيقونة</label><select id="sIcon"></select></div>
+      </div>
+      <div><label>الرابط الكامل</label><input id="sUrl" placeholder="https://wa.me/9639xxxxxxxx"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="sActive" style="width:auto" checked>
+        <label style="margin:0">مفعّل ويظهر بالموقع</label>
+      </div>
+      <button class="primary" id="saveSocialBtn">حفظ الرابط</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -180,6 +242,32 @@ const SUPABASE_URL="https://pblbdxocvnkmakrpomsb.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 let rows=[], editingId=null;
+let projectRows=[], editingProjectId=null;
+let socialRows=[], editingSocialId=null;
+const ICON_OPTIONS=[
+  {key:"whatsapp",label:"واتساب"},
+  {key:"instagram",label:"انستغرام"},
+  {key:"facebook",label:"فيسبوك"},
+  {key:"tiktok",label:"تيك توك"},
+  {key:"linkedin",label:"لينكدإن"},
+  {key:"behance",label:"Behance"},
+  {key:"snapchat",label:"سناب شات"},
+  {key:"x",label:"X (تويتر)"},
+  {key:"youtube",label:"يوتيوب"},
+  {key:"link",label:"رابط عام"}
+];
+let socialRows=[], projectRows=[], editingProjectId=null, pendingImageFile=null, pendingImagePreviewUrl=null;
+
+const SOCIAL_META={
+  whatsapp:{label:"واتساب",placeholder:"9639XXXXXXXXX (رقم دولي بدون +)",icon:'<path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.6 14.3c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.7 1.9.8 2 .1.2.1.4 0 .6-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.7-.1 1.3z" fill="currentColor"/>'},
+  instagram:{label:"انستغرام",placeholder:"https://instagram.com/username",icon:'<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/>'},
+  facebook:{label:"فيسبوك",placeholder:"https://facebook.com/username",icon:'<path d="M15 8h2V4h-2c-2.2 0-4 1.8-4 4v2H9v4h2v6h4v-6h2.6l.4-4H15V8c0-.6.4-1 1-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'},
+  tiktok:{label:"تيك توك",placeholder:"https://tiktok.com/@username",icon:'<path d="M14 3v10.5a3 3 0 1 1-2.4-2.94" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14 3c.5 2.5 2.2 4.2 5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'},
+  linkedin:{label:"لينكدإن",placeholder:"https://linkedin.com/in/username",icon:'<rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="7" y1="10" x2="7" y2="17" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="7" r="1" fill="currentColor"/><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="11" y1="10" x2="11" y2="17" stroke="currentColor" stroke-width="1.6"/>'},
+  behance:{label:"Behance",placeholder:"https://behance.net/username",icon:'<rect x="2" y="7" width="9" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2 11h6M14 12c1-2 3-3 5-3 3 0 4.5 2 4.5 5.5H13.5c0 2 1.5 3 3.5 3 1.3 0 2.2-.5 3-1.3M14 12c0-2.5 1.7-4 4-4M13.5 14.5h8" fill="none" stroke="currentColor" stroke-width="1.6"/>'},
+  snapchat:{label:"سناب شات",placeholder:"https://snapchat.com/add/username",icon:'<path d="M12 3c3 0 4.5 2.3 4.5 5v2c0 .4.3.9.9 1.2.8.4 1.6.5 1.6 1s-1 .9-1.9 1.2c-.5.2-.6.4-.5.8.2.7.9 1.6 2.4 1.8.3 0 .4.3.2.5-.4.5-1.4.8-2.5.9-.2 0-.3.1-.4.4-.1.5-.3.9-1.2.9-.6 0-1.1-.2-1.9-.2s-1.7.7-3.2.7-2.5-.7-3.2-.7-1.3.2-1.9.2c-.9 0-1.1-.4-1.2-.9-.1-.3-.2-.4-.4-.4-1.1-.1-2.1-.4-2.5-.9-.2-.2-.1-.5.2-.5 1.5-.2 2.2-1.1 2.4-1.8.1-.4 0-.6-.5-.8-.9-.3-1.9-.7-1.9-1.2s.8-.6 1.6-1c.6-.3.9-.8.9-1.2V8c0-2.7 1.5-5 4.5-5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>'}
+};
+const SOCIAL_ORDER=["whatsapp","instagram","facebook","tiktok","linkedin","behance","snapchat"];
 
 /* ===== كل المحتوى الافتراضي من index.html ===== */
 const DEFAULT_CONTENT=[
@@ -288,6 +376,145 @@ async function load(){
   rows=data||[];
   render();
   updateStats();
+  await Promise.all([loadSocial(),loadProjects()]);
+}
+
+/* ===== روابط التواصل ===== */
+async function loadSocial(){
+  const {data,error}=await db.from("social_links").select("*").order("sort_order",{ascending:true});
+  if(error){console.error(error);toast("تعذر تحميل روابط التواصل — تأكد من تشغيل ملف supabase_migration.sql");return}
+  socialRows=data||[];
+  renderSocial();
+}
+function renderSocial(){
+  const list=$("socialList");
+  if(!socialRows.length){list.innerHTML='<div class="empty">لا يوجد بيانات — شغّل ملف supabase_migration.sql على قاعدة بياناتك.</div>';return}
+  list.innerHTML=SOCIAL_ORDER.map(key=>{
+    const row=socialRows.find(r=>r.platform===key);
+    if(!row)return"";
+    const meta=SOCIAL_META[key];
+    return `<div class="social-card ${row.is_active?'':'off'}" data-platform="${key}">
+      <div class="social-head">
+        <div class="social-name"><span class="ic"><svg viewBox="0 0 24 24">${meta.icon}</svg></span>${meta.label}</div>
+        <button class="switch ${row.is_active?'on':''}" onclick="toggleSocial('${key}',this)"></button>
+      </div>
+      <input class="sVal" placeholder="${meta.placeholder}" value="${esc(row.value||'')}">
+      <button class="social-save" onclick="saveSocial('${key}',this)">حفظ</button>
+    </div>`;
+  }).join('');
+}
+async function toggleSocial(platform,btn){
+  const row=socialRows.find(r=>r.platform===platform);
+  const newVal=!row.is_active;
+  const {error}=await db.from("social_links").update({is_active:newVal,updated_at:new Date().toISOString()}).eq("platform",platform);
+  if(error){toast(error.message);return}
+  row.is_active=newVal;
+  btn.classList.toggle("on",newVal);
+  btn.closest(".social-card").classList.toggle("off",!newVal);
+  toast(newVal?"تم التفعيل ✓":"تم الإيقاف");
+}
+async function saveSocial(platform,btn){
+  const card=btn.closest(".social-card");
+  const value=card.querySelector(".sVal").value.trim();
+  const {error}=await db.from("social_links").update({value,updated_at:new Date().toISOString()}).eq("platform",platform);
+  if(error){toast(error.message);return}
+  const row=socialRows.find(r=>r.platform===platform);
+  if(row)row.value=value;
+  toast("تم الحفظ ✓");
+}
+
+/* ===== المشاريع (جدول projects) ===== */
+async function loadProjects(){
+  const {data,error}=await db.from("projects").select("*").order("sort_order",{ascending:true});
+  if(error){console.error(error);toast("تعذر تحميل المشاريع — تأكد من تشغيل ملف supabase_migration.sql");return}
+  projectRows=data||[];
+  renderProjects();
+}
+function projectCard(p){
+  const thumb=p.image_url?`background-image:url('${esc(p.image_url)}')`:'';
+  return `<div class="proj-card">
+    <div class="proj-thumb" style="${thumb}">
+      ${p.image_url?'':'بدون صورة'}
+      <span class="proj-status ${p.status==='live'?'live':'soon'}">${p.status==='live'?'منشور':'قريبًا'}</span>
+      ${p.is_featured?'<span class="proj-featured-badge">مميز</span>':''}
+    </div>
+    <div class="proj-body">
+      <h3>${esc(p.title_ar||p.title_en||'بدون عنوان')}</h3>
+      <p title="${esc(p.category_ar||'')}">${esc(p.category_ar||p.category_en||'')}</p>
+      <div class="actions">
+        <button onclick="editProject(${p.id})">تعديل</button>
+        <button class="del" onclick="deleteProject(${p.id})">حذف</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderProjects(){
+  $("projectList").innerHTML=projectRows.length
+    ?projectRows.map(projectCard).join('')
+    :'<div class="empty">لا توجد مشاريع بعد — اضغط "+ مشروع جديد".</div>';
+}
+function openProjectModal(p=null){
+  editingProjectId=p?.id??null;
+  pendingImageFile=null;
+  pendingImagePreviewUrl=p?.image_url||null;
+  $("projectModalTitle").textContent=editingProjectId?"تعديل المشروع":"مشروع جديد";
+  $("pTitleAr").value=p?.title_ar||"";
+  $("pTitleEn").value=p?.title_en||"";
+  $("pCatAr").value=p?.category_ar||"";
+  $("pCatEn").value=p?.category_en||"";
+  $("pDescAr").value=p?.desc_ar||"";
+  $("pDescEn").value=p?.desc_en||"";
+  $("pLinkUrl").value=p?.link_url||"";
+  $("pStatus").value=p?.status||"coming_soon";
+  $("pFeatured").checked=!!p?.is_featured;
+  $("pImgStatus").textContent="";
+  $("pImgPreview").style.backgroundImage=pendingImagePreviewUrl?`url('${pendingImagePreviewUrl}')`:'';
+  $("projectModalOverlay").classList.add("show");
+}
+function closeProjectModal(){$("projectModalOverlay").classList.remove("show");editingProjectId=null;pendingImageFile=null;pendingImagePreviewUrl=null}
+function editProject(id){openProjectModal(projectRows.find(p=>p.id===id))}
+async function deleteProject(id){
+  if(!confirm("حذف هذا المشروع نهائياً؟"))return;
+  const {error}=await db.from("projects").delete().eq("id",id);
+  if(error){toast(error.message);return}
+  toast("تم الحذف");await loadProjects();
+}
+async function saveProject(){
+  const title_ar=$("pTitleAr").value.trim(),title_en=$("pTitleEn").value.trim();
+  if(!title_ar&&!title_en){toast("أدخل عنوان المشروع على الأقل");return}
+  $("saveProjectBtn").disabled=true;
+  let image_url=pendingImagePreviewUrl;
+  if(pendingImageFile){
+    $("pImgStatus").textContent="جاري رفع الصورة...";
+    const ext=pendingImageFile.name.split('.').pop();
+    const path=`project_${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const {error:upErr}=await db.storage.from("project-images").upload(path,pendingImageFile,{upsert:true});
+    if(upErr){toast("فشل رفع الصورة: "+upErr.message);$("saveProjectBtn").disabled=false;return}
+    const {data:pub}=db.storage.from("project-images").getPublicUrl(path);
+    image_url=pub.publicUrl;
+  }
+  const payload={
+    title_ar,title_en,
+    category_ar:$("pCatAr").value.trim(),category_en:$("pCatEn").value.trim(),
+    desc_ar:$("pDescAr").value.trim(),desc_en:$("pDescEn").value.trim(),
+    link_url:$("pLinkUrl").value.trim(),
+    status:$("pStatus").value,
+    is_featured:$("pFeatured").checked,
+    image_url:image_url||"",
+    updated_at:new Date().toISOString()
+  };
+  let error;
+  if(editingProjectId){
+    ({error}=await db.from("projects").update(payload).eq("id",editingProjectId));
+  }else{
+    payload.sort_order=projectRows.length;
+    ({error}=await db.from("projects").insert(payload));
+  }
+  $("saveProjectBtn").disabled=false;
+  if(error){toast(error.message);return}
+  closeProjectModal();
+  toast("تم حفظ المشروع ✓");
+  await loadProjects();
 }
 
 function updateStats(){
@@ -348,13 +575,6 @@ function render(){
   const old=sec;
   $("sectionFilter").innerHTML='<option value="">كل الأقسام</option>'+sections.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
   $("sectionFilter").value=sections.includes(old)?old:"";
-
-  // المشاريع
-  $("projectList").innerHTML=allRows.filter(r=>
-    r.section.toLowerCase().includes("project")||
-    r.section.toLowerCase().includes("work")||
-    r.section.includes("مشروع")
-  ).map(card).join('')||'<div class="empty">لا توجد عناصر مشاريع.</div>';
 
   // الخدمات
   $("serviceList").innerHTML=allRows.filter(r=>
@@ -428,7 +648,7 @@ $("password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 $("logoutBtn").onclick=logout;
 $("addBtn").onclick=()=>openModal();
 $("quickAdd").onclick=()=>openModal();
-$("projectAdd").onclick=()=>openModal({section:"projects",key:""});
+$("projectAdd").onclick=()=>openProjectModal();
 $("serviceAdd").onclick=()=>openModal({section:"services",key:""});
 $("closeModal").onclick=closeModal;
 $("modalOverlay").addEventListener("click",e=>{if(e.target===$("modalOverlay"))closeModal()});
@@ -436,12 +656,26 @@ $("saveBtn").onclick=save;
 $("search").oninput=render;
 $("sectionFilter").onchange=render;
 
+$("closeProjectModal").onclick=closeProjectModal;
+$("projectModalOverlay").addEventListener("click",e=>{if(e.target===$("projectModalOverlay"))closeProjectModal()});
+$("saveProjectBtn").onclick=saveProject;
+$("pImgFile").addEventListener("change",e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.size>4*1024*1024){toast("الصورة كبيرة جدًا (الحد 4MB)");e.target.value="";return}
+  pendingImageFile=file;
+  const reader=new FileReader();
+  reader.onload=ev=>{$("pImgPreview").style.backgroundImage=`url('${ev.target.result}')`};
+  reader.readAsDataURL(file);
+  $("pImgStatus").textContent=file.name;
+});
+
 document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>{
   document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
   $(btn.dataset.view).classList.add("active");
-  const titles={overview:"نظرة عامة",content:"محتوى الموقع",projects:"المشاريع",services:"الخدمات",settings:"الإعدادات"};
+  const titles={overview:"نظرة عامة",content:"محتوى الموقع",projects:"المشاريع",services:"الخدمات",social:"روابط التواصل",settings:"الإعدادات"};
   $("pageTitle").textContent=titles[btn.dataset.view];
 });
 

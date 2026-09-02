@@ -647,84 +647,8 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         <p class="kicker" data-i18n="work_kicker">Selected Work</p>
         <h2 data-i18n="work_title">Projects built to perform</h2>
       </div>
-      <div class="portfolio-grid">
-
-        <article class="project-card project-featured reveal">
-          <div class="project-preview preview-featured">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div>
-                <div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj1_cat">Business Website</span>
-            <h3 data-i18n="proj1_title">Al-Haytham Electric Workshop</h3>
-            <p data-i18n="proj1_desc">A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers.</p>
-            <a href="#" class="project-link">
-              <span data-i18n="proj_btn">View Project</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-preview preview-2">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div>
-                <div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
-            <h3 data-i18n="proj2_title">E-Commerce Store</h3>
-            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-preview preview-3">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div>
-                <div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
-            <h3 data-i18n="proj3_title">Restaurant & Hospitality</h3>
-            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
-          </div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-preview preview-4">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div>
-                <div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj_soon">Coming Soon</span>
-            <h3 data-i18n="proj4_title">Personal Portfolio</h3>
-            <p data-i18n="proj_placeholder_desc">A new project will be featured here soon.</p>
-          </div>
-        </article>
-
+      <div class="portfolio-grid" id="portfolioGrid">
+        <div class="portfolio-loading muted" style="grid-column:1/-1;text-align:center;color:var(--ink-faint);padding:20px 0;">…</div>
       </div>
     </div>
   </section>
@@ -863,11 +787,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.6 14.3c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.7 1.9.8 2 .1.2.1.4 0 .6-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
           <span data-i18n="contact_btn">Contact me on WhatsApp</span>
         </a>
-        <div class="contact-socials">
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
-          <a href="#" aria-label="Behance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="9" height="10" rx="2"/><path d="M2 11h6M14 12c1-2 3-3 5-3 3 0 4.5 2 4.5 5.5H13.5c0 2 1.5 3 3.5 3 1.3 0 2.2-.5 3-1.3M14 12c0-2.5 1.7-4 4-4M13.5 14.5h8"/></svg></a>
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"/><line x1="11" y1="10" x2="11" y2="17"/></svg></a>
-        </div>
+        <div class="contact-socials" id="contactSocials"></div>
       </div>
     </div>
   </section>
@@ -895,10 +815,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       </div>
       <div class="footer-col">
         <h4 data-i18n="footer_contact_title">Contact</h4>
-        <ul>
-          <li><a href="#" id="whatsappFooterLink" target="_blank" rel="noopener">WhatsApp</a></li>
-          <li><a href="#" aria-label="Instagram">Instagram</a></li>
-        </ul>
+        <ul id="footerSocialList"></ul>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1081,12 +998,171 @@ function applyLanguage(lang) {
   document.querySelectorAll(".lang-btn").forEach(function(b) {
     b.classList.toggle("is-active", b.getAttribute("data-lang") === lang);
   });
-  var waText  = encodeURIComponent(whatsappMsg[lang]);
-  var waUrl   = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + waText;
-  var waBtn   = document.getElementById("whatsappBtn");
-  var waFooter = document.getElementById("whatsappFooterLink");
-  if (waBtn) waBtn.setAttribute("href", waUrl);
-  if (waFooter) waFooter.setAttribute("href", waUrl);
+  renderSocialLinks();
+  renderProjects();
+}
+
+/* ============================================================
+   Social links (Supabase-driven: WhatsApp, Instagram, Facebook,
+   TikTok, LinkedIn, Behance, Snapchat)
+   ============================================================ */
+var socialLinksData = null; // null = not loaded yet -> use fallback defaults
+var SOCIAL_ORDER = ["whatsapp","instagram","facebook","tiktok","linkedin","behance","snapchat"];
+var SOCIAL_LABELS = { whatsapp:"WhatsApp", instagram:"Instagram", facebook:"Facebook", tiktok:"TikTok", linkedin:"LinkedIn", behance:"Behance", snapchat:"Snapchat" };
+var SOCIAL_ICON_SVG = {
+  whatsapp:'<path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.6 14.3c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.7 1.9.8 2 .1.2.1.4 0 .6-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.7-.1 1.3z" fill="currentColor"/>',
+  instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/>',
+  facebook:'<path d="M15 8h2V4h-2c-2.2 0-4 1.8-4 4v2H9v4h2v6h4v-6h2.6l.4-4H15V8c0-.6.4-1 1-1z"/>',
+  tiktok:'<path d="M14 3v10.5a3 3 0 1 1-2.4-2.94"/><path d="M14 3c.5 2.5 2.2 4.2 5 4.5"/>',
+  linkedin:'<rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"/><line x1="11" y1="10" x2="11" y2="17"/>',
+  behance:'<rect x="2" y="7" width="9" height="10" rx="2"/><path d="M2 11h6M14 12c1-2 3-3 5-3 3 0 4.5 2 4.5 5.5H13.5c0 2 1.5 3 3.5 3 1.3 0 2.2-.5 3-1.3M14 12c0-2.5 1.7-4 4-4M13.5 14.5h8"/>',
+  snapchat:'<path d="M12 3c3 0 4.5 2.3 4.5 5v2c0 .4.3.9.9 1.2.8.4 1.6.5 1.6 1s-1 .9-1.9 1.2c-.5.2-.6.4-.5.8.2.7.9 1.6 2.4 1.8.3 0 .4.3.2.5-.4.5-1.4.8-2.5.9-.2 0-.3.1-.4.4-.1.5-.3.9-1.2.9-.6 0-1.1-.2-1.9-.2s-1.7.7-3.2.7-2.5-.7-3.2-.7-1.3.2-1.9.2c-.9 0-1.1-.4-1.2-.9-.1-.3-.2-.4-.4-.4-1.1-.1-2.1-.4-2.5-.9-.2-.2-.1-.5.2-.5 1.5-.2 2.2-1.1 2.4-1.8.1-.4 0-.6-.5-.8-.9-.3-1.9-.7-1.9-1.2s.8-.6 1.6-1c.6-.3.9-.8.9-1.2V8c0-2.7 1.5-5 4.5-5z"/>'
+};
+
+async function loadSocialLinks() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("social_links")
+      .select("platform,value,is_active,sort_order")
+      .order("sort_order", { ascending: true });
+    if (error) { console.error("Failed to load social links:", error); return; }
+    socialLinksData = data || [];
+    renderSocialLinks();
+  } catch (err) {
+    console.error("Social links error:", err);
+  }
+}
+
+function socialHref(platform, value) {
+  value = (value || "").trim();
+  if (!value) return null;
+  if (platform === "whatsapp") {
+    var digits = value.replace(/[^0-9]/g, "");
+    if (!digits) return null;
+    var text = encodeURIComponent(whatsappMsg[currentLang] || whatsappMsg.en);
+    return "https://wa.me/" + digits + "?text=" + text;
+  }
+  if (/^https?:\/\//i.test(value)) return value;
+  return "https://" + value.replace(/^\/+/, "");
+}
+
+function renderSocialLinks() {
+  // Fallback defaults if the DB table isn't loaded yet / migration not run
+  var rows = socialLinksData;
+  if (!rows) {
+    rows = [
+      { platform: "whatsapp", value: WHATSAPP_NUMBER, is_active: true },
+      { platform: "instagram", value: "", is_active: false },
+      { platform: "behance", value: "", is_active: false },
+      { platform: "linkedin", value: "", is_active: false }
+    ];
+  }
+  var active = SOCIAL_ORDER
+    .map(function(key){ return rows.find(function(r){ return r.platform === key; }); })
+    .filter(function(r){ return r && r.is_active; })
+    .map(function(r){ return { platform: r.platform, href: socialHref(r.platform, r.value) }; })
+    .filter(function(r){ return !!r.href; });
+
+  // Big WhatsApp CTA button
+  var wa = active.find(function(r){ return r.platform === "whatsapp"; });
+  var waBtn = document.getElementById("whatsappBtn");
+  if (waBtn) {
+    if (wa) { waBtn.setAttribute("href", wa.href); waBtn.style.display = ""; }
+    else { waBtn.style.display = "none"; }
+  }
+
+  // Round social icons (contact section) — everything except the big WhatsApp CTA
+  var iconRow = active.filter(function(r){ return r.platform !== "whatsapp"; });
+  var socialsEl = document.getElementById("contactSocials");
+  if (socialsEl) {
+    socialsEl.innerHTML = iconRow.map(function(r) {
+      return '<a href="' + r.href + '" target="_blank" rel="noopener" aria-label="' + SOCIAL_LABELS[r.platform] + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">' + SOCIAL_ICON_SVG[r.platform] + '</svg></a>';
+    }).join("");
+    initSocialSprings(); // re-bind hover-lift springs for freshly rendered icons
+  }
+
+  // Footer contact list
+  var footerEl = document.getElementById("footerSocialList");
+  if (footerEl) {
+    footerEl.innerHTML = active.map(function(r) {
+      return '<li><a href="' + r.href + '" target="_blank" rel="noopener">' + SOCIAL_LABELS[r.platform] + '</a></li>';
+    }).join("");
+  }
+}
+
+/* ============================================================
+   Portfolio projects (Supabase-driven, with real images + links)
+   ============================================================ */
+var projectsData = null;
+var PREVIEW_CLASSES = ["preview-featured","preview-2","preview-3","preview-4"];
+
+async function loadProjects() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("projects")
+      .select("id,title_ar,title_en,category_ar,category_en,desc_ar,desc_en,image_url,link_url,status,is_featured,sort_order")
+      .order("sort_order", { ascending: true });
+    if (error) { console.error("Failed to load projects:", error); return; }
+    projectsData = data || [];
+    renderProjects();
+  } catch (err) {
+    console.error("Projects error:", err);
+  }
+}
+
+function projectCardHTML(p, idx) {
+  var lang = currentLang;
+  var title = (lang === "ar" ? p.title_ar : p.title_en) || p.title_ar || p.title_en || "";
+  var cat = (lang === "ar" ? p.category_ar : p.category_en) || p.category_ar || p.category_en || "";
+  var desc = (lang === "ar" ? p.desc_ar : p.desc_en) || p.desc_ar || p.desc_en || "";
+  var isLive = p.status === "live" && p.link_url;
+  var previewClass = p.is_featured ? "preview-featured" : PREVIEW_CLASSES[(idx % 3) + 1];
+  var cardClass = "project-card reveal" + (p.is_featured ? " project-featured" : "");
+
+  var mediaHTML = p.image_url
+    ? '<img src="' + p.image_url + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">'
+    : '<div class="mock-browser" aria-hidden="true"><div class="mock-bar"><span></span><span></span><span></span></div>' +
+      '<div class="mock-body"><div class="mock-nav"></div><div class="mock-hero"></div>' +
+      '<div class="mock-grid"><div></div><div></div><div></div></div></div></div>';
+
+  var linkHTML = isLive
+    ? '<a href="' + p.link_url + '" target="_blank" rel="noopener" class="project-link"><span>' +
+      (translations[lang].proj_btn || "View Project") +
+      '</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>'
+    : '<span class="project-soon">' + (translations[lang].proj_soon || "Coming Soon") + '</span>';
+
+  return '<article class="' + cardClass + '">' +
+    '<div class="project-preview ' + previewClass + '">' + mediaHTML + '</div>' +
+    '<div class="project-info">' +
+      (cat ? '<span class="project-cat">' + cat + '</span>' : '') +
+      '<h3>' + title + '</h3>' +
+      (desc ? '<p>' + desc + '</p>' : '') +
+      linkHTML +
+    '</div></article>';
+}
+
+function renderProjects() {
+  var grid = document.getElementById("portfolioGrid");
+  if (!grid) return;
+  if (!projectsData || !projectsData.length) {
+    grid.innerHTML = '';
+    return;
+  }
+  grid.innerHTML = projectsData.map(projectCardHTML).join("");
+  // Re-init spring interactions + scroll reveal for the freshly injected cards
+  initCardSprings();
+  var items = grid.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io2 = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add("is-visible"); io2.unobserve(entry.target); }
+      });
+    }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
+    items.forEach(function(el){ io2.observe(el); });
+  } else {
+    items.forEach(function(el){ el.classList.add("is-visible"); });
+  }
 }
 
 function initLangSwitch() {
@@ -1608,15 +1684,17 @@ function initFooterYear() {
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function() {
   loadSiteContent();
-  applyLanguage("en");
+  applyLanguage("en");       // also does an initial renderSocialLinks()/renderProjects() with fallbacks
+  loadSocialLinks();
+  loadProjects();
   initLangSwitch();
   initLoader();
   initCursor();
   initButtonSprings();       // non-magnetic btn press spring
   initMagnetic();            // XY spring + press scale for .magnetic
-  initCardSprings();         // 3D tilt + lift for project cards
+  initCardSprings();         // 3D tilt + lift for project cards (re-run after loadProjects renders)
   initServiceIconSprings();  // scale + rotate for service icons
-  initSocialSprings();       // lift for social links
+  initSocialSprings();       // lift for social links (re-run after loadSocialLinks renders)
   initNav();                 // glass state + scroll-direction spring
   initReveal();
   initSpotlight();
