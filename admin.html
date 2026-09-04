@@ -23,8 +23,8 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .app{min-height:100vh;display:flex;}
 
 /* ── Sidebar ── */
-.sidebar{position:fixed;right:0;top:0;bottom:0;width:260px;padding:18px;z-index:20;}
-.side-inner{height:100%;background:rgba(255,255,255,.65);backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.88);box-shadow:var(--shadow);border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:6px;}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:260px;padding:18px;z-index:20;overflow-y:auto;}
+.side-inner{min-height:100%;background:rgba(255,255,255,.65);backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.88);box-shadow:var(--shadow);border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:6px;}
 .brand{display:flex;align-items:center;gap:11px;padding:6px 4px 20px;}
 .logo-mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));display:grid;place-items:center;color:#fff;font:800 22px 'Bricolage Grotesque';flex-shrink:0;}
 .brand-text b{font:800 18px 'Bricolage Grotesque';letter-spacing:-.04em;display:block;}
@@ -42,7 +42,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .btn-logout{width:100%;border:0;border-radius:13px;padding:12px;background:#15151d;color:#fff;font-weight:600;font-size:14px;}
 
 /* ── Main ── */
-.main{width:calc(100% - 260px);margin-right:260px;padding:26px 32px;min-height:100vh;}
+.main{width:calc(100% - 260px);margin-right:260px;padding:26px 32px;min-height:100vh;max-width:1400px;}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:26px;}
 .topbar-left .eyebrow{font-size:11px;color:var(--purple);font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
 .topbar-left h1{margin:4px 0 0;font-size:28px;letter-spacing:-.04em;font-family:'Bricolage Grotesque';}
@@ -507,7 +507,10 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
         <div class="field-hint">اتركه فارغاً لإخفاء زر "عرض المشروع" — يظهر تلقائياً حين تضع رابطاً</div>
       </div>
 
-      <button class="btn-primary" onclick="saveProject()">💾 حفظ المشروع</button>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button class="btn-primary" style="flex:1" onclick="saveProject()">💾 حفظ المشروع</button>
+        <button class="btn-red" style="flex:0 0 auto;padding:10px 18px" onclick="clearProject(projectEditingNum)">🗑️ تفريغ/حذف</button>
+      </div>
     </div>
   </div>
 </div>
@@ -866,8 +869,9 @@ function renderProjects() {
     const p = getProjectData(num);
     const hasImg = p.image.trim();
     const hasUrl = p.url.trim();
+    const isHidden = getVal(`proj${num}_hidden`).en === "true";
 
-    return `<div class="proj-card">
+    return `<div class="proj-card" style="${isHidden?'opacity:0.6':''}">
       <div class="proj-img-wrap">
         ${hasImg
           ? `<img src="${esc(p.image)}" alt="${esc(p.title.ar)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -880,12 +884,15 @@ function renderProjects() {
       <div class="proj-body">
         <div class="proj-meta">
           <span class="proj-num">مشروع #${num}</span>
-          <span class="proj-status ${hasUrl?'live':'draft'}">${hasUrl ? '🟢 له رابط' : '⚫ بدون رابط'}</span>
+          <span class="proj-status ${isHidden?'draft':(hasUrl?'live':'draft')}">${isHidden ? '🔴 مخفي' : (hasUrl ? '🟢 معروض ومكتمل' : '🟡 مسودة')}</span>
         </div>
         <h3>${esc(p.title.ar || p.title.en || 'مشروع '+num)}</h3>
         <p class="proj-cat">${esc(p.cat.ar || p.cat.en || '—')}</p>
         ${hasUrl ? `<a class="proj-url-preview" href="${esc(p.url)}" target="_blank" rel="noopener">🔗 ${esc(p.url)}</a>` : ''}
-        <button class="btn-primary" style="width:100%" onclick="openProjectModal(${num})">✏️ تعديل المشروع</button>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn-primary" style="flex:1" onclick="openProjectModal(${num})">✏️ تعديل</button>
+          <button class="btn-red" style="padding:8px 12px" onclick="clearProject(${num})" title="تفريغ/حذف المشروع">🗑️ تفريغ</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -993,6 +1000,36 @@ function updateImgPreview() {
   }
 }
 
+async function clearProject(num) {
+  if (!num) return;
+  if (!confirm(`هل أنت تأكد من تفريغ وحذف بيانات المشروع #${num} من الموقع؟`)) return;
+  const now = new Date().toISOString();
+
+  const fields = [
+    {key:`proj${num}_title`, ar:"", en:""},
+    {key:`proj${num}_cat`,   ar:"", en:""},
+    {key:`proj${num}_desc`,  ar:"", en:""},
+    {key:`proj${num}_url`,   ar:"", en:""},
+    {key:`proj${num}_image`, ar:"", en:""},
+    {key:`proj${num}_hidden`, ar:"", en:"true"},
+  ];
+
+  for (const f of fields) {
+    const existing = rows.find(r => r.key === f.key);
+    let error;
+    if (existing) {
+      ({error} = await db.from("site_content").update({ar:f.ar,en:f.en,updated_at:now}).eq("id",existing.id));
+    } else {
+      ({error} = await db.from("site_content").insert({section:"projects",key:f.key,ar:f.ar,en:f.en,updated_at:now}));
+    }
+    if (error) { console.error(error); toast(error.message); return; }
+  }
+
+  toast(`تم تفريغ وحذف المشروع #${num} بنجاح ✓`);
+  closeProjectModal();
+  await load();
+}
+
 async function saveProject() {
   const num = projectEditingNum;
   if (!num) return;
@@ -1004,6 +1041,7 @@ async function saveProject() {
     {key:`proj${num}_desc`,  ar:$("pm_desc_ar").value,  en:$("pm_desc_en").value},
     {key:`proj${num}_url`,   ar:"", en:$("pm_url").value.trim()},
     {key:`proj${num}_image`, ar:"", en:$("pm_image").value.trim()},
+    {key:`proj${num}_hidden`, ar:"", en:"false"},
   ];
 
   for (const f of fields) {

@@ -958,9 +958,9 @@ function applySiteSettings(){
   applyLink("behanceFooterLink",   siteSettings['behance_url']);
   applyLink("linkedinFooterLink",  siteSettings['linkedin_url']);
 
-  // Projects: URL + image
+  // Projects: URL + image + hidden status
   for(var i=1; i<=4; i++){
-    applyProject(i, siteSettings['proj'+i+'_url'], siteSettings['proj'+i+'_image']);
+    applyProject(i, siteSettings['proj'+i+'_url'], siteSettings['proj'+i+'_image'], siteSettings['proj'+i+'_hidden']);
   }
 }
 
@@ -975,7 +975,17 @@ function applyLink(id, url){
   }
 }
 
-function applyProject(num, url, imageUrl){
+function applyProject(num, url, imageUrl, hiddenFlag){
+  var cardEl = document.getElementById("proj"+num+"-link");
+  if(cardEl) cardEl = cardEl.closest(".project-card");
+
+  if(hiddenFlag === "true"){
+    if(cardEl) cardEl.style.display = "none";
+    return;
+  } else if(cardEl) {
+    cardEl.style.display = "";
+  }
+
   // Project link button
   var linkEl = document.getElementById("proj"+num+"-link");
   if(linkEl){
@@ -989,6 +999,8 @@ function applyProject(num, url, imageUrl){
   // Project image
   var previewEl = document.getElementById("proj"+num+"-preview");
   if(previewEl && imageUrl && imageUrl.trim()){
+    var existingImg = previewEl.querySelector(".proj-real-img");
+    if(existingImg) existingImg.remove();
     var img = document.createElement("img");
     img.src = imageUrl.trim();
     img.className = "proj-real-img";
