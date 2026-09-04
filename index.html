@@ -19,6 +19,25 @@
 <meta name="twitter:description" content="Modern, fast and high-performing websites built for businesses.">
 <meta name="theme-color" content="#F7F7FB">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 260'%3E%3Cpolygon points='100,0 195,260 138,260 116,140 84,140 62,260 5,260' fill='%234C7CFF'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "ABOUD WEB",
+  "description": "Modern web design and development studio building fast, high-performing websites for businesses.",
+  "url": "https://aboudweb.onrender.com",
+  "logo": "https://aboudweb.onrender.com/favicon.svg",
+  "priceRange": "$$",
+  "telephone": "+963951708141",
+  "sameAs": [],
+  "offers": {
+    "@type": "Offer",
+    "price": "100.00",
+    "priceCurrency": "USD",
+    "description": "Professional Business Website"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -186,7 +205,7 @@ body.has-custom-cursor,body.has-custom-cursor a,body.has-custom-cursor button{cu
 .nav-links{display:flex;align-items:center;gap:34px;}
 .nav-links a{font-size:.94rem;font-weight:500;color:var(--ink-dim);position:relative;padding-block:6px;transition:color .3s ease;}
 .nav-links a::after{content:"";position:absolute;inset-inline-start:0;bottom:0;height:1.5px;width:0;background:linear-gradient(90deg,var(--azure),var(--iris));transition:width .4s var(--ease);}
-.nav-links a:hover{color:var(--ink);}.nav-links a:hover::after{width:100%;}
+.nav-links a:hover, .nav-links a.is-active{color:var(--ink);}.nav-links a:hover::after, .nav-links a.is-active::after{width:100%;}
 .nav-actions{display:flex;align-items:center;gap:16px;}
 .lang-switch{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;}
 .lang-btn{color:var(--ink-faint);transition:color .3s ease;padding:4px 2px;}
@@ -361,6 +380,23 @@ html[dir="rtl"] .footer-col h4{font-family:var(--font-ar);letter-spacing:0;}
 .a-watermark polygon{fill:currentColor;}
 .magnetic{transform-origin:center;}
 ::selection{background:var(--iris);color:#fff;}
+
+/* Project Inquiry Modal */
+.inquiry-overlay{position:fixed;inset:0;background:rgba(20,20,31,.55);backdrop-filter:blur(12px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s var(--ease);}
+.inquiry-overlay.is-open{opacity:1;visibility:visible;}
+.inquiry-modal{background:var(--canvas-raised);border-radius:var(--r-xl);border:1px solid var(--glass-border);box-shadow:var(--shadow-lift);max-width:540px;width:100%;padding:32px;position:relative;transform:scale(.95) translateY(12px);transition:transform .35s var(--ease);max-height:90vh;overflow-y:auto;}
+.inquiry-overlay.is-open .inquiry-modal{transform:scale(1) translateY(0);}
+.inquiry-close{position:absolute;top:20px;inset-inline-end:20px;width:34px;height:34px;border-radius:50%;background:var(--canvas-sunken);display:grid;place-items:center;font-size:18px;line-height:1;color:var(--ink-dim);transition:background .2s ease;}
+.inquiry-close:hover{background:var(--line);color:var(--ink);}
+.inquiry-title{font-size:1.5rem;margin-bottom:8px;}
+.inquiry-sub{color:var(--ink-dim);font-size:.95rem;margin-bottom:24px;}
+.inquiry-form{display:flex;flex-direction:column;gap:16px;}
+.inquiry-field{display:flex;flex-direction:column;gap:6px;}
+.inquiry-field label{font-size:.85rem;font-weight:600;color:var(--ink);}
+.inquiry-field input,.inquiry-field select,.inquiry-field textarea{width:100%;border:1px solid var(--line-strong);background:var(--canvas);border-radius:var(--r-md);padding:12px 14px;font-family:inherit;font-size:.95rem;color:var(--ink);outline:none;transition:border-color .2s ease,box-shadow .2s ease;}
+.inquiry-field input:focus,.inquiry-field select:focus,.inquiry-field textarea:focus{border-color:var(--azure);box-shadow:0 0 0 3px rgba(76,124,255,.15);}
+.inquiry-field textarea{min-height:90px;resize:vertical;}
+.inquiry-submit{margin-top:10px;width:100%;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -657,6 +693,43 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </div>
   </section>
 
+  <!-- INQUIRY MODAL -->
+  <div class="inquiry-overlay" id="inquiryOverlay" aria-hidden="true">
+    <div class="inquiry-modal" role="dialog" aria-labelledby="modalTitle">
+      <button class="inquiry-close" id="inquiryCloseBtn" aria-label="Close">&times;</button>
+      <h3 class="inquiry-title" id="modalTitle" data-i18n="modal_title">Start Your Project</h3>
+      <p class="inquiry-sub" data-i18n="modal_sub">Fill out the brief details below and send directly via WhatsApp.</p>
+      <form class="inquiry-form" id="inquiryForm">
+        <div class="inquiry-field">
+          <label for="inquiryName" data-i18n="modal_name_label">Your Name</label>
+          <input type="text" id="inquiryName" required placeholder="John Doe">
+        </div>
+        <div class="inquiry-field">
+          <label for="inquiryService" data-i18n="modal_service_label">Service Needed</label>
+          <select id="inquiryService">
+            <option value="Website Design & Development" data-i18n="modal_opt_web">Website Design & Development</option>
+            <option value="E-commerce Store" data-i18n="modal_opt_ecom">E-commerce Store</option>
+            <option value="Custom Web App" data-i18n="modal_opt_custom">Custom Web App</option>
+            <option value="Maintenance & SEO" data-i18n="modal_opt_seo">Maintenance & SEO</option>
+          </select>
+        </div>
+        <div class="inquiry-field">
+          <label for="inquiryBudget" data-i18n="modal_budget_label">Estimated Budget</label>
+          <select id="inquiryBudget">
+            <option value="$100 - $300">$100 - $300</option>
+            <option value="$300 - $600">$300 - $600</option>
+            <option value="$600+">$600+</option>
+          </select>
+        </div>
+        <div class="inquiry-field">
+          <label for="inquiryNotes" data-i18n="modal_notes_label">Project Details / Message</label>
+          <textarea id="inquiryNotes" placeholder="Tell me briefly about your business and goals..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary inquiry-submit" data-i18n="modal_submit">Send Inquiry on WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
   <!-- CONTACT -->
   <section id="contact" class="section contact">
     <div class="container" style="position:relative;">
@@ -775,7 +848,18 @@ var translations = {
     contact_sub:"Tell me about your project on WhatsApp — I usually reply within a few hours.",
     contact_btn:"Contact me on WhatsApp",
     footer_tagline:"Digital experiences that make your business stand out.",
-    footer_contact_title:"Contact",footer_rights:"All rights reserved."
+    footer_contact_title:"Contact",footer_rights:"All rights reserved.",
+    modal_title:"Start Your Project",
+    modal_sub:"Fill out the brief details below and send directly via WhatsApp.",
+    modal_name_label:"Your Name",
+    modal_service_label:"Service Needed",
+    modal_opt_web:"Website Design & Development",
+    modal_opt_ecom:"E-commerce Store",
+    modal_opt_custom:"Custom Web App",
+    modal_opt_seo:"Maintenance & SEO",
+    modal_budget_label:"Estimated Budget",
+    modal_notes_label:"Project Details / Message",
+    modal_submit:"Send Inquiry on WhatsApp"
   },
   ar:{
     nav_home:"الرئيسية",nav_work:"أعمالي",nav_services:"الخدمات",nav_about:"من أنا",nav_contact:"تواصل",
@@ -812,7 +896,18 @@ var translations = {
     contact_sub:"احكيلي عن مشروعك عبر واتساب، بجاوب عادة خلال ساعات قليلة.",
     contact_btn:"تواصل معي عبر واتساب",
     footer_tagline:"تجارب رقمية تجعل مشروعك يظهر بشكل أقوى.",
-    footer_contact_title:"تواصل",footer_rights:"جميع الحقوق محفوظة."
+    footer_contact_title:"تواصل",footer_rights:"جميع الحقوق محفوظة.",
+    modal_title:"ابدأ مشروعك الآن",
+    modal_sub:"عبّئ التفاصيل البسيطة أدناه للإرسال مباشرة عبر واتساب.",
+    modal_name_label:"الاسم",
+    modal_service_label:"الخدمة المطلوبة",
+    modal_opt_web:"تصميم وتطوير موقع",
+    modal_opt_ecom:"متجر إلكتروني",
+    modal_opt_custom:"تطبيق أو موقع مخصص",
+    modal_opt_seo:"صيانة وتحسين محركات البحث",
+    modal_budget_label:"الميزانية التقريبية",
+    modal_notes_label:"تفاصيل المشروع / ملاحظات",
+    modal_submit:"إرسال الطلب عبر واتساب"
   }
 };
 
@@ -904,8 +999,19 @@ function applyProject(num, url, imageUrl){
 }
 
 /* ── Language ── */
+function detectInitialLang(){
+  try {
+    var saved = localStorage.getItem("aboud_web_lang");
+    if(saved === "ar" || saved === "en") return saved;
+  } catch(e){}
+  var navLang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+  if(navLang.startsWith("ar")) return "ar";
+  return "en";
+}
+
 function applyLanguage(lang){
   currentLang = lang;
+  try { localStorage.setItem("aboud_web_lang", lang); } catch(e){}
   var dict = translations[lang];
   document.documentElement.lang = lang;
   document.documentElement.dir = (lang==="ar") ? "rtl" : "ltr";
@@ -1054,6 +1160,24 @@ function initNav(){
   function closeMenu(){toggle.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");menu.classList.remove("is-open");if(navHidden){navSpring.to(0);navHidden=false;}}
   toggle.addEventListener("click",function(){var open=!menu.classList.contains("is-open");toggle.classList.toggle("is-open",open);toggle.setAttribute("aria-expanded",open?"true":"false");menu.classList.toggle("is-open",open);if(open&&navHidden){navSpring.to(0);navHidden=false;}});
   menu.querySelectorAll("[data-close-menu]").forEach(function(a){a.addEventListener("click",closeMenu);});
+
+  // Scroll spy active indicator
+  var navLinks = document.querySelectorAll(".nav-links a");
+  var sections = document.querySelectorAll("section[id]");
+  if("IntersectionObserver" in window && sections.length > 0){
+    var spyObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id = entry.target.getAttribute("id");
+          navLinks.forEach(function(link){
+            var href = link.getAttribute("href");
+            link.classList.toggle("is-active", href === "#" + id);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach(function(sec){ spyObserver.observe(sec); });
+  }
 }
 
 /* ── Reveal ── */
@@ -1120,10 +1244,79 @@ function initFooterYear(){
   if(el) el.textContent=new Date().getFullYear();
 }
 
+/* ── Inquiry Modal ── */
+function initInquiryModal(){
+  var overlay = document.getElementById("inquiryOverlay");
+  var closeBtn = document.getElementById("inquiryCloseBtn");
+  var form = document.getElementById("inquiryForm");
+  if(!overlay || !form) return;
+
+  function openModal(defaultService){
+    if(defaultService){
+      var sel = document.getElementById("inquiryService");
+      if(sel) sel.value = defaultService;
+    }
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal(){
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  // Connect CTA buttons
+  document.querySelectorAll("a[href='#contact']").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      var txt = btn.textContent.toLowerCase();
+      if(txt.includes("quote") || txt.includes("سعر") || txt.includes("started") || txt.includes("ابدأ") || txt.includes("together") || txt.includes("معًا")){
+        e.preventDefault();
+        openModal();
+      }
+    });
+  });
+
+  if(closeBtn) closeBtn.addEventListener("click", closeModal);
+  overlay.addEventListener("click", function(e){
+    if(e.target === overlay) closeModal();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && overlay.classList.contains("is-open")) closeModal();
+  });
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = document.getElementById("inquiryName").value.trim();
+    var service = document.getElementById("inquiryService").value;
+    var budget = document.getElementById("inquiryBudget").value;
+    var notes = document.getElementById("inquiryNotes").value.trim();
+
+    var text = (currentLang === "ar")
+      ? "مرحباً عبود! أود الاستفسار عن مشروع:\n" +
+        "• الاسم: " + name + "\n" +
+        "• الخدمة: " + service + "\n" +
+        "• الميزانية: " + budget + "\n" +
+        (notes ? "• التفاصيل: " + notes : "")
+      : "Hi Aboud! I'd like to inquire about a project:\n" +
+        "• Name: " + name + "\n" +
+        "• Service: " + service + "\n" +
+        "• Budget: " + budget + "\n" +
+        (notes ? "• Notes: " + notes : "");
+
+    var waNum = siteSettings['whatsapp_number'] || WHATSAPP_NUMBER;
+    var waUrl = "https://wa.me/" + waNum + "?text=" + encodeURIComponent(text);
+    window.open(waUrl, "_blank", "noopener");
+    closeModal();
+  });
+}
+
 /* ── Init ── */
 document.addEventListener("DOMContentLoaded",function(){
+  var initialLang = detectInitialLang();
   loadSiteContent();
-  applyLanguage("en");
+  applyLanguage(initialLang);
   initLangSwitch();
   initLoader();
   initCursor();
@@ -1137,6 +1330,7 @@ document.addEventListener("DOMContentLoaded",function(){
   initSpotlight();
   initHero3D();
   initFooterYear();
+  initInquiryModal();
 });
 
 })();

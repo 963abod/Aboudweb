@@ -1031,9 +1031,15 @@ function loadSocialForm() {
 }
 
 async function saveSocialSettings() {
+  const waVal = $("s_whatsapp").value.trim().replace(/[^\d]/g, '');
+  if($("s_whatsapp").value.trim() && !waVal){
+    toast("رقم الواتساب يجب أن يحتوي على أرقام فقط");
+    return;
+  }
+
   const now = new Date().toISOString();
   const fields = [
-    {key:"whatsapp_number", en:$("s_whatsapp").value.trim()},
+    {key:"whatsapp_number", en:waVal || $("s_whatsapp").value.trim()},
     {key:"instagram_url",   en:$("s_instagram").value.trim()},
     {key:"behance_url",     en:$("s_behance").value.trim()},
     {key:"linkedin_url",    en:$("s_linkedin").value.trim()},
