@@ -2,988 +2,1077 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ABOUD WEB — Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABOUD WEB — Admin Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f7f7fb;--card:rgba(255,255,255,.76);
-  --ink:#14141f;--muted:#77778b;--line:rgba(20,20,31,.09);
-  --blue:#4c7cff;--purple:#8b5cf6;--pink:#f0629e;--green:#22a06b;--red:#e5484d;--amber:#f4a63d;
-  --shadow:0 24px 70px -35px rgba(30,30,60,.28);--r:24px;
+:root {
+  --bg: #F4F5FB;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-solid: #FFFFFF;
+  --ink: #0F1221;
+  --ink-dim: #525875;
+  --ink-faint: #8E94B0;
+  --border: rgba(15, 18, 33, 0.08);
+  --border-strong: rgba(15, 18, 33, 0.16);
+  --blue: #3B82F6;
+  --purple: #7C3AED;
+  --pink: #EC4899;
+  --green: #10B981;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --shadow-sm: 0 4px 16px -4px rgba(20, 20, 40, 0.06);
+  --shadow-lg: 0 24px 60px -20px rgba(20, 20, 50, 0.18);
+  --r-xl: 24px; --r-lg: 16px; --r-md: 12px; --r-pill: 999px;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-ar: 'IBM Plex Sans Arabic', sans-serif;
+  --font-en: 'Inter', sans-serif;
 }
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:'IBM Plex Sans Arabic',sans-serif;color:var(--ink);}
-body{background:radial-gradient(circle at 10% 0%,rgba(76,124,255,.11),transparent 26%),radial-gradient(circle at 88% 8%,rgba(139,92,246,.1),transparent 26%),var(--bg);}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}
-.app{min-height:100vh;display:flex;}
 
-/* ── Sidebar ── */
-.sidebar{position:fixed;right:0;top:0;bottom:0;width:260px;padding:18px;z-index:20;}
-.side-inner{height:100%;background:rgba(255,255,255,.65);backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.88);box-shadow:var(--shadow);border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:6px;}
-.brand{display:flex;align-items:center;gap:11px;padding:6px 4px 20px;}
-.logo-mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));display:grid;place-items:center;color:#fff;font:800 22px 'Bricolage Grotesque';flex-shrink:0;}
-.brand-text b{font:800 18px 'Bricolage Grotesque';letter-spacing:-.04em;display:block;}
-.brand-text small{color:var(--muted);font-size:10px;}
-.nav-group{display:grid;gap:4px;}
-.nav-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);padding:8px 12px 2px;text-transform:uppercase;}
-.nav button{border:0;background:transparent;color:var(--muted);padding:11px 13px;border-radius:13px;text-align:right;display:flex;align-items:center;gap:10px;transition:.18s;width:100%;font-size:14px;}
-.nav button:hover,.nav button.active{background:#fff;color:var(--ink);box-shadow:0 6px 20px -14px rgba(20,20,60,.25);}
-.nav button.active{font-weight:600;}
-.nav-icon{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;font-size:12px;background:var(--line);flex-shrink:0;}
-.nav button.active .nav-icon{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;}
-.side-bottom{margin-top:auto;display:grid;gap:8px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-left:6px;}
-.status-tag{padding:10px 13px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.5);font-size:11px;color:var(--muted);}
-.btn-logout{width:100%;border:0;border-radius:13px;padding:12px;background:#15151d;color:#fff;font-weight:600;font-size:14px;}
-
-/* ── Main ── */
-.main{width:calc(100% - 260px);margin-right:260px;padding:26px 32px;min-height:100vh;}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:26px;}
-.topbar-left .eyebrow{font-size:11px;color:var(--purple);font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-.topbar-left h1{margin:4px 0 0;font-size:28px;letter-spacing:-.04em;font-family:'Bricolage Grotesque';}
-.preview-link{border:1px solid var(--line);background:rgba(255,255,255,.72);padding:10px 16px;border-radius:999px;text-decoration:none;color:var(--ink);font-size:13px;font-weight:500;transition:.2s;}
-.preview-link:hover{background:#fff;box-shadow:0 8px 24px -16px rgba(20,20,60,.2);}
-.view{display:none}.view.active{display:block;}
-
-/* ── Stat cards ── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
-.stat{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.88);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);}
-.stat-label{font-size:12px;color:var(--muted);margin-bottom:8px;}
-.stat-val{font-size:28px;font-weight:800;font-family:'Bricolage Grotesque';line-height:1;letter-spacing:-.04em;}
-.stat-sub{font-size:11px;color:var(--purple);margin-top:4px;}
-.stat.amber .stat-sub{color:var(--amber);}
-
-/* ── Panel ── */
-.panel{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.88);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
-.panel-head h2{margin:0;font-size:18px;font-family:'Bricolage Grotesque';}
-.panel-sub{color:var(--muted);font-size:12px;margin-top:2px;}
-.panel-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-
-/* ── Buttons ── */
-.btn-primary{border:0;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));color:#fff;border-radius:12px;padding:10px 16px;font-weight:700;font-size:13px;transition:.2s;}
-.btn-primary:hover{box-shadow:0 8px 24px -10px rgba(139,92,246,.5);}
-.btn-amber{border:0;background:linear-gradient(135deg,var(--amber) 0%,var(--pink) 100%);color:#fff;border-radius:12px;padding:10px 16px;font-weight:700;font-size:13px;}
-.btn-ghost{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;font-size:13px;color:var(--ink);transition:.2s;}
-.btn-ghost:hover{background:#f8f8fc;}
-.btn-red{border:1px solid rgba(229,72,77,.2);background:rgba(229,72,77,.06);color:var(--red);border-radius:12px;padding:10px 14px;font-size:13px;}
-
-/* ── Search / Filter toolbar ── */
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
-.tb-search,.tb-select{border:1px solid var(--line);background:rgba(255,255,255,.8);border-radius:12px;padding:10px 13px;outline:none;font-size:14px;}
-.tb-search{min-width:220px;flex:1;}
-
-/* ── Seed banner ── */
-.seed-banner{background:rgba(255,243,205,.75);border:1px solid rgba(244,166,61,.28);border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
-.seed-banner p{margin:0;font-size:13px;color:#7a5c00;}
-
-/* ── Content grid cards ── */
-.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.c-item{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:16px;padding:15px;}
-.c-item.is-default{background:rgba(255,243,205,.45);border-color:rgba(244,166,61,.22);}
-.c-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
-.c-tag{font-size:10px;padding:4px 9px;border-radius:999px;background:#efeff8;color:var(--purple);font-weight:600;}
-.c-badge{font-size:10px;padding:3px 8px;border-radius:999px;background:#fff3cd;color:#856404;font-weight:700;}
-.c-id{font-size:10px;color:var(--muted);}
-.c-item h3{margin:0 0 3px;font-size:14px;font-weight:600;}
-.c-item p{margin:0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.c-actions{display:flex;gap:6px;margin-top:12px;}
-.c-actions button{border:1px solid var(--line);background:#fff;padding:7px 11px;border-radius:10px;font-size:12px;transition:.15s;}
-.c-actions button:hover{background:#f5f5fc;}
-.c-actions .del{color:var(--red);border-color:rgba(229,72,77,.18);background:rgba(229,72,77,.04);}
-.c-actions .seed-btn{background:#fffbeb;border-color:rgba(244,166,61,.3);color:#92400e;}
-.empty{text-align:center;color:var(--muted);padding:40px 20px;grid-column:1/-1;}
-
-/* ── Projects view ── */
-.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-.proj-card{background:var(--card);border:1px solid rgba(255,255,255,.88);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);}
-.proj-img-wrap{height:190px;overflow:hidden;position:relative;flex-shrink:0;}
-.proj-img-wrap img{width:100%;height:100%;object-fit:cover;transition:.4s;}
-.proj-card:hover .proj-img-wrap img{transform:scale(1.04);}
-.proj-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:800 72px 'Bricolage Grotesque';color:rgba(255,255,255,.45);}
-.p1-bg{background:linear-gradient(145deg,var(--blue),var(--purple) 60%,var(--pink));}
-.p2-bg{background:linear-gradient(145deg,var(--purple),var(--pink));}
-.p3-bg{background:linear-gradient(145deg,var(--amber),var(--pink));}
-.p4-bg{background:linear-gradient(145deg,var(--blue),var(--amber));}
-.proj-body{padding:18px;}
-.proj-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.proj-num{font-size:11px;color:var(--muted);font-weight:700;}
-.proj-status{font-size:10px;padding:4px 10px;border-radius:999px;font-weight:700;}
-.proj-status.live{background:#d1fae5;color:#065f46;}
-.proj-status.draft{background:#f3f4f6;color:#6b7280;}
-.proj-body h3{margin:0 0 2px;font-size:15px;font-weight:700;font-family:'Bricolage Grotesque';}
-.proj-body .proj-cat{font-size:12px;color:var(--muted);margin-bottom:10px;}
-.proj-url-preview{font-size:11px;color:var(--blue);margin-bottom:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-
-/* ── Social settings ── */
-.social-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.social-field{background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:18px;padding:20px;}
-.social-field-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.social-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.ico-wa{background:linear-gradient(135deg,#25d366,#128c7e);}
-.ico-ig{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);}
-.ico-be{background:linear-gradient(135deg,#1769ff,#053eff);}
-.ico-li{background:linear-gradient(135deg,#0077b5,#005582);}
-.social-field-head div strong{font-size:14px;font-weight:700;display:block;}
-.social-field-head div span{font-size:11px;color:var(--muted);}
-.social-field input{width:100%;border:1px solid var(--line);background:#fafafe;border-radius:12px;padding:11px 13px;outline:none;font-size:14px;direction:ltr;text-align:left;}
-.social-field input:focus{border-color:var(--blue);}
-.social-hint{font-size:11px;color:var(--muted);margin-top:6px;}
-.social-save-row{margin-top:20px;display:flex;align-items:center;gap:14px;}
-
-/* ── Project Modal ── */
-.overlay{position:fixed;inset:0;background:rgba(14,14,24,.38);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50;}
-.overlay.show{display:flex;}
-.modal{width:min(680px,100%);max-height:92vh;overflow-y:auto;background:#fff;border-radius:28px;padding:26px;box-shadow:0 40px 100px -30px rgba(0,0,0,.35);}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.modal-head h2{margin:0;font-size:19px;font-family:'Bricolage Grotesque';}
-.modal-close{border:0;background:#f1f1f6;width:36px;height:36px;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;}
-.form-grid{display:grid;gap:14px;}
-.field label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px;}
-.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:#fafafe;border-radius:13px;padding:11px 13px;outline:none;font-size:14px;font-family:inherit;}
-.field input:focus,.field textarea:focus{border-color:var(--blue);}
-.field textarea{min-height:90px;resize:vertical;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.field-hint{font-size:11px;color:var(--muted);margin-top:4px;}
-.img-preview-box{border-radius:12px;overflow:hidden;display:none;margin-top:10px;border:1px solid var(--line);}
-.img-preview-box img{width:100%;height:180px;object-fit:cover;display:block;}
-.modal-divider{border:none;border-top:1px solid var(--line);margin:4px 0;}
-
-/* ── Login ── */
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;}
-.login-card{width:min(420px,100%);background:rgba(255,255,255,.78);backdrop-filter:blur(28px);border:1px solid #fff;border-radius:28px;padding:32px;box-shadow:var(--shadow);}
-.login-logo{width:50px;height:50px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));display:grid;place-items:center;color:#fff;font:800 24px 'Bricolage Grotesque';margin:0 auto 18px;}
-.login-card h1{text-align:center;margin:0;font:800 28px 'Bricolage Grotesque';}
-.login-card p{text-align:center;color:var(--muted);font-size:13px;margin:6px 0 22px;}
-.login-field{position:relative;margin-bottom:10px;}
-.login-field input{width:100%;padding:13px 44px 13px 13px;border:1px solid var(--line);border-radius:13px;outline:none;font-size:14px;transition:border-color .2s;}
-.login-field input:focus{border-color:var(--blue);}
-.login-field input.error{border-color:var(--red);}
-.toggle-pass{position:absolute;left:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;line-height:1;}
-.login-card .btn-primary{width:100%;padding:13px;font-size:15px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:8px;}
-.login-card .btn-primary:disabled{opacity:.65;cursor:not-allowed;}
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.login-msg{text-align:center;min-height:22px;font-size:13px;margin-top:10px;padding:8px 12px;border-radius:10px;display:none;}
-.login-msg.error{background:rgba(229,72,77,.08);color:var(--red);display:block;}
-.login-msg.success{background:rgba(34,160,107,.08);color:var(--green);display:block;}
-
-/* ── Toast ── */
-.toast{position:fixed;left:22px;bottom:22px;background:#171720;color:#fff;padding:11px 16px;border-radius:13px;box-shadow:0 14px 32px -18px #000;transform:translateY(18px);opacity:0;pointer-events:none;transition:.25s;z-index:200;font-size:13px;}
-.toast.show{transform:none;opacity:1;}
-
-/* ── Settings page ── */
-.settings-info{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:16px;padding:20px 22px;}
-.settings-info p{margin:0 0 10px;font-size:14px;color:var(--muted);}
-.settings-info p:last-child{margin:0;}
-.settings-info b{color:var(--ink);}
-
-/* ── Responsive ── */
-@media(max-width:960px){
-  .sidebar{width:76px;padding:10px;}
-  .side-inner{padding:10px;border-radius:20px;}
-  .brand-text,.nav button span,.nav-label,.status-tag{display:none;}
-  .brand{justify-content:center;}
-  .nav button{justify-content:center;padding:12px;}
-  .nav-icon{margin:0;}
-  .btn-logout span{display:none;}
-  .main{width:calc(100% - 76px);margin-right:76px;padding:18px;}
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .content-grid,.proj-grid,.social-grid{grid-template-columns:1fr;}
-  .field-row{grid-template-columns:1fr;}
+[data-theme="dark"] {
+  --bg: #0A0D18;
+  --surface: rgba(18, 23, 41, 0.82);
+  --surface-solid: #121729;
+  --ink: #F3F4F6;
+  --ink-dim: #9CA3AF;
+  --ink-faint: #6B7280;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --shadow-sm: 0 4px 16px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.65);
 }
-@media(max-width:540px){
-  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;}
-  .panel{padding:15px;}
-  .stat-val{font-size:22px;}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100vh; font-family: var(--font-ar); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+html[dir="ltr"] body { font-family: var(--font-en); }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+.hidden { display: none !important; }
+
+/* SVG Icons Utility */
+.icon { width: 18px; height: 18px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.icon-lg { width: 22px; height: 22px; }
+
+/* Layout Structure */
+.app { min-height: 100vh; display: flex; }
+
+/* Sidebar */
+.sidebar { position: fixed; top: 0; bottom: 0; inset-inline-start: 0; width: 270px; padding: 20px 16px; z-index: 100; transition: transform 0.3s ease; }
+.side-inner { height: 100%; background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--r-xl); padding: 20px 16px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow-lg); }
+
+.brand { display: flex; align-items: center; gap: 12px; padding: 4px 8px 18px; border-bottom: 1px solid var(--border); }
+.brand-logo { width: 42px; height: 42px; border-radius: var(--r-md); background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink)); display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 20px; flex-shrink: 0; }
+.brand-text h1 { margin: 0; font-family: var(--font-display); font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-text p { margin: 0; font-size: 11px; color: var(--ink-faint); font-weight: 500; }
+
+.nav-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-block: 10px; padding-inline-end: 4px; }
+.nav-group-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 4px 10px; }
+.nav-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: var(--r-md); color: var(--ink-dim); font-size: 13.5px; font-weight: 500; transition: all 0.2s ease; text-align: start; }
+.nav-btn:hover { background: var(--surface-solid); color: var(--ink); box-shadow: var(--shadow-sm); }
+.nav-btn.active { background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff; font-weight: 600; box-shadow: 0 8px 20px -6px rgba(124, 58, 237, 0.4); }
+.nav-btn.active .icon { stroke: #fff; }
+
+.side-bottom { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.status-pill { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--r-pill); font-size: 11px; color: var(--ink-dim); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+/* Main Section */
+.main { flex: 1; margin-inline-start: 270px; padding: 24px 32px; min-height: 100vh; transition: margin 0.3s ease; }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.topbar-title h2 { margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 800; letter-spacing: -0.03em; }
+.topbar-title p { margin: 4px 0 0; font-size: 13px; color: var(--ink-dim); }
+.topbar-controls { display: flex; align-items: center; gap: 12px; }
+
+/* Action Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--r-md); font-size: 13px; font-weight: 600; transition: all 0.2s ease; }
+.btn-primary { background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff; box-shadow: 0 8px 20px -6px rgba(59, 130, 246, 0.4); }
+.btn-primary:hover { box-shadow: 0 12px 24px -6px rgba(59, 130, 246, 0.6); opacity: 0.95; }
+.btn-secondary { background: var(--surface-solid); border: 1px solid var(--border); color: var(--ink); }
+.btn-secondary:hover { border-color: var(--border-strong); background: var(--bg); }
+.btn-danger { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--red); }
+.btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+.btn-icon-only { width: 38px; height: 38px; padding: 0; border-radius: 50%; border: 1px solid var(--border); background: var(--surface-solid); color: var(--ink); }
+.btn-icon-only:hover { background: var(--bg); border-color: var(--border-strong); }
+
+/* Views & Panels */
+.view { display: none; }
+.view.active { display: block; }
+
+.panel { background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 24px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.panel-head h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+.panel-head p { margin: 4px 0 0; font-size: 12px; color: var(--ink-dim); }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--glass-border); border-radius: var(--r-lg); padding: 18px 20px; box-shadow: var(--shadow-sm); }
+.stat-label { font-size: 12px; color: var(--ink-dim); margin-bottom: 6px; }
+.stat-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.stat-sub { font-size: 11px; color: var(--purple); margin-top: 6px; font-weight: 600; }
+
+/* Grid Cards & Lists */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+.item-card { background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; transition: all 0.2s ease; position: relative; display: flex; flex-direction: column; gap: 12px; }
+.item-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.item-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.item-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); background: rgba(124, 58, 237, 0.1); color: var(--purple); }
+.item-card h4 { margin: 0; font-size: 15px; font-weight: 700; font-family: var(--font-display); }
+.item-card p { margin: 0; font-size: 13px; color: var(--ink-dim); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item-media { width: 100%; height: 160px; border-radius: var(--r-md); overflow: hidden; background: var(--bg); border: 1px solid var(--border); }
+.item-media img { width: 100%; height: 100%; object-fit: cover; }
+.item-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* Toolbars & Form Controls */
+.toolbar { display: flex; items-center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.input-search, .input-select, .form-input, .form-textarea { width: 100%; border: 1px solid var(--border); background: var(--surface-solid); border-radius: var(--r-md); padding: 10px 14px; font-size: 13.5px; outline: none; transition: border-color 0.2s ease; }
+.input-search:focus, .input-select:focus, .form-input:focus, .form-textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+.input-search { flex: 1; min-width: 200px; }
+.input-select { width: auto; min-width: 150px; }
+.form-textarea { min-height: 90px; resize: vertical; }
+
+.form-grid { display: grid; gap: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--ink-dim); }
+.form-hint { font-size: 11px; color: var(--ink-faint); }
+
+/* Switch Toggle */
+.toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--r-md); }
+.toggle-switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: var(--border-strong); border-radius: var(--r-pill); transition: 0.3s; cursor: pointer; }
+.toggle-slider::before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+input:checked + .toggle-slider { background: var(--purple); }
+input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* Modal & Confirm Dialog */
+.modal-overlay { position: fixed; inset: 0; background: rgba(10, 13, 24, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+.modal-overlay.show { display: flex; }
+.modal-card { width: min(600px, 100%); max-height: 90vh; overflow-y: auto; background: var(--surface-solid); border: 1px solid var(--border-strong); border-radius: var(--r-xl); padding: 28px; box-shadow: var(--shadow-lg); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-head h3 { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+
+/* Toast Notifications */
+.toast { position: fixed; bottom: 24px; inset-inline-end: 24px; background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: var(--r-md); box-shadow: var(--shadow-lg); font-size: 13px; font-weight: 600; transform: translateY(20px); opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 2000; display: flex; align-items: center; gap: 10px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Login Screen */
+.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.login-card { width: min(400px, 100%); background: var(--surface); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--r-xl); padding: 36px; box-shadow: var(--shadow-lg); text-align: center; }
+.login-card h2 { margin: 12px 0 6px; font-family: var(--font-display); font-size: 24px; font-weight: 800; }
+.login-card p { margin: 0 0 24px; font-size: 13px; color: var(--ink-dim); }
+
+/* Responsive Adjustments */
+.mobile-nav-toggle { display: none; }
+@media (max-width: 960px) {
+  .sidebar { transform: translateX(100%); width: 260px; }
+  html[dir="ltr"] .sidebar { transform: translateX(-100%); }
+  .sidebar.show { transform: translateX(0) !important; }
+  .main { margin-inline-start: 0; padding: 18px; }
+  .mobile-nav-toggle { display: inline-flex; }
+  .form-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ======= LOGIN ======= -->
-<div id="loginScreen" class="login-wrap">
+<!-- ======= LOGIN SCREEN ======= -->
+<div id="loginScreen" class="login-screen">
   <div class="login-card">
-    <div class="login-logo">A</div>
-    <h1>ABOUD WEB</h1>
-    <p>لوحة تحكم الموقع</p>
-    <div class="login-field">
-      <input id="loginEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="username" oninput="clearLoginMsg()">
+    <div class="brand-logo" style="margin: 0 auto; width: 54px; height: 54px; font-size: 26px;">A</div>
+    <h2>ABOUD WEB</h2>
+    <p id="loginSubtitle">لوحة تحكم الموقع الإلكتروني</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <input id="loginEmail" type="email" class="form-input" placeholder="البريد الإلكتروني" dir="ltr">
+      </div>
+      <div class="form-group">
+        <input id="loginPass" type="password" class="form-input" placeholder="كلمة المرور" dir="ltr">
+      </div>
+      <button class="btn btn-primary" style="width:100%; padding: 12px;" onclick="handleLogin()">
+        <svg class="icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span id="loginBtnText">تسجيل الدخول</span>
+      </button>
+      <div id="loginError" style="color:var(--red); font-size:12px; display:none;"></div>
     </div>
-    <div class="login-field">
-      <input id="loginPass" type="password" placeholder="كلمة المرور" autocomplete="current-password" oninput="clearLoginMsg()">
-      <button type="button" class="toggle-pass" id="togglePass" onclick="togglePassword()" title="إظهار/إخفاء كلمة المرور">👁</button>
-    </div>
-    <button class="btn-primary" id="loginBtn" onclick="login()">
-      <span id="loginBtnText">تسجيل الدخول</span>
-      <span class="spinner" id="loginSpinner"></span>
-    </button>
-    <div class="login-msg" id="loginMsg"></div>
   </div>
 </div>
 
 <!-- ======= ADMIN APP ======= -->
 <div id="adminApp" class="app hidden">
 
-  <aside class="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
     <div class="side-inner">
       <div class="brand">
-        <div class="logo-mark">A</div>
-        <div class="brand-text"><b>ABOUD WEB</b><small>ADMIN PANEL</small></div>
+        <div class="brand-logo">A</div>
+        <div class="brand-text">
+          <h1>ABOUD WEB</h1>
+          <p>ADMIN DASHBOARD</p>
+        </div>
       </div>
 
-      <div class="nav-group">
-        <div class="nav-label">الرئيسية</div>
-        <nav class="nav">
-          <button class="active" data-view="overview"><span class="nav-icon">📊</span><span>نظرة عامة</span></button>
-        </nav>
-      </div>
+      <div class="nav-scroll">
+        <div class="nav-group-title" data-i18n="nav_main">الرئيسية</div>
+        <button class="nav-btn active" data-view="overview">
+          <svg class="icon"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span data-i18n="nav_overview">نظرة عامة</span>
+        </button>
 
-      <div class="nav-group">
-        <div class="nav-label">المحتوى</div>
-        <nav class="nav">
-          <button data-view="content"><span class="nav-icon">📝</span><span>النصوص</span></button>
-          <button data-view="projects"><span class="nav-icon">🗂️</span><span>المشاريع</span></button>
-          <button data-view="services"><span class="nav-icon">⚙️</span><span>الخدمات</span></button>
-        </nav>
-      </div>
+        <div class="nav-group-title" data-i18n="nav_content">إدارة المحتوى</div>
+        <button class="nav-btn" data-view="hero">
+          <svg class="icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span data-i18n="nav_hero">الصفحة الرئيسية</span>
+        </button>
+        <button class="nav-btn" data-view="services">
+          <svg class="icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span data-i18n="nav_services">الخدمات</span>
+        </button>
+        <button class="nav-btn" data-view="projects">
+          <svg class="icon"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span data-i18n="nav_projects">المشاريع</span>
+        </button>
+        <button class="nav-btn" data-view="testimonials">
+          <svg class="icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span data-i18n="nav_testimonials">آراء العملاء</span>
+        </button>
+        <button class="nav-btn" data-view="about">
+          <svg class="icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="nav_about">من نحن</span>
+        </button>
 
-      <div class="nav-group">
-        <div class="nav-label">الإعدادات</div>
-        <nav class="nav">
-          <button data-view="social"><span class="nav-icon">🔗</span><span>روابط التواصل</span></button>
-          <button data-view="settings"><span class="nav-icon">🛠️</span><span>الإعدادات</span></button>
-        </nav>
+        <div class="nav-group-title" data-i18n="nav_config">الإعدادات والروابط</div>
+        <button class="nav-btn" data-view="contact">
+          <svg class="icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span data-i18n="nav_contact">التواصل والاجتماعي</span>
+        </button>
+        <button class="nav-btn" data-view="location">
+          <svg class="icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span data-i18n="nav_location">الموقع وساعات العمل</span>
+        </button>
+        <button class="nav-btn" data-view="navigation">
+          <svg class="icon"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <span data-i18n="nav_navigation">الهيدر والفوتر</span>
+        </button>
+        <button class="nav-btn" data-view="seo">
+          <svg class="icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="nav_seo">إعدادات SEO</span>
+        </button>
+        <button class="nav-btn" data-view="media">
+          <svg class="icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span data-i18n="nav_media">إدارة الوسائط</span>
+        </button>
+        <button class="nav-btn" data-view="raw">
+          <svg class="icon"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span data-i18n="nav_raw">سجل المحتوى الخام</span>
+        </button>
       </div>
 
       <div class="side-bottom">
-        <div class="status-tag"><span class="status-dot"></span>Supabase متصل</div>
-        <button class="btn-logout" id="logoutBtn">خروج</button>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Supabase Connected</span>
+        </div>
+        <button class="btn btn-danger" style="width:100%" onclick="handleLogout()">
+          <svg class="icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span data-i18n="btn_logout">تسجيل الخروج</span>
+        </button>
       </div>
     </div>
   </aside>
 
+  <!-- Main Body -->
   <main class="main">
     <header class="topbar">
-      <div class="topbar-left">
-        <div class="eyebrow">ABOUD WEB / ADMIN</div>
-        <h1 id="pageTitle">نظرة عامة</h1>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="btn btn-icon-only mobile-nav-toggle" onclick="toggleMobileSidebar()">
+          <svg class="icon"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-title">
+          <h2 id="topbarViewTitle">نظرة عامة</h2>
+          <p id="topbarViewSub">إحصائيات وحالة قاعدة البيانات</p>
+        </div>
       </div>
-      <a class="preview-link" href="https://aboudweb.onrender.com" target="_blank">🌐 فتح الموقع</a>
+
+      <div class="topbar-controls">
+        <!-- Lang switch -->
+        <button class="btn btn-secondary" onclick="toggleAdminLanguage()">
+          <svg class="icon"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="langSwitchLabel">English</span>
+        </button>
+
+        <!-- Theme toggle -->
+        <button class="btn btn-icon-only" onclick="toggleTheme()" title="Theme Toggle">
+          <svg class="icon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+
+        <a class="btn btn-primary" href="index.html" target="_blank">
+          <svg class="icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span data-i18n="btn_preview">معاينة الموقع</span>
+        </a>
+      </div>
     </header>
 
-    <!-- ===== OVERVIEW ===== -->
+    <!-- OVERVIEW VIEW -->
     <section id="overview" class="view active">
       <div class="stats-grid">
-        <div class="stat">
-          <div class="stat-label">محفوظ في القاعدة</div>
-          <div class="stat-val" id="statTotal">0</div>
-          <div class="stat-sub">عنصر</div>
+        <div class="stat-card">
+          <div class="stat-label">إجمالي العناصر المحفوظة</div>
+          <div class="stat-val" id="statTotalDb">0</div>
+          <div class="stat-sub">عنصر في Supabase</div>
         </div>
-        <div class="stat amber">
-          <div class="stat-label">غير مرفوع بعد</div>
+        <div class="stat-card">
+          <div class="stat-label">المحتوى الافتراضي المتبقي</div>
           <div class="stat-val" id="statUnsynced">0</div>
-          <div class="stat-sub">افتراضي</div>
+          <div class="stat-sub" style="color:var(--amber)">يمكن رفعه بنقرة واحدة</div>
         </div>
-        <div class="stat">
-          <div class="stat-label">اكتمال العربي</div>
-          <div class="stat-val" id="statAr">0%</div>
-          <div class="stat-sub">من عناصر القاعدة</div>
+        <div class="stat-card">
+          <div class="stat-label">نسبة اكتمال اللغة العربية</div>
+          <div class="stat-val" id="statArPct">0%</div>
+          <div class="stat-sub">من النصوص المحفوظة</div>
         </div>
-        <div class="stat">
-          <div class="stat-label">English completion</div>
-          <div class="stat-val" id="statEn">0%</div>
-          <div class="stat-sub">of DB items</div>
+        <div class="stat-card">
+          <div class="stat-label">English Completion</div>
+          <div class="stat-val" id="statEnPct">0%</div>
+          <div class="stat-sub">of saved keys</div>
         </div>
-      </div>
-
-      <div id="seedBanner" class="seed-banner hidden">
-        <p>⚠️ يوجد محتوى افتراضي لم يُرفع بعد — لن تتمكن من تعديله حتى ترفعه.</p>
-        <button class="btn-amber" onclick="importAllDefaults()">رفع الكل للقاعدة</button>
       </div>
 
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h2>آخر التعديلات</h2>
-            <div class="panel-sub">آخر 6 عناصر محفوظة في قاعدة البيانات</div>
+            <h3>رفع المحتوى الافتراضي دفعة واحدة</h3>
+            <p>يمكنك رفع باقي نصوص الموقع الأساسية لقاعدة البيانات لتتمكن من تعديلها بحرية.</p>
           </div>
-          <button class="btn-primary" onclick="openContentModal()">+ إضافة محتوى</button>
+          <button class="btn btn-primary" onclick="seedAllDefaults()">
+            <svg class="icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>رفع الكل للقاعدة</span>
+          </button>
         </div>
-        <div id="recentList" class="content-grid"></div>
       </div>
-    </section>
 
-    <!-- ===== CONTENT ===== -->
-    <section id="content" class="view">
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h2>إدارة النصوص</h2>
-            <div class="panel-sub">العناصر الصفراء افتراضية — اضغط "تعديل وحفظ" لرفعها</div>
-          </div>
-          <div class="panel-actions">
-            <button class="btn-amber" onclick="importAllDefaults()">رفع الافتراضي</button>
-            <button class="btn-primary" onclick="openContentModal()">+ إضافة</button>
+            <h3>آخر التعديلات المحفوظة</h3>
+            <p>أحدث العناصر التي تم إنشاؤها أو تحديثها مؤخراً.</p>
           </div>
         </div>
-        <div class="toolbar">
-          <input id="searchInput" class="tb-search" placeholder="ابحث بالقسم أو المفتاح أو النص...">
-          <select id="sectionFilter" class="tb-select"><option value="">كل الأقسام</option></select>
-        </div>
-        <div id="contentList" class="content-grid"></div>
+        <div class="card-grid" id="recentGrid"></div>
       </div>
     </section>
 
-    <!-- ===== PROJECTS ===== -->
-    <section id="projects" class="view">
+    <!-- HERO & HOMEPAGE VIEW -->
+    <section id="hero" class="view">
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h2>إدارة المشاريع</h2>
-            <div class="panel-sub">اضغط على أي مشروع لتعديله — يمكنك إضافة رابط وصورة لكل مشروع</div>
+            <h3>إدارة الواجهة الرئيسية (Hero Section)</h3>
+            <p>عدّل العناوين والأزرار ونصوص الشعار الرئيسي</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveHeroSection()">حفظ التغييرات</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group"><label>العنوان الفرعي (العربي)</label><input id="hero_kicker_ar" class="form-input"></div>
+            <div class="form-group"><label>Sub-kicker (English)</label><input id="hero_kicker_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>الوصف الرئيسي (العربي)</label><textarea id="hero_sub_ar" class="form-textarea"></textarea></div>
+            <div class="form-group"><label>Main Subtext (English)</label><textarea id="hero_sub_en" class="form-textarea" dir="ltr"></textarea></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>نص زر الأداء (العربي)</label><input id="hero_btn_work_ar" class="form-input"></div>
+            <div class="form-group"><label>Work Button Label (English)</label><input id="hero_btn_work_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>نص زر التواصل (العربي)</label><input id="hero_btn_contact_ar" class="form-input"></div>
+            <div class="form-group"><label>Contact Button Label (English)</label><input id="hero_btn_contact_en" class="form-input" dir="ltr"></div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--border); margin: 10px 0;">
+          <h4>إظهار / إخفاء أقسام الموقع الرئيسي</h4>
+
+          <div class="toggle-group">
+            <span>إظهار قسم الهيرو الرئيسي</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_hero" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم الأعمال والمشاريع (Portfolio Carousel)</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_work" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم الخدمات</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_services" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم الأسعار</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_pricing" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم آراء العملاء</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_testimonials"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم من نحن</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_about" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-group">
+            <span>إظهار قسم التواصل</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_contact" checked><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="proj-grid" id="projectGrid"></div>
       </div>
     </section>
 
-    <!-- ===== SERVICES ===== -->
+    <!-- SERVICES VIEW -->
     <section id="services" class="view">
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h2>الخدمات</h2>
-            <div class="panel-sub">عناصر الخدمات المحفوظة في قاعدة البيانات</div>
+            <h3>إدارة الخدمات</h3>
+            <p>إضافة وتعديل وحذف كافة الخدمات مع تحديد السعر والترتيب</p>
           </div>
-          <button class="btn-primary" onclick="openContentModal({section:'services',key:''})">+ خدمة جديدة</button>
+          <button class="btn btn-primary" onclick="openServiceModal()">+ إضافة خدمة جديدة</button>
         </div>
-        <div id="serviceList" class="content-grid"></div>
+        <div class="toolbar">
+          <input id="serviceSearch" class="input-search" placeholder="ابحث في الخدمات..." oninput="renderServicesList()">
+        </div>
+        <div class="card-grid" id="servicesGrid"></div>
       </div>
     </section>
 
-    <!-- ===== SOCIAL ===== -->
-    <section id="social" class="view">
+    <!-- PROJECTS VIEW -->
+    <section id="projects" class="view">
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h2>روابط التواصل الاجتماعي</h2>
-            <div class="panel-sub">اترك الرابط فارغاً لإخفاء الأيقونة من الموقع تلقائياً</div>
+            <h3>إدارة معرض الأعمال والمشاريع</h3>
+            <p>أضف المشاريع وعدّل روابطها وصورها وتفاصيلها المكتملة</p>
           </div>
+          <button class="btn btn-primary" onclick="openProjectModal()">+ إضافة مشروع جديد</button>
         </div>
-        <div class="social-grid">
+        <div class="card-grid" id="projectsGrid"></div>
+      </div>
+    </section>
 
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico ico-wa">📱</div>
-              <div><strong>واتساب</strong><span>رقم الاتصال</span></div>
-            </div>
-            <input id="s_whatsapp" type="tel" placeholder="963951708141" dir="ltr">
-            <div class="social-hint">أدخل الرقم كاملاً بدون + أو 00 (مثال: 963951708141)</div>
+    <!-- TESTIMONIALS VIEW -->
+    <section id="testimonials" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>إدارة آراء العملاء والتقييمات</h3>
+            <p>أضف تقييمات العملاء لتعزيز موثوقية موقعك</p>
           </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico ico-ig">📸</div>
-              <div><strong>إنستاغرام</strong><span>رابط الصفحة</span></div>
-            </div>
-            <input id="s_instagram" type="url" placeholder="https://instagram.com/username" dir="ltr">
-            <div class="social-hint">اتركه فارغاً لإخفاء الأيقونة من الموقع</div>
-          </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico ico-be">🎨</div>
-              <div><strong>بيهانس</strong><span>رابط الملف الشخصي</span></div>
-            </div>
-            <input id="s_behance" type="url" placeholder="https://behance.net/username" dir="ltr">
-            <div class="social-hint">اتركه فارغاً لإخفاء الأيقونة من الموقع</div>
-          </div>
-
-          <div class="social-field">
-            <div class="social-field-head">
-              <div class="social-ico ico-li">💼</div>
-              <div><strong>لينكدإن</strong><span>رابط الملف الشخصي</span></div>
-            </div>
-            <input id="s_linkedin" type="url" placeholder="https://linkedin.com/in/username" dir="ltr">
-            <div class="social-hint">اتركه فارغاً لإخفاء الأيقونة من الموقع</div>
-          </div>
-
+          <button class="btn btn-primary" onclick="openTestimonialModal()">+ إضافة تقييم</button>
         </div>
-        <div class="social-save-row">
-          <button class="btn-primary" onclick="saveSocialSettings()">💾 حفظ الإعدادات</button>
-          <span id="socialSaveMsg" style="font-size:13px;color:var(--green);display:none">✓ تم الحفظ</span>
+        <div class="card-grid" id="testimonialsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT VIEW -->
+    <section id="about" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>إدارة صفحة "من نحن"</h3>
+            <p>عدّل التعريف الشخصي والخبرات وسرد القصة المكتوبة</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveAboutSection()">حفظ التفاصيل</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group"><label>المسمى الوظيفي (العربي)</label><input id="about_role_ar" class="form-input"></div>
+            <div class="form-group"><label>Role / Title (English)</label><input id="about_role_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>العنوان الرئيسي (العربي)</label><input id="about_title_ar" class="form-input"></div>
+            <div class="form-group"><label>Main Heading (English)</label><input id="about_title_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>النص التعريفي (العربي)</label><textarea id="about_body_ar" class="form-textarea"></textarea></div>
+            <div class="form-group"><label>Bio Body (English)</label><textarea id="about_body_en" class="form-textarea" dir="ltr"></textarea></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== SETTINGS ===== -->
-    <section id="settings" class="view">
+    <!-- CONTACT & SOCIAL VIEW -->
+    <section id="contact" class="view">
       <div class="panel">
-        <div class="panel-head"><h2>الإعدادات العامة</h2></div>
-        <div class="settings-info">
-          <p>الموقع: <b>aboudweb.onrender.com</b></p>
-          <p>قاعدة البيانات: <b>Supabase</b></p>
-          <p>الجلسة محمية بواسطة: <b>Supabase Auth</b></p>
+        <div class="panel-head">
+          <div>
+            <h3>روابط التواصل الاجتماعي والمعلومات</h3>
+            <p>عدّل أرقام التواصل والروابط الرسمية (اترك الرابط فارغاً لإخفاء الأيقونة)</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveContactSettings()">حفظ روابط التواصل</button>
         </div>
-        <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">رفع جميع النصوص الافتراضية لقاعدة البيانات دفعة واحدة:</p>
-        <button class="btn-amber" onclick="importAllDefaults()">📥 رفع المحتوى الافتراضي</button>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>رقم واتساب الرسمي (بدون + أو 00)</label>
+            <input id="whatsapp_number" class="form-input" placeholder="963951708141" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label>رابط حساب إنستاغرام</label>
+            <input id="instagram_url" class="form-input" placeholder="https://instagram.com/username" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label>رابط حساب بيهانس</label>
+            <input id="behance_url" class="form-input" placeholder="https://behance.net/username" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label>رابط حساب لينكدإن</label>
+            <input id="linkedin_url" class="form-input" placeholder="https://linkedin.com/in/username" dir="ltr">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOCATION VIEW -->
+    <section id="location" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>الموقع الجغرافي وساعات العمل</h3>
+            <p>أدخل العنوان وتفاصيل أوقات العمل ورابط خرائط جوجل</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveLocationSettings()">حفظ بيانات الموقع</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group"><label>العنوان الجغرافي (العربي)</label><input id="location_address_ar" class="form-input"></div>
+            <div class="form-group"><label>Address (English)</label><input id="location_address_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>ساعات العمل (العربي)</label><input id="location_hours_ar" class="form-input"></div>
+            <div class="form-group"><label>Working Hours (English)</label><input id="location_hours_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-group">
+            <label>رابط موقع جوجل ماب (Google Maps URL)</label>
+            <input id="location_maps_url" class="form-input" placeholder="https://maps.google.com/..." dir="ltr">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION VIEW -->
+    <section id="navigation" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>إدارة الهيدر والفوتر والحقوق</h3>
+            <p>تحكم بالروابط ونصوص الفوتر ورابط المطور</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveNavSettings()">حفظ الإعدادات</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group"><label>شعار الفوتر (العربي)</label><input id="footer_tagline_ar" class="form-input"></div>
+            <div class="form-group"><label>Footer Tagline (English)</label><input id="footer_tagline_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-group">
+            <label>رابط حقوق المطور "تصميم وتطوير عبود"</label>
+            <input id="dev_credit_url" class="form-input" placeholder="https://wa.me/963951708141" dir="ltr">
+          </div>
+          <div class="toggle-group">
+            <span>إظهار جملة ورابط المطور "تصميم وتطوير عبود" بالفوتر</span>
+            <label class="toggle-switch"><input type="checkbox" id="show_dev_credit" checked><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO VIEW -->
+    <section id="seo" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>إعدادات SEO والميتا تاج</h3>
+            <p>تحسين ظهور الموقع في محركات البحث ومواقع التواصل</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveSeoSettings()">حفظ SEO</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group"><label>Meta Title (العربي)</label><input id="seo_title_ar" class="form-input"></div>
+            <div class="form-group"><label>Meta Title (English)</label><input id="seo_title_en" class="form-input" dir="ltr"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Meta Description (العربي)</label><textarea id="seo_desc_ar" class="form-textarea"></textarea></div>
+            <div class="form-group"><label>Meta Description (English)</label><textarea id="seo_desc_en" class="form-textarea" dir="ltr"></textarea></div>
+          </div>
+          <div class="form-group">
+            <label>رابط صورة مشاركة الرابط (Open Graph Image URL)</label>
+            <input id="seo_og_image" class="form-input" placeholder="https://..." dir="ltr">
+          </div>
+          <div class="form-group">
+            <label>رابط أيقونة الموقع (Favicon URL)</label>
+            <input id="seo_favicon" class="form-input" placeholder="https://..." dir="ltr">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA VIEW -->
+    <section id="media" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>إدارة الصور والوسائط</h3>
+            <p>استخدم روابط الصور المباشرة (مثل Imgur أو روابط CDN) واستعرضها</p>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:20px;">
+          <label>معاينة رابط صورة</label>
+          <input id="mediaTestUrl" class="form-input" placeholder="ضع رابط صورة هنا للمعاينة..." dir="ltr" oninput="previewMediaUrl()">
+          <div id="mediaPreviewBox" style="margin-top:12px; display:none;" class="item-media">
+            <img id="mediaPreviewImg" src="">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAW CONTENT VIEW -->
+    <section id="raw" class="view">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>سجل مفاتيح المحتوى الخام (Raw Editor)</h3>
+            <p>إدارة كافة المفاتيح المحفوظة مباشرة</p>
+          </div>
+          <button class="btn btn-primary" onclick="openRawModal()">+ إضافة عنصر جديد</button>
+        </div>
+        <div class="toolbar">
+          <input id="rawSearch" class="input-search" placeholder="ابحث بالقسم أو المفتاح أو النص..." oninput="renderRawList()">
+          <select id="rawSectionFilter" class="input-select" onchange="renderRawList()"><option value="">كل الأقسام</option></select>
+        </div>
+        <div class="card-grid" id="rawGrid"></div>
       </div>
     </section>
 
   </main>
 </div>
 
-<!-- ===== CONTENT MODAL ===== -->
-<div id="contentModalOverlay" class="overlay">
-  <div class="modal">
+<!-- ======= MODALS ======= -->
+
+<!-- Raw Modal -->
+<div id="rawModal" class="modal-overlay">
+  <div class="modal-card">
     <div class="modal-head">
-      <h2 id="contentModalTitle">إضافة محتوى</h2>
-      <button class="modal-close" onclick="closeContentModal()">×</button>
+      <h3 id="rawModalTitle">تعديل عنصر</h3>
+      <button class="btn btn-icon-only" onclick="closeModal('rawModal')">✕</button>
     </div>
     <div class="form-grid">
-      <div class="field-row">
-        <div class="field"><label>القسم</label><input id="cm_section" placeholder="hero"></div>
-        <div class="field"><label>المفتاح</label><input id="cm_key" placeholder="title"></div>
+      <div class="form-row">
+        <div class="form-group"><label>القسم</label><input id="rm_section" class="form-input"></div>
+        <div class="form-group"><label>المفتاح Key</label><input id="rm_key" class="form-input" dir="ltr"></div>
       </div>
-      <div class="field"><label>النص العربي</label><textarea id="cm_ar"></textarea></div>
-      <div class="field"><label>English text</label><textarea id="cm_en"></textarea></div>
-      <button class="btn-primary" onclick="saveContent()">حفظ</button>
+      <div class="form-group"><label>النص العربي</label><textarea id="rm_ar" class="form-textarea"></textarea></div>
+      <div class="form-group"><label>English Text</label><textarea id="rm_en" class="form-textarea" dir="ltr"></textarea></div>
+      <button class="btn btn-primary" onclick="saveRawItem()">حفظ العنصر</button>
     </div>
   </div>
 </div>
 
-<!-- ===== PROJECT MODAL ===== -->
-<div id="projectModalOverlay" class="overlay">
-  <div class="modal">
+<!-- Project Modal -->
+<div id="projectModal" class="modal-overlay">
+  <div class="modal-card">
     <div class="modal-head">
-      <h2 id="pm_heading">تعديل المشروع</h2>
-      <button class="modal-close" onclick="closeProjectModal()">×</button>
+      <h3 id="pm_title_head">تعديل مشروع</h3>
+      <button class="btn btn-icon-only" onclick="closeModal('projectModal')">✕</button>
     </div>
     <div class="form-grid">
-
-      <!-- Image -->
-      <div class="field">
-        <label>📷 صورة المشروع — رابط URL مباشر</label>
-        <input id="pm_image" type="url" placeholder="https://i.imgur.com/xxxx.jpg" dir="ltr" oninput="updateImgPreview()">
-        <div class="field-hint">يمكنك رفع الصورة على <b>Imgur.com</b> ونسخ الرابط المباشر منها</div>
-        <div class="img-preview-box" id="pm_img_preview">
-          <img id="pm_img_tag" src="" alt="Preview">
-        </div>
+      <div class="form-group"><label>رقم المشروع (1 - 4)</label><input id="pm_num" type="number" min="1" max="10" class="form-input"></div>
+      <div class="form-row">
+        <div class="form-group"><label>اسم المشروع (العربي)</label><input id="pm_title_ar" class="form-input"></div>
+        <div class="form-group"><label>Project Title (English)</label><input id="pm_title_en" class="form-input" dir="ltr"></div>
       </div>
-
-      <hr class="modal-divider">
-
-      <!-- Titles -->
-      <div class="field-row">
-        <div class="field"><label>العنوان بالعربي</label><input id="pm_title_ar" placeholder="ورشة الهيثم للكهرباء"></div>
-        <div class="field"><label>Title in English</label><input id="pm_title_en" placeholder="Al-Haytham Workshop"></div>
+      <div class="form-row">
+        <div class="form-group"><label>التصنيف (العربي)</label><input id="pm_cat_ar" class="form-input"></div>
+        <div class="form-group"><label>Category (English)</label><input id="pm_cat_en" class="form-input" dir="ltr"></div>
       </div>
-
-      <!-- Category -->
-      <div class="field-row">
-        <div class="field"><label>التصنيف بالعربي</label><input id="pm_cat_ar" placeholder="موقع أعمال"></div>
-        <div class="field"><label>Category in English</label><input id="pm_cat_en" placeholder="Business Website"></div>
+      <div class="form-row">
+        <div class="form-group"><label>الوصف (العربي)</label><textarea id="pm_desc_ar" class="form-textarea"></textarea></div>
+        <div class="form-group"><label>Description (English)</label><textarea id="pm_desc_en" class="form-textarea" dir="ltr"></textarea></div>
       </div>
-
-      <!-- Description -->
-      <div class="field-row">
-        <div class="field"><label>الوصف بالعربي</label><textarea id="pm_desc_ar" style="min-height:70px"></textarea></div>
-        <div class="field"><label>Description in English</label><textarea id="pm_desc_en" style="min-height:70px"></textarea></div>
-      </div>
-
-      <hr class="modal-divider">
-
-      <!-- URL -->
-      <div class="field">
-        <label>🔗 رابط الموقع المكتمل</label>
-        <input id="pm_url" type="url" placeholder="https://client-site.com" dir="ltr">
-        <div class="field-hint">اتركه فارغاً لإخفاء زر "عرض المشروع" — يظهر تلقائياً حين تضع رابطاً</div>
-      </div>
-
-      <button class="btn-primary" onclick="saveProject()">💾 حفظ المشروع</button>
+      <div class="form-group"><label>رابط المشروع المكتمل</label><input id="pm_url" class="form-input" dir="ltr"></div>
+      <div class="form-group"><label>رابط صورة المشروع Direct Image URL</label><input id="pm_image" class="form-input" dir="ltr"></div>
+      <button class="btn btn-primary" onclick="saveProjectForm()">حفظ المشروع</button>
     </div>
   </div>
 </div>
 
-<div id="toast" class="toast"></div>
+<!-- Confirm Modal -->
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-card" style="max-width:400px; text-align:center;">
+    <h3>تأكيد الحذف</h3>
+    <p style="margin:12px 0 20px; color:var(--ink-dim);" id="confirmModalMsg">هل أنت تأكد من حذف هذا العنصر نهائياً؟</p>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button class="btn btn-secondary" onclick="closeModal('confirmModal')">إلغاء</button>
+      <button class="btn btn-danger" id="confirmModalBtn">حذف نهائي</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast">
+  <svg class="icon"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">تم الحفظ بنجاح</span>
+</div>
 
 <script>
 const SUPABASE_URL  = "https://pblbdxocvnkmakrpomsb.supabase.co";
 const SUPABASE_ANON = "sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-let rows = [];
-let contentEditingId = null;
-let projectEditingNum = null;
+let dbRows = [];
+let editingRawId = null;
+let currentLang = "ar";
 
-/* ──────────────── DEFAULT CONTENT ──────────────── */
 const DEFAULT_CONTENT = [
-  // nav
   {section:"nav",key:"nav_home",ar:"الرئيسية",en:"Home"},
   {section:"nav",key:"nav_work",ar:"أعمالي",en:"Work"},
   {section:"nav",key:"nav_services",ar:"الخدمات",en:"Services"},
   {section:"nav",key:"nav_about",ar:"من أنا",en:"About"},
   {section:"nav",key:"nav_contact",ar:"تواصل",en:"Contact"},
-  // hero
   {section:"hero",key:"hero_kicker",ar:"استوديو تصميم وتطوير المواقع",en:"Web Design & Development Studio"},
   {section:"hero",key:"hero_sub",ar:"نصنع تجارب رقمية تجعل مشروعك يظهر بشكل أقوى.",en:"We build digital experiences that make your business stand out."},
   {section:"hero",key:"hero_btn_work",ar:"شاهد أعمالي",en:"View My Work"},
   {section:"hero",key:"hero_btn_contact",ar:"لنعمل معًا",en:"Let's Work Together"},
-  // work section headings
   {section:"work",key:"work_kicker",ar:"أعمال مختارة",en:"Selected Work"},
   {section:"work",key:"work_title",ar:"مشاريع مبنية لتحقق نتائج",en:"Projects built to perform"},
-  // project 1
-  {section:"projects",key:"proj1_cat",ar:"موقع أعمال",en:"Business Website"},
-  {section:"projects",key:"proj1_title",ar:"ورشة الهيثم للكهرباء",en:"Al-Haytham Electric Workshop"},
-  {section:"projects",key:"proj1_desc",ar:"حضور رقمي احترافي وواضح لورشة كهرباء، مصمم ليكسب ثقة الزوار ويجلب عملاء جدد.",en:"A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers."},
-  {section:"projects",key:"proj1_url",ar:"",en:""},
-  {section:"projects",key:"proj1_image",ar:"",en:""},
-  // project 2
-  {section:"projects",key:"proj2_cat",ar:"قريبًا",en:"Coming Soon"},
-  {section:"projects",key:"proj2_title",ar:"متجر إلكتروني",en:"E-Commerce Store"},
-  {section:"projects",key:"proj2_desc",ar:"قريبًا سيتم عرض مشروع جديد هنا.",en:"A new project will be featured here soon."},
-  {section:"projects",key:"proj2_url",ar:"",en:""},
-  {section:"projects",key:"proj2_image",ar:"",en:""},
-  // project 3
-  {section:"projects",key:"proj3_cat",ar:"قريبًا",en:"Coming Soon"},
-  {section:"projects",key:"proj3_title",ar:"مطاعم وضيافة",en:"Restaurant & Hospitality"},
-  {section:"projects",key:"proj3_desc",ar:"قريبًا سيتم عرض مشروع جديد هنا.",en:"A new project will be featured here soon."},
-  {section:"projects",key:"proj3_url",ar:"",en:""},
-  {section:"projects",key:"proj3_image",ar:"",en:""},
-  // project 4
-  {section:"projects",key:"proj4_cat",ar:"قريبًا",en:"Coming Soon"},
-  {section:"projects",key:"proj4_title",ar:"موقع شخصي",en:"Personal Portfolio"},
-  {section:"projects",key:"proj4_desc",ar:"قريبًا سيتم عرض مشروع جديد هنا.",en:"A new project will be featured here soon."},
-  {section:"projects",key:"proj4_url",ar:"",en:""},
-  {section:"projects",key:"proj4_image",ar:"",en:""},
-  // shared project strings
-  {section:"projects",key:"proj_btn",ar:"عرض المشروع",en:"View Project"},
-  // services
   {section:"services",key:"services_kicker",ar:"ماذا أقدّم",en:"What I Do"},
   {section:"services",key:"services_title",ar:"الخدمات",en:"Services"},
   {section:"services",key:"services_sub",ar:"كل ما تحتاجه لإطلاق مشروعك ونموه أونلاين، من الألف إلى الياء.",en:"Everything you need to launch and grow online, handled end to end."},
-  {section:"services",key:"svc1_title",ar:"تصميم المواقع",en:"Website Design"},
-  {section:"services",key:"svc1_desc",ar:"واجهات نظيفة وعصرية مبنية حول علامتك ومستخدميك.",en:"Clean, modern interfaces crafted around your brand and your users."},
-  {section:"services",key:"svc2_title",ar:"تطوير المواقع",en:"Website Development"},
-  {section:"services",key:"svc2_desc",ar:"بناء سريع وموثوق باستخدام تقنيات حديثة وقابلة للتوسع.",en:"Fast, reliable builds using modern, scalable technology."},
-  {section:"services",key:"svc3_title",ar:"المتاجر الإلكترونية",en:"E-commerce"},
-  {section:"services",key:"svc3_desc",ar:"متاجر إلكترونية مصممة لتحويل الزوار إلى عملاء.",en:"Online stores designed to convert visitors into customers."},
-  {section:"services",key:"svc4_title",ar:"تطوير مخصص",en:"Custom Web Development"},
-  {section:"services",key:"svc4_desc",ar:"حلول مصممة خصيصًا لمتطلبات عملك الفريدة.",en:"Tailored solutions for unique business requirements."},
-  {section:"services",key:"svc5_title",ar:"تحسين محركات البحث",en:"SEO"},
-  {section:"services",key:"svc5_desc",ar:"أسس منظمة ومحسّنة تساعدك على الظهور.",en:"Structured, optimized foundations that help you get found."},
-  {section:"services",key:"svc6_title",ar:"صيانة المواقع",en:"Website Maintenance"},
-  {section:"services",key:"svc6_desc",ar:"دعم مستمر ليبقى موقعك سريعًا وآمنًا ومحدثًا.",en:"Ongoing support to keep your site fast, secure and current."},
-  // pricing
   {section:"pricing",key:"pricing_kicker",ar:"الأسعار",en:"Pricing"},
   {section:"pricing",key:"pricing_title",ar:"أسعار بسيطة وواضحة",en:"Simple, transparent pricing"},
   {section:"pricing",key:"pricing_sub",ar:"تبدأ الأسعار من 250$، بدون مفاجآت.",en:"Starting prices from $250+. No hidden surprises."},
-  {section:"pricing",key:"price1_title",ar:"موقع احترافي",en:"Professional Website"},
-  {section:"pricing",key:"price1_prefix",ar:"يبدأ من",en:"Starting from"},
-  {section:"pricing",key:"price1_desc",ar:"موقع إلكتروني كامل ومصمم باحترافية، متجاوب وسريع وجاهز لتمثيل عملك على الإنترنت.",en:"A complete, professionally designed website — responsive, fast, and ready to represent your business online."},
-  {section:"pricing",key:"price1_f1",ar:"تصميم مخصص",en:"Custom design"},
-  {section:"pricing",key:"price1_f2",ar:"متجاوب مع الجوال",en:"Mobile responsive"},
-  {section:"pricing",key:"price1_f3",ar:"أداء سريع",en:"Fast performance"},
-  {section:"pricing",key:"price1_f4",ar:"إعداد SEO أساسي",en:"Basic SEO setup"},
-  {section:"pricing",key:"price1_f5",ar:"ربط مع واتساب",en:"WhatsApp integration"},
-  {section:"pricing",key:"price1_btn",ar:"ابدأ الآن",en:"Get Started"},
-  {section:"pricing",key:"price2_title",ar:"عرض سعر مخصص",en:"Custom Quote"},
-  {section:"pricing",key:"price2_desc",ar:"للمشاريع الأكبر أو المتاجر الإلكترونية أو الميزات المتقدمة، كل عرض سعر يُصمم خصيصًا لأهدافك.",en:"For larger projects, online stores, or advanced functionality — every quote is tailored to your goals."},
-  {section:"pricing",key:"price2_btn",ar:"اطلب عرض سعر",en:"Request a Quote"},
-  // about
   {section:"about",key:"about_role",ar:"مصمم ومطوّر مواقع",en:"Web Designer & Developer"},
   {section:"about",key:"about_title",ar:"أنا عبود.",en:"I'm Aboud."},
   {section:"about",key:"about_body",ar:"أصمم وأطوّر مواقع إلكترونية وتجارب رقمية عصرية للأعمال التي تريد أن تتميز على الإنترنت. كل مشروع ينال نفس الاهتمام بالتفاصيل، من أول فكرة حتى آخر سطر برمجي.",en:"I design and build modern websites and digital experiences for businesses that want to stand out online. Every project gets the same attention to detail — from the first sketch to the final line of code."},
-  // contact
   {section:"contact",key:"contact_kicker",ar:"تواصل",en:"Contact"},
   {section:"contact",key:"contact_title",ar:"جاهز نخلي مشروعك يظهر بشكل أقوى؟",en:"Ready to build something better?"},
   {section:"contact",key:"contact_sub",ar:"احكيلي عن مشروعك عبر واتساب، بجاوب عادة خلال ساعات قليلة.",en:"Tell me about your project on WhatsApp — I usually reply within a few hours."},
   {section:"contact",key:"contact_btn",ar:"تواصل معي عبر واتساب",en:"Contact me on WhatsApp"},
-  // footer
   {section:"footer",key:"footer_tagline",ar:"تجارب رقمية تجعل مشروعك يظهر بشكل أقوى.",en:"Digital experiences that make your business stand out."},
-  {section:"footer",key:"footer_contact_title",ar:"تواصل",en:"Contact"},
   {section:"footer",key:"footer_rights",ar:"جميع الحقوق محفوظة.",en:"All rights reserved."},
-  // settings (social)
   {section:"settings",key:"whatsapp_number",ar:"",en:"963951708141"},
   {section:"settings",key:"instagram_url",ar:"",en:""},
   {section:"settings",key:"behance_url",ar:"",en:""},
-  {section:"settings",key:"linkedin_url",ar:"",en:""},
+  {section:"settings",key:"linkedin_url",ar:"",en:""}
 ];
 
-/* ──────────────── HELPERS ──────────────── */
-const $ = id => document.getElementById(id);
-function toast(t, duration=2800) {
-  $("toast").textContent = t;
+function $(id) { return document.getElementById(id); }
+
+function toast(msg) {
+  $("toastMsg").textContent = msg;
   $("toast").classList.add("show");
-  setTimeout(() => $("toast").classList.remove("show"), duration);
-}
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g, m=>
-    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])
-  );
+  setTimeout(() => $("toast").classList.remove("show"), 3000);
 }
 
-/* ──────────────── DATA ──────────────── */
-function getUnsyncedDefaults() {
-  const dbKeys = new Set(rows.map(r => r.key));
-  return DEFAULT_CONTENT.filter(d => !dbKeys.has(d.key));
-}
-
-function getVal(key) {
-  const row = rows.find(r => r.key === key);
-  if (row) return { ar: row.ar||'', en: row.en||'' };
+function getValue(key) {
+  const row = dbRows.find(r => r.key === key);
+  if (row) return { ar: row.ar||"", en: row.en||"" };
   const def = DEFAULT_CONTENT.find(d => d.key === key);
-  return def ? { ar: def.ar||'', en: def.en||'' } : { ar:'', en:'' };
+  return def ? { ar: def.ar||"", en: def.en||"" } : { ar:"", en:"" };
 }
 
-function getProjectData(num) {
-  return {
-    num,
-    title : getVal(`proj${num}_title`),
-    cat   : getVal(`proj${num}_cat`),
-    desc  : getVal(`proj${num}_desc`),
-    url   : getVal(`proj${num}_url`).en,
-    image : getVal(`proj${num}_image`).en,
-  };
-}
-
-/* ──────────────── AUTH ──────────────── */
-
-// ترجمة أخطاء Supabase الشائعة للعربية
-const AUTH_ERRORS = {
-  "Invalid login credentials":    "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
-  "Email not confirmed":          "البريد الإلكتروني لم يتم تأكيده بعد. تحقق من صندوق الوارد.",
-  "Too many requests":            "طلبات كثيرة جداً، انتظر قليلاً ثم حاول مجدداً.",
-  "User not found":               "هذا الحساب غير موجود.",
-  "Invalid email":                "صيغة البريد الإلكتروني غير صحيحة.",
-  "Password should be at least":  "كلمة المرور قصيرة جداً.",
-  "Network request failed":       "تعذر الاتصال بالخادم. تحقق من الإنترنت.",
-  "Failed to fetch":              "تعذر الاتصال بالخادم. تحقق من الإنترنت.",
-};
-
-function translateError(msg) {
-  for (const [en, ar] of Object.entries(AUTH_ERRORS)) {
-    if (msg && msg.toLowerCase().includes(en.toLowerCase())) return ar;
-  }
-  return msg || "حدث خطأ غير متوقع، حاول مجدداً.";
-}
-
-function showLoginMsg(text, type="error") {
-  const el = $("loginMsg");
-  el.textContent = text;
-  el.className = "login-msg " + type;
-}
-
-function clearLoginMsg() {
-  const el = $("loginMsg");
-  el.textContent = "";
-  el.className = "login-msg";
-  $("loginEmail").classList.remove("error");
-  $("loginPass").classList.remove("error");
-}
-
-function setLoginLoading(loading) {
-  const btn = $("loginBtn");
-  const txt = $("loginBtnText");
-  const spin = $("loginSpinner");
-  btn.disabled = loading;
-  $("loginEmail").disabled = loading;
-  $("loginPass").disabled = loading;
-  txt.textContent = loading ? "جاري الدخول..." : "تسجيل الدخول";
-  spin.style.display = loading ? "block" : "none";
-}
-
-function togglePassword() {
-  const input = $("loginPass");
-  const btn   = $("togglePass");
-  if (input.type === "password") {
-    input.type = "text";
-    btn.textContent = "🙈";
+async function upsertKey(section, key, arVal, enVal) {
+  const now = new Date().toISOString();
+  const existing = dbRows.find(r => r.key === key);
+  let error;
+  if (existing) {
+    ({ error } = await db.from("site_content").update({ ar: arVal, en: enVal, updated_at: now }).eq("id", existing.id));
   } else {
-    input.type = "password";
-    btn.textContent = "👁";
+    ({ error } = await db.from("site_content").insert({ section, key, ar: arVal, en: enVal, updated_at: now }));
   }
+  if (error) { console.error(error); toast("خطأ في التحديث: " + error.message); return false; }
+  return true;
 }
 
-async function login() {
-  clearLoginMsg();
-
-  const email    = $("loginEmail").value.trim();
+/* Auth Logic */
+async function handleLogin() {
+  const email = $("loginEmail").value.trim();
   const password = $("loginPass").value;
+  const errEl = $("loginError");
+  errEl.style.display = "none";
 
-  // Validation
-  if (!email) {
-    $("loginEmail").classList.add("error");
-    showLoginMsg("أدخل البريد الإلكتروني.");
-    $("loginEmail").focus();
-    return;
-  }
-  if (!email.includes("@")) {
-    $("loginEmail").classList.add("error");
-    showLoginMsg("صيغة البريد الإلكتروني غير صحيحة.");
-    $("loginEmail").focus();
-    return;
-  }
-  if (!password) {
-    $("loginPass").classList.add("error");
-    showLoginMsg("أدخل كلمة المرور.");
-    $("loginPass").focus();
+  if (!email || !password) {
+    errEl.textContent = "يرجى أدخال البريد وكلمة المرور";
+    errEl.style.display = "block";
     return;
   }
 
-  setLoginLoading(true);
-
-  try {
-    const {data, error} = await db.auth.signInWithPassword({email, password});
-
-    if (error) {
-      showLoginMsg(translateError(error.message));
-      $("loginPass").value = "";
-      $("loginPass").classList.add("error");
-      setLoginLoading(false);
-      return;
-    }
-
-    if (!data.session) {
-      showLoginMsg("تعذر إنشاء الجلسة، حاول مجدداً.");
-      setLoginLoading(false);
-      return;
-    }
-
-    showLoginMsg("تم الدخول بنجاح! جاري التحميل...", "success");
-    setTimeout(showAdmin, 400);
-
-  } catch(err) {
-    showLoginMsg(translateError(err.message));
-    setLoginLoading(false);
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
+  if (error) {
+    errEl.textContent = error.message;
+    errEl.style.display = "block";
+    return;
   }
+
+  showAdminApp();
 }
 
-async function showAdmin() {
+async function handleLogout() {
+  await db.auth.signOut();
+  location.reload();
+}
+
+function showAdminApp() {
   $("loginScreen").classList.add("hidden");
   $("adminApp").classList.remove("hidden");
-  await load();
+  loadAllData();
 }
 
-async function logout() { await db.auth.signOut(); location.reload(); }
-
-/* ──────────────── LOAD ──────────────── */
-async function load() {
-  const {data,error} = await db.from("site_content").select("*").order("updated_at",{ascending:false});
-  if (error) { console.error(error); toast("خطأ في تحميل البيانات"); return; }
-  rows = data || [];
-  renderAll();
+/* Data Loading */
+async function loadAllData() {
+  const { data, error } = await db.from("site_content").select("*").order("updated_at", { ascending: false });
+  if (error) { console.error(error); toast("خطأ في جلب البيانات"); return; }
+  dbRows = data || [];
+  renderOverviewStats();
+  populateHeroForm();
+  renderServicesList();
+  renderProjectsList();
+  populateAboutForm();
+  populateContactForm();
+  populateLocationForm();
+  populateNavForm();
+  populateSeoForm();
+  renderRawList();
 }
 
-function renderAll() {
-  updateStats();
-  renderContent();
-  renderProjects();
-  renderServices();
-  loadSocialForm();
-}
-
-function updateStats() {
-  const unsynced = getUnsyncedDefaults();
-  $("statTotal").textContent    = rows.length;
+/* Stats */
+function renderOverviewStats() {
+  $("statTotalDb").textContent = dbRows.length;
+  const dbKeys = new Set(dbRows.map(r => r.key));
+  const unsynced = DEFAULT_CONTENT.filter(d => !dbKeys.has(d.key));
   $("statUnsynced").textContent = unsynced.length;
-  $("statAr").textContent       = rows.length ? Math.round(rows.filter(x=>x.ar?.trim()).length/rows.length*100)+"%" : "0%";
-  $("statEn").textContent       = rows.length ? Math.round(rows.filter(x=>x.en?.trim()).length/rows.length*100)+"%" : "0%";
-  if (unsynced.length) $("seedBanner").classList.remove("hidden");
-  else $("seedBanner").classList.add("hidden");
-}
 
-/* ──────────────── CONTENT RENDER ──────────────── */
-function contentCard(r) {
-  if (r._isDefault) {
-    return `<div class="c-item is-default">
-      <div class="c-item-head"><span class="c-tag">${esc(r.section)}</span><span class="c-badge">افتراضي</span></div>
-      <h3>${esc(r.key)}</h3>
-      <p title="${esc(r.ar||r.en||'')}">${esc(r.ar||r.en||'—')}</p>
-      <div class="c-actions"><button class="seed-btn" onclick='editDefaultContent("${esc(r.key)}")'>✏️ تعديل وحفظ</button></div>
-    </div>`;
-  }
-  return `<div class="c-item">
-    <div class="c-item-head"><span class="c-tag">${esc(r.section)}</span><span class="c-id">#${r.id}</span></div>
-    <h3>${esc(r.key)}</h3>
-    <p title="${esc(r.ar||r.en||'')}">${esc(r.ar||r.en||'—')}</p>
-    <div class="c-actions">
-      <button class="btn-ghost" onclick="editContent(${r.id})">تعديل</button>
-      <button class="del btn-red" onclick="deleteContent(${r.id})">حذف</button>
+  const arCount = dbRows.filter(r => r.ar && r.ar.trim()).length;
+  const enCount = dbRows.filter(r => r.en && r.en.trim()).length;
+  $("statArPct").textContent = dbRows.length ? Math.round((arCount / dbRows.length) * 100) + "%" : "0%";
+  $("statEnPct").textContent = dbRows.length ? Math.round((enCount / dbRows.length) * 100) + "%" : "0%";
+
+  const recent = dbRows.slice(0, 6);
+  $("recentGrid").innerHTML = recent.map(r => `
+    <div class="item-card">
+      <div class="item-card-head"><span class="item-tag">${r.section}</span></div>
+      <h4>${r.key}</h4>
+      <p>${r.ar || r.en || '—'}</p>
     </div>
-  </div>`;
+  `).join('');
 }
 
-function renderContent() {
-  const q   = ($("searchInput")?.value||"").trim().toLowerCase();
-  const sec = $("sectionFilter")?.value||"";
+async function seedAllDefaults() {
+  const dbKeys = new Set(dbRows.map(r => r.key));
+  const unsynced = DEFAULT_CONTENT.filter(d => !dbKeys.has(d.key));
+  if (!unsynced.length) { toast("كل المحتوى الأساسي مرفوع بالفعل"); return; }
 
-  const dbKeys   = new Set(rows.map(r => r.key));
-  const defaults = DEFAULT_CONTENT.filter(d => !dbKeys.has(d.key)).map(d=>({...d,_isDefault:true}));
-  const allRows  = [...rows, ...defaults];
-
-  const filtered = allRows.filter(r =>
-    (!q  || (r.section+" "+r.key+" "+(r.ar||"")+" "+(r.en||"")).toLowerCase().includes(q)) &&
-    (!sec || r.section === sec)
-  );
-
-  if ($("contentList")) {
-    $("contentList").innerHTML = filtered.length
-      ? filtered.map(contentCard).join('')
-      : '<div class="empty">لا يوجد محتوى مطابق.</div>';
-  }
-
-  // Recent list (DB only, last 6)
-  if ($("recentList")) {
-    const recent = rows.slice(0, 6);
-    $("recentList").innerHTML = recent.length
-      ? recent.map(contentCard).join('')
-      : '<div class="empty">لا يوجد محتوى محفوظ بعد.</div>';
-  }
-
-  // Section filter options
-  const allSections = [...new Set(allRows.map(r=>r.section))].sort();
-  const old = sec;
-  if ($("sectionFilter")) {
-    $("sectionFilter").innerHTML = '<option value="">كل الأقسام</option>' +
-      allSections.map(s=>`<option value="${esc(s)}"${s===old?' selected':''}>${esc(s)}</option>`).join('');
-  }
+  const now = new Date().toISOString();
+  const docs = unsynced.map(d => ({ ...d, updated_at: now }));
+  const { error } = await db.from("site_content").insert(docs);
+  if (error) { toast("خطأ: " + error.message); return; }
+  toast(`تم رفع ${docs.length} عنصراً بنجاح`);
+  loadAllData();
 }
 
-/* ──────────────── PROJECTS RENDER ──────────────── */
-const projColors = ['p1-bg','p2-bg','p3-bg','p4-bg'];
+/* Hero Section */
+function populateHeroForm() {
+  $("hero_kicker_ar").value = getValue("hero_kicker").ar;
+  $("hero_kicker_en").value = getValue("hero_kicker").en;
+  $("hero_sub_ar").value = getValue("hero_sub").ar;
+  $("hero_sub_en").value = getValue("hero_sub").en;
+  $("hero_btn_work_ar").value = getValue("hero_btn_work").ar;
+  $("hero_btn_work_en").value = getValue("hero_btn_work").en;
+  $("hero_btn_contact_ar").value = getValue("hero_btn_contact").ar;
+  $("hero_btn_contact_en").value = getValue("hero_btn_contact").en;
 
-function renderProjects() {
-  if (!$("projectGrid")) return;
-  $("projectGrid").innerHTML = [1,2,3,4].map(num => {
-    const p = getProjectData(num);
-    const hasImg = p.image.trim();
-    const hasUrl = p.url.trim();
+  $("show_hero").checked = getValue("show_hero").en !== "false";
+  $("show_work").checked = getValue("show_work").en !== "false";
+  $("show_services").checked = getValue("show_services").en !== "false";
+  $("show_pricing").checked = getValue("show_pricing").en !== "false";
+  $("show_testimonials").checked = getValue("show_testimonials").en === "true";
+  $("show_about").checked = getValue("show_about").en !== "false";
+  $("show_contact").checked = getValue("show_contact").en !== "false";
+}
 
-    return `<div class="proj-card">
-      <div class="proj-img-wrap">
-        ${hasImg
-          ? `<img src="${esc(p.image)}" alt="${esc(p.title.ar)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-          : ''
-        }
-        <div class="proj-placeholder ${projColors[num-1]}" style="${hasImg?'display:none':''}">
-          ${num}
-        </div>
+async function saveHeroSection() {
+  await upsertKey("hero", "hero_kicker", $("hero_kicker_ar").value, $("hero_kicker_en").value);
+  await upsertKey("hero", "hero_sub", $("hero_sub_ar").value, $("hero_sub_en").value);
+  await upsertKey("hero", "hero_btn_work", $("hero_btn_work_ar").value, $("hero_btn_work_en").value);
+  await upsertKey("hero", "hero_btn_contact", $("hero_btn_contact_ar").value, $("hero_btn_contact_en").value);
+
+  await upsertKey("settings", "show_hero", "", $("show_hero").checked ? "true" : "false");
+  await upsertKey("settings", "show_work", "", $("show_work").checked ? "true" : "false");
+  await upsertKey("settings", "show_services", "", $("show_services").checked ? "true" : "false");
+  await upsertKey("settings", "show_pricing", "", $("show_pricing").checked ? "true" : "false");
+  await upsertKey("settings", "show_testimonials", "", $("show_testimonials").checked ? "true" : "false");
+  await upsertKey("settings", "show_about", "", $("show_about").checked ? "true" : "false");
+  await upsertKey("settings", "show_contact", "", $("show_contact").checked ? "true" : "false");
+
+  toast("تم حفظ إعدادات الصفحة الرئيسية");
+  loadAllData();
+}
+
+/* Services */
+function renderServicesList() {
+  const svcRows = dbRows.filter(r => r.section === "services");
+  $("servicesGrid").innerHTML = [1,2,3,4,5,6].map(num => {
+    const title = getValue(`svc${num}_title`);
+    const desc  = getValue(`svc${num}_desc`);
+    return `
+      <div class="item-card">
+        <div class="item-card-head"><span class="item-tag">خدمة #${num}</span></div>
+        <h4>${title.ar || title.en || 'خدمة جديدة'}</h4>
+        <p>${desc.ar || desc.en || '—'}</p>
       </div>
-      <div class="proj-body">
-        <div class="proj-meta">
-          <span class="proj-num">مشروع #${num}</span>
-          <span class="proj-status ${hasUrl?'live':'draft'}">${hasUrl ? '🟢 له رابط' : '⚫ بدون رابط'}</span>
-        </div>
-        <h3>${esc(p.title.ar || p.title.en || 'مشروع '+num)}</h3>
-        <p class="proj-cat">${esc(p.cat.ar || p.cat.en || '—')}</p>
-        ${hasUrl ? `<a class="proj-url-preview" href="${esc(p.url)}" target="_blank" rel="noopener">🔗 ${esc(p.url)}</a>` : ''}
-        <button class="btn-primary" style="width:100%" onclick="openProjectModal(${num})">✏️ تعديل المشروع</button>
-      </div>
-    </div>`;
+    `;
   }).join('');
 }
 
-/* ──────────────── SERVICES RENDER ──────────────── */
-function renderServices() {
-  if (!$("serviceList")) return;
-  const dbKeys   = new Set(rows.map(r=>r.key));
-  const defaults = DEFAULT_CONTENT.filter(d=>!dbKeys.has(d.key) && d.section==='services').map(d=>({...d,_isDefault:true}));
-  const svcRows  = [...rows.filter(r=>r.section==='services'), ...defaults];
-  $("serviceList").innerHTML = svcRows.length
-    ? svcRows.map(contentCard).join('')
-    : '<div class="empty">لا توجد عناصر خدمات.</div>';
+/* Projects */
+function renderProjectsList() {
+  $("projectsGrid").innerHTML = [1,2,3,4].map(num => {
+    const title = getValue(`proj${num}_title`);
+    const cat   = getValue(`proj${num}_cat`);
+    const img   = getValue(`proj${num}_image`).en;
+    const url   = getValue(`proj${num}_url`).en;
+    return `
+      <div class="item-card">
+        ${img ? `<div class="item-media"><img src="${img}"></div>` : ''}
+        <div class="item-card-head"><span class="item-tag">مشروع #${num}</span></div>
+        <h4>${title.ar || title.en || 'مشروع ' + num}</h4>
+        <p>${cat.ar || cat.en || '—'}</p>
+        <button class="btn btn-secondary" onclick="editProjectNum(${num})">✏️ تعديل المشروع</button>
+      </div>
+    `;
+  }).join('');
 }
 
-/* ──────────────── CONTENT MODAL (CRUD) ──────────────── */
-function openContentModal(preset=null) {
-  contentEditingId = preset?.id ?? null;
-  $("contentModalTitle").textContent = contentEditingId ? "تعديل المحتوى" : "إضافة محتوى";
-  $("cm_section").value = preset?.section || "";
-  $("cm_key").value     = preset?.key     || "";
-  $("cm_ar").value      = preset?.ar      || "";
-  $("cm_en").value      = preset?.en      || "";
-  $("contentModalOverlay").classList.add("show");
-}
-function closeContentModal() {
-  $("contentModalOverlay").classList.remove("show");
-  contentEditingId = null;
-}
-function editContent(id)        { openContentModal(rows.find(r=>r.id===id)); }
-function editDefaultContent(key){ openContentModal(DEFAULT_CONTENT.find(d=>d.key===key)); }
-
-async function saveContent() {
-  const section = $("cm_section").value.trim();
-  const key     = $("cm_key").value.trim();
-  const ar      = $("cm_ar").value;
-  const en      = $("cm_en").value;
-  if (!section || !key) { toast("القسم والمفتاح مطلوبان"); return; }
-  const now = new Date().toISOString();
-  let error;
-  if (contentEditingId) {
-    ({error} = await db.from("site_content").update({ar,en,updated_at:now}).eq("id",contentEditingId));
-  } else {
-    ({error} = await db.from("site_content").insert({section,key,ar,en,updated_at:now}));
-  }
-  if (error) { console.error(error); toast(error.message); return; }
-  closeContentModal();
-  toast(contentEditingId ? "تم التعديل ✓" : "تمت الإضافة ✓");
-  await load();
+function editProjectNum(num) {
+  $("pm_num").value = num;
+  $("pm_title_ar").value = getValue(`proj${num}_title`).ar;
+  $("pm_title_en").value = getValue(`proj${num}_title`).en;
+  $("pm_cat_ar").value = getValue(`proj${num}_cat`).ar;
+  $("pm_cat_en").value = getValue(`proj${num}_cat`).en;
+  $("pm_desc_ar").value = getValue(`proj${num}_desc`).ar;
+  $("pm_desc_en").value = getValue(`proj${num}_desc`).en;
+  $("pm_url").value = getValue(`proj${num}_url`).en;
+  $("pm_image").value = getValue(`proj${num}_image`).en;
+  openModal("projectModal");
 }
 
-async function deleteContent(id) {
-  if (!confirm("حذف هذا العنصر نهائياً؟")) return;
-  const {error} = await db.from("site_content").delete().eq("id",id);
-  if (error) { toast(error.message); return; }
-  toast("تم الحذف");
-  await load();
+async function saveProjectForm() {
+  const num = $("pm_num").value;
+  await upsertKey("projects", `proj${num}_title`, $("pm_title_ar").value, $("pm_title_en").value);
+  await upsertKey("projects", `proj${num}_cat`, $("pm_cat_ar").value, $("pm_cat_en").value);
+  await upsertKey("projects", `proj${num}_desc`, $("pm_desc_ar").value, $("pm_desc_en").value);
+  await upsertKey("projects", `proj${num}_url`, "", $("pm_url").value.trim());
+  await upsertKey("projects", `proj${num}_image`, "", $("pm_image").value.trim());
+
+  toast(`تم حفظ المشروع #${num}`);
+  closeModal("projectModal");
+  loadAllData();
 }
 
-/* ──────────────── IMPORT ALL DEFAULTS ──────────────── */
-async function importAllDefaults() {
-  const unsynced = getUnsyncedDefaults();
-  if (!unsynced.length) { toast("كل المحتوى موجود بالفعل ✓"); return; }
-  if (!confirm(`سيتم رفع ${unsynced.length} عنصراً للقاعدة. هل تريد المتابعة؟`)) return;
-  const now  = new Date().toISOString();
-  const docs = unsynced.map(d=>({...d,updated_at:now}));
-  const {error} = await db.from("site_content").insert(docs);
-  if (error) { console.error(error); toast(error.message); return; }
-  toast(`تم رفع ${docs.length} عنصر ✓`);
-  await load();
+/* About */
+function populateAboutForm() {
+  $("about_role_ar").value = getValue("about_role").ar;
+  $("about_role_en").value = getValue("about_role").en;
+  $("about_title_ar").value = getValue("about_title").ar;
+  $("about_title_en").value = getValue("about_title").en;
+  $("about_body_ar").value = getValue("about_body").ar;
+  $("about_body_en").value = getValue("about_body").en;
 }
 
-/* ──────────────── PROJECT MODAL ──────────────── */
-function openProjectModal(num) {
-  projectEditingNum = num;
-  const p = getProjectData(num);
-  $("pm_heading").textContent = `✏️ تعديل المشروع #${num}`;
-  $("pm_title_ar").value = p.title.ar;
-  $("pm_title_en").value = p.title.en;
-  $("pm_cat_ar").value   = p.cat.ar;
-  $("pm_cat_en").value   = p.cat.en;
-  $("pm_desc_ar").value  = p.desc.ar;
-  $("pm_desc_en").value  = p.desc.en;
-  $("pm_url").value      = p.url;
-  $("pm_image").value    = p.image;
-  updateImgPreview();
-  $("projectModalOverlay").classList.add("show");
-}
-function closeProjectModal() {
-  $("projectModalOverlay").classList.remove("show");
-  projectEditingNum = null;
+async function saveAboutSection() {
+  await upsertKey("about", "about_role", $("about_role_ar").value, $("about_role_en").value);
+  await upsertKey("about", "about_title", $("about_title_ar").value, $("about_title_en").value);
+  await upsertKey("about", "about_body", $("about_body_ar").value, $("about_body_en").value);
+  toast("تم حفظ بيانات من نحن");
+  loadAllData();
 }
 
-function updateImgPreview() {
-  const url = $("pm_image").value.trim();
-  const box = $("pm_img_preview");
-  const img = $("pm_img_tag");
+/* Contact */
+function populateContactForm() {
+  $("whatsapp_number").value = getValue("whatsapp_number").en || "963951708141";
+  $("instagram_url").value = getValue("instagram_url").en;
+  $("behance_url").value = getValue("behance_url").en;
+  $("linkedin_url").value = getValue("linkedin_url").en;
+}
+
+async function saveContactSettings() {
+  await upsertKey("settings", "whatsapp_number", "", $("whatsapp_number").value.trim());
+  await upsertKey("settings", "instagram_url", "", $("instagram_url").value.trim());
+  await upsertKey("settings", "behance_url", "", $("behance_url").value.trim());
+  await upsertKey("settings", "linkedin_url", "", $("linkedin_url").value.trim());
+  toast("تم حفظ روابط التواصل");
+  loadAllData();
+}
+
+/* Location */
+function populateLocationForm() {
+  $("location_address_ar").value = getValue("location_address").ar;
+  $("location_address_en").value = getValue("location_address").en;
+  $("location_hours_ar").value = getValue("location_hours").ar;
+  $("location_hours_en").value = getValue("location_hours").en;
+  $("location_maps_url").value = getValue("location_maps_url").en;
+}
+
+async function saveLocationSettings() {
+  await upsertKey("location", "location_address", $("location_address_ar").value, $("location_address_en").value);
+  await upsertKey("location", "location_hours", $("location_hours_ar").value, $("location_hours_en").value);
+  await upsertKey("location", "location_maps_url", "", $("location_maps_url").value.trim());
+  toast("تم حفظ معلومات الموقع");
+  loadAllData();
+}
+
+/* Navigation & Footer */
+function populateNavForm() {
+  $("footer_tagline_ar").value = getValue("footer_tagline").ar;
+  $("footer_tagline_en").value = getValue("footer_tagline").en;
+  $("dev_credit_url").value = getValue("dev_credit_url").en || "https://wa.me/963951708141";
+  $("show_dev_credit").checked = getValue("show_dev_credit").en !== "false";
+}
+
+async function saveNavSettings() {
+  await upsertKey("footer", "footer_tagline", $("footer_tagline_ar").value, $("footer_tagline_en").value);
+  await upsertKey("settings", "dev_credit_url", "", $("dev_credit_url").value.trim());
+  await upsertKey("settings", "show_dev_credit", "", $("show_dev_credit").checked ? "true" : "false");
+  toast("تم حفظ إعدادات الهيدر والفوتر");
+  loadAllData();
+}
+
+/* SEO */
+function populateSeoForm() {
+  $("seo_title_ar").value = getValue("seo_title").ar;
+  $("seo_title_en").value = getValue("seo_title").en;
+  $("seo_desc_ar").value = getValue("seo_desc").ar;
+  $("seo_desc_en").value = getValue("seo_desc").en;
+  $("seo_og_image").value = getValue("seo_og_image").en;
+  $("seo_favicon").value = getValue("seo_favicon").en;
+}
+
+async function saveSeoSettings() {
+  await upsertKey("seo", "seo_title", $("seo_title_ar").value, $("seo_title_en").value);
+  await upsertKey("seo", "seo_desc", $("seo_desc_ar").value, $("seo_desc_en").value);
+  await upsertKey("seo", "seo_og_image", "", $("seo_og_image").value.trim());
+  await upsertKey("seo", "seo_favicon", "", $("seo_favicon").value.trim());
+  toast("تم حفظ إعدادات SEO");
+  loadAllData();
+}
+
+/* Media Preview */
+function previewMediaUrl() {
+  const url = $("mediaTestUrl").value.trim();
+  const box = $("mediaPreviewBox");
+  const img = $("mediaPreviewImg");
   if (url) {
     img.src = url;
     box.style.display = "block";
@@ -993,100 +1082,134 @@ function updateImgPreview() {
   }
 }
 
-async function saveProject() {
-  const num = projectEditingNum;
-  if (!num) return;
+/* Raw Editor */
+function renderRawList() {
+  const q = ($("rawSearch")?.value || "").toLowerCase();
+  const sec = $("rawSectionFilter")?.value || "";
+
+  const filtered = dbRows.filter(r =>
+    (!q || (r.section + " " + r.key + " " + (r.ar||"") + " " + (r.en||"")).toLowerCase().includes(q)) &&
+    (!sec || r.section === sec)
+  );
+
+  $("rawGrid").innerHTML = filtered.map(r => `
+    <div class="item-card">
+      <div class="item-card-head">
+        <span class="item-tag">${r.section}</span>
+        <span style="font-size:11px; color:var(--ink-faint);">#${r.id}</span>
+      </div>
+      <h4>${r.key}</h4>
+      <p>${r.ar || r.en || '—'}</p>
+      <div class="item-actions">
+        <button class="btn btn-secondary" onclick="openRawModal(${r.id})">تعديل</button>
+        <button class="btn btn-danger" onclick="deleteRawItem(${r.id})">حذف</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Populate sections filter
+  const sections = [...new Set(dbRows.map(r => r.section))].sort();
+  $("rawSectionFilter").innerHTML = '<option value="">كل الأقسام</option>' +
+    sections.map(s => `<option value="${s}" ${s === sec ? 'selected' : ''}>${s}</option>`).join('');
+}
+
+function openRawModal(id = null) {
+  editingRawId = id;
+  if (id) {
+    const item = dbRows.find(r => r.id === id);
+    $("rm_section").value = item.section;
+    $("rm_key").value = item.key;
+    $("rm_ar").value = item.ar || "";
+    $("rm_en").value = item.en || "";
+  } else {
+    $("rm_section").value = "";
+    $("rm_key").value = "";
+    $("rm_ar").value = "";
+    $("rm_en").value = "";
+  }
+  openModal("rawModal");
+}
+
+async function saveRawItem() {
+  const section = $("rm_section").value.trim();
+  const key = $("rm_key").value.trim();
+  const ar = $("rm_ar").value;
+  const en = $("rm_en").value;
+  if (!section || !key) { toast("يرجى ملء القسم والمفتاح"); return; }
+
   const now = new Date().toISOString();
-
-  const fields = [
-    {key:`proj${num}_title`, ar:$("pm_title_ar").value, en:$("pm_title_en").value},
-    {key:`proj${num}_cat`,   ar:$("pm_cat_ar").value,   en:$("pm_cat_en").value},
-    {key:`proj${num}_desc`,  ar:$("pm_desc_ar").value,  en:$("pm_desc_en").value},
-    {key:`proj${num}_url`,   ar:"", en:$("pm_url").value.trim()},
-    {key:`proj${num}_image`, ar:"", en:$("pm_image").value.trim()},
-  ];
-
-  for (const f of fields) {
-    const existing = rows.find(r => r.key === f.key);
-    let error;
-    if (existing) {
-      ({error} = await db.from("site_content").update({ar:f.ar,en:f.en,updated_at:now}).eq("id",existing.id));
-    } else {
-      ({error} = await db.from("site_content").insert({section:"projects",key:f.key,ar:f.ar,en:f.en,updated_at:now}));
-    }
-    if (error) { console.error(error); toast(error.message); return; }
+  let error;
+  if (editingRawId) {
+    ({ error } = await db.from("site_content").update({ section, key, ar, en, updated_at: now }).eq("id", editingRawId));
+  } else {
+    ({ error } = await db.from("site_content").insert({ section, key, ar, en, updated_at: now }));
   }
 
-  toast(`تم حفظ المشروع #${num} ✓`);
-  closeProjectModal();
-  await load();
+  if (error) { toast(error.message); return; }
+  toast("تم التعديل الحفظ بنجاح");
+  closeModal("rawModal");
+  loadAllData();
 }
 
-/* ──────────────── SOCIAL SETTINGS ──────────────── */
-function loadSocialForm() {
-  $("s_whatsapp").value  = getVal("whatsapp_number").en || "963951708141";
-  $("s_instagram").value = getVal("instagram_url").en;
-  $("s_behance").value   = getVal("behance_url").en;
-  $("s_linkedin").value  = getVal("linkedin_url").en;
+async function deleteRawItem(id) {
+  $("confirmModalMsg").textContent = "هل أنت متأكد من حذف هذا العنصر؟";
+  $("confirmModalBtn").onclick = async () => {
+    const { error } = await db.from("site_content").delete().eq("id", id);
+    if (error) { toast(error.message); return; }
+    toast("تم الحذف بنجاح");
+    closeModal("confirmModal");
+    loadAllData();
+  };
+  openModal("confirmModal");
 }
 
-async function saveSocialSettings() {
-  const now = new Date().toISOString();
-  const fields = [
-    {key:"whatsapp_number", en:$("s_whatsapp").value.trim()},
-    {key:"instagram_url",   en:$("s_instagram").value.trim()},
-    {key:"behance_url",     en:$("s_behance").value.trim()},
-    {key:"linkedin_url",    en:$("s_linkedin").value.trim()},
-  ];
-
-  for (const f of fields) {
-    const existing = rows.find(r => r.key === f.key);
-    let error;
-    if (existing) {
-      ({error} = await db.from("site_content").update({en:f.en,updated_at:now}).eq("id",existing.id));
-    } else {
-      ({error} = await db.from("site_content").insert({section:"settings",key:f.key,ar:"",en:f.en,updated_at:now}));
-    }
-    if (error) { console.error(error); toast(error.message); return; }
-  }
-
-  const msg = $("socialSaveMsg");
-  msg.style.display = "inline";
-  setTimeout(() => msg.style.display = "none", 3000);
-  toast("تم حفظ إعدادات التواصل ✓");
-  await load();
-}
-
-/* ──────────────── NAV WIRING ──────────────── */
-document.querySelectorAll("[data-view]").forEach(btn => {
+/* Navigation UI wiring */
+document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll("[data-view]").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
+    const viewId = btn.dataset.view;
     document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    const view = $(btn.dataset.view);
+    const view = $(viewId);
     if (view) view.classList.add("active");
+
     const titles = {
-      overview:"نظرة عامة", content:"إدارة النصوص",
-      projects:"المشاريع",  services:"الخدمات",
-      social:"روابط التواصل", settings:"الإعدادات"
+      overview: "نظرة عامة", hero: "الصفحة الرئيسية", services: "إدارة الخدمات",
+      projects: "إدارة المشاريع", testimonials: "آراء العملاء", about: "من نحن",
+      contact: "روابط التواصل", location: "الموقع وساعات العمل", navigation: "الهيدر والفوتر",
+      seo: "إعدادات SEO", media: "إدارة الوسائط", raw: "سجل المحتوى الخام"
     };
-    $("pageTitle").textContent = titles[btn.dataset.view] || "";
-    if (btn.dataset.view === "social") loadSocialForm();
+    $("topbarViewTitle").textContent = titles[viewId] || "لوحة التحكم";
+    if (window.innerWidth <= 960) $("sidebar").classList.remove("show");
   });
 });
 
-$("loginEmail").addEventListener("keydown", e => { if(e.key==="Enter") $("loginPass").focus(); });
-$("loginPass").addEventListener("keydown",  e => { if(e.key==="Enter") login(); });
-$("logoutBtn").onclick = logout;
-$("contentModalOverlay").addEventListener("click", e => { if(e.target===$("contentModalOverlay")) closeContentModal(); });
-$("projectModalOverlay").addEventListener("click", e => { if(e.target===$("projectModalOverlay")) closeProjectModal(); });
-$("searchInput")?.addEventListener("input", renderContent);
-$("sectionFilter")?.addEventListener("change", renderContent);
+function toggleMobileSidebar() { $("sidebar").classList.toggle("show"); }
 
-/* ──────────────── BOOT ──────────────── */
+function openModal(id) { $(id).classList.add("show"); }
+function closeModal(id) { $(id).classList.remove("show"); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute("data-theme") || "light";
+  const next = cur === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem("aboudweb_admin_theme", next); } catch(e){}
+}
+
+function toggleAdminLanguage() {
+  currentLang = currentLang === "ar" ? "en" : "ar";
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === "ar" ? "rtl" : "ltr";
+  $("langSwitchLabel").textContent = currentLang === "ar" ? "English" : "العربية";
+}
+
+/* Initialization */
 (async () => {
-  const {data} = await db.auth.getSession();
-  if (data.session) showAdmin();
+  const savedTheme = localStorage.getItem("aboudweb_admin_theme") || "light";
+  document.documentElement.setAttribute("data-theme", savedTheme);
+
+  const { data } = await db.auth.getSession();
+  if (data.session) showAdminApp();
 })();
 </script>
 </body>
