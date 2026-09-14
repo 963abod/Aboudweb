@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta name="google-site-verification" content="vbHP3zSXlePXVuGt4Rrc6VrKDNY3zoINKX1QdlFuUCM" />
 <meta charset="UTF-8">
@@ -29,24 +29,24 @@ html{scroll-behavior:smooth;}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 
 :root{
-  --canvas:#F7F7FB;
+  --canvas:#F5F6FC;
   --canvas-raised:#FFFFFF;
-  --canvas-sunken:#EFEFF5;
-  --ink:#14141F;
-  --ink-dim:#5D5D74;
-  --ink-faint:#9A9AAC;
-  --line:rgba(20,20,31,.09);
-  --line-strong:rgba(20,20,31,.15);
-  --azure:#4C7CFF;
-  --iris:#8B5CF6;
-  --bloom:#F0629E;
-  --amber:#F4A63D;
-  --glass-bg:rgba(255,255,255,.58);
-  --glass-bg-strong:rgba(255,255,255,.82);
-  --glass-border:rgba(255,255,255,.82);
-  --glass-hi:rgba(255,255,255,.95);
-  --shadow-soft:0 20px 60px -24px rgba(30,30,60,.20);
-  --shadow-lift:0 30px 90px -28px rgba(30,30,60,.30);
+  --canvas-sunken:#ECEEF8;
+  --ink:#0F1221;
+  --ink-dim:#4E526B;
+  --ink-faint:#8E93AB;
+  --line:rgba(20,20,40,.08);
+  --line-strong:rgba(20,20,40,.16);
+  --azure:#3B82F6;
+  --iris:#7C3AED;
+  --bloom:#EC4899;
+  --amber:#F59E0B;
+  --glass-bg:rgba(255,255,255,.68);
+  --glass-bg-strong:rgba(255,255,255,.88);
+  --glass-border:rgba(255,255,255,.85);
+  --glass-hi:rgba(255,255,255,.98);
+  --shadow-soft:0 24px 64px -20px rgba(20,20,50,.12);
+  --shadow-lift:0 36px 96px -24px rgba(20,20,60,.22);
   --r-xl:32px; --r-lg:24px; --r-md:16px; --r-sm:10px; --r-pill:999px;
   --ease:cubic-bezier(.16,1,.3,1);
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
@@ -55,6 +55,27 @@ html{scroll-behavior:smooth;}
   --font-body:'Inter','Segoe UI',sans-serif;
   --font-ar:'IBM Plex Sans Arabic','Segoe UI',sans-serif;
   --nav-h:84px;
+}
+
+[data-theme="dark"] {
+  --canvas:#0A0D18;
+  --canvas-raised:#121729;
+  --canvas-sunken:#060812;
+  --ink:#F3F4F6;
+  --ink-dim:#9CA3AF;
+  --ink-faint:#6B7280;
+  --line:rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.18);
+  --azure:#60A5FA;
+  --iris:#A78BFA;
+  --bloom:#F472B6;
+  --amber:#FBBF24;
+  --glass-bg:rgba(18,23,41,.65);
+  --glass-bg-strong:rgba(18,23,41,.88);
+  --glass-border:rgba(255,255,255,.12);
+  --glass-hi:rgba(255,255,255,.22);
+  --shadow-soft:0 24px 64px -20px rgba(0,0,0,.55);
+  --shadow-lift:0 36px 96px -24px rgba(0,0,0,.75);
 }
 
 body{
@@ -188,6 +209,18 @@ body.has-custom-cursor,body.has-custom-cursor a,body.has-custom-cursor button{cu
 .nav-links a::after{content:"";position:absolute;inset-inline-start:0;bottom:0;height:1.5px;width:0;background:linear-gradient(90deg,var(--azure),var(--iris));transition:width .4s var(--ease);}
 .nav-links a:hover{color:var(--ink);}.nav-links a:hover::after{width:100%;}
 .nav-actions{display:flex;align-items:center;gap:16px;}
+.theme-toggle-btn{
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--glass-bg);border:1px solid var(--glass-border);border-top-color:var(--glass-hi);
+  color:var(--ink);transition:all .3s var(--ease);padding:0;cursor:pointer;
+}
+.theme-toggle-btn:hover{background:var(--glass-bg-strong);color:var(--iris);transform:scale(1.06);}
+.theme-toggle-btn svg{width:18px;height:18px;}
+.theme-toggle-btn .sun-icon{display:block;}
+.theme-toggle-btn .moon-icon{display:none;}
+[data-theme="dark"] .theme-toggle-btn .sun-icon{display:none;}
+[data-theme="dark"] .theme-toggle-btn .moon-icon{display:block;}
+
 .lang-switch{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;}
 .lang-btn{color:var(--ink-faint);transition:color .3s ease;padding:4px 2px;}
 .lang-btn.is-active{color:var(--ink);}
@@ -259,38 +292,82 @@ html[dir="rtl"] .hero-stage{transform:translateX(-6%);}
 /* Project real image overlay */
 .proj-real-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;border-radius:var(--r-lg);}
 
-/* Portfolio */
-.portfolio-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;}
-.project-card{position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--canvas-raised);border:1px solid var(--line);border-top-color:rgba(255,255,255,.85);grid-column:span 3;display:flex;flex-direction:column;transition:box-shadow .6s var(--ease);transform-origin:center bottom;}
-.project-card:hover{box-shadow:var(--shadow-lift);}
-.project-featured{grid-column:span 6;flex-direction:row;min-height:400px;}
-.project-preview{position:relative;aspect-ratio:16/10;overflow:hidden;}
-.project-featured .project-preview{flex:1.15;aspect-ratio:auto;}
+/* Portfolio Carousel */
+.portfolio-carousel-wrapper{position:relative;max-width:100%;margin-inline:auto;overflow:hidden;padding-block:12px 24px;}
+.portfolio-track-container{overflow:hidden;border-radius:var(--r-xl);position:relative;touch-action:pan-y;}
+.portfolio-track{display:flex;transition:transform 0.55s var(--ease);will-change:transform;}
+.portfolio-slide{flex:0 0 100%;min-width:0;padding-inline:4px;box-sizing:border-box;}
+
+.project-card{
+  position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--canvas-raised);
+  border:1px solid var(--line);border-top-color:rgba(255,255,255,.9);
+  display:flex;flex-direction:row;min-height:420px;
+  box-shadow:var(--shadow-soft);transition:box-shadow .5s var(--ease), border-color .3s ease;
+}
+.project-card:hover{box-shadow:var(--shadow-lift);border-color:rgba(139,92,246,.25);}
+
+.project-preview{position:relative;flex:1.2;aspect-ratio:16/10;overflow:hidden;}
 .project-preview .mock-browser{transition:transform .8s var(--ease);}
-.project-card:hover .project-preview .mock-browser{transform:scale(1.04);}
-.project-info{padding:28px 30px 30px;display:flex;flex-direction:column;gap:10px;flex:1;}
-.project-featured .project-info{flex:1;justify-content:center;}
-.project-cat{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
-.project-info h3{font-size:1.3rem;letter-spacing:-.02em;}
-.project-featured .project-info h3{font-size:1.9rem;letter-spacing:-.025em;}
-.project-info p{color:var(--ink-dim);font-size:.94rem;max-width:420px;}
-.project-link{margin-top:8px;font-weight:600;font-size:.92rem;display:inline-flex;align-items:center;gap:8px;color:var(--iris);width:fit-content;transition:gap .35s var(--ease);}
-.project-link:hover{gap:13px;}
-.project-link svg{transition:transform .4s var(--ease);width:14px;height:14px;}
+.project-card:hover .project-preview .mock-browser{transform:scale(1.03);}
+
+.project-info{padding:36px 40px;display:flex;flex-direction:column;gap:14px;flex:1;justify-content:center;background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(247,247,251,.85));}
+.project-cat{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--iris);}
+.project-info h3{font-size:clamp(1.5rem,2.8vw,2.2rem);letter-spacing:-.025em;color:var(--ink);}
+.project-info p{color:var(--ink-dim);font-size:1.02rem;max-width:480px;line-height:1.65;}
+.project-link{margin-top:12px;font-weight:600;font-size:1rem;display:inline-flex;align-items:center;gap:10px;color:var(--azure);width:fit-content;padding:10px 20px;border-radius:var(--r-pill);background:rgba(76,124,255,.08);transition:all .35s var(--ease);}
+.project-link:hover{background:rgba(76,124,255,.16);color:var(--iris);gap:14px;}
+.project-link svg{transition:transform .4s var(--ease);width:16px;height:16px;}
 .project-link:hover svg{transform:translateX(4px);}
 html[dir="rtl"] .project-link svg{transform:scaleX(-1);}
 html[dir="rtl"] .project-link:hover svg{transform:scaleX(-1) translateX(4px);}
+
+/* RTL/LTR Mirroring & Adaptations */
+html[dir="rtl"] .carousel-arrow svg{transform:scaleX(-1);}
+html[dir="ltr"] .carousel-arrow svg{transform:none;}
+html[dir="rtl"] .btn-arrow{transform:scaleX(-1);}
+html[dir="ltr"] .btn-arrow{transform:none;}
+
+/* Carousel Controls */
+.carousel-controls{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:20px;flex-wrap:wrap;}
+.carousel-arrows{display:flex;align-items:center;gap:12px;}
+.carousel-arrow{
+  width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--glass-bg);border:1px solid var(--glass-border);border-top-color:var(--glass-hi);
+  color:var(--ink);transition:all .3s var(--ease);box-shadow:0 4px 16px rgba(0,0,0,.06);
+}
+.carousel-arrow:hover:not(:disabled){background:var(--glass-bg-strong);color:var(--azure);transform:translateY(-2px);box-shadow:0 8px 24px rgba(76,124,255,.18);}
+.carousel-arrow:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.carousel-arrow svg{width:20px;height:20px;}
+html[dir="rtl"] .carousel-arrow svg{transform:scaleX(-1);}
+
+.carousel-dots{display:flex;align-items:center;gap:10px;}
+.carousel-dot{
+  width:10px;height:10px;border-radius:999px;background:var(--line-strong);
+  transition:all .4s var(--ease);cursor:pointer;padding:0;
+}
+.carousel-dot.is-active{width:32px;background:linear-gradient(90deg,var(--azure),var(--iris));}
+
+.carousel-counter{font-size:.9rem;font-weight:600;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+
 @media (max-width:900px){
-  .portfolio-grid{grid-template-columns:1fr;}
-  .project-card,.project-featured{grid-column:1/-1;flex-direction:column;}
-  .project-featured .project-preview{aspect-ratio:16/10;}
+  .project-card{flex-direction:column;min-height:auto;}
+  .project-preview{aspect-ratio:16/10;}
+  .project-info{padding:26px 24px;}
 }
 
 /* Services */
-.services{background:var(--canvas-raised);}
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden;}
-.service-card{background:var(--canvas-raised);padding:38px 32px;display:flex;flex-direction:column;gap:16px;transition:background .35s ease;}
-.service-card:hover{background:rgba(255,255,255,.9);}
+.services{background:transparent;}
+.services-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
+  border-radius:var(--r-xl);
+}
+.service-card{
+  background:var(--glass-bg);padding:38px 32px;display:flex;flex-direction:column;gap:16px;
+  border:1px solid var(--glass-border);border-top-color:var(--glass-hi);
+  border-radius:var(--r-xl);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:var(--shadow-soft);transition:transform .4s var(--ease), box-shadow .4s var(--ease), background .35s ease;
+}
+.service-card:hover{background:var(--glass-bg-strong);transform:translateY(-6px);box-shadow:var(--shadow-lift);}
 .service-top{display:flex;align-items:flex-start;justify-content:space-between;}
 .service-icon{width:48px;height:48px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,rgba(76,124,255,.14),rgba(139,92,246,.14));color:var(--iris);transform-origin:center;}
 .service-icon svg{width:24px;height:24px;}
@@ -411,10 +488,14 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       <a href="#contact" data-i18n="nav_contact">Contact</a>
     </nav>
     <div class="nav-actions">
+      <button type="button" class="theme-toggle-btn" id="themeToggleNav" aria-label="Toggle dark/light theme" title="تبديل الوضع الليلي / النهاري">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
       <div class="lang-switch" role="group" aria-label="Language">
-        <button type="button" class="lang-btn" data-lang="ar">العربية</button>
+        <button type="button" class="lang-btn is-active" data-lang="ar">العربية</button>
         <span class="lang-sep">|</span>
-        <button type="button" class="lang-btn is-active" data-lang="en">English</button>
+        <button type="button" class="lang-btn" data-lang="en">English</button>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -429,10 +510,16 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   <a href="#services" data-i18n="nav_services" data-close-menu>Services</a>
   <a href="#about"   data-i18n="nav_about" data-close-menu>About</a>
   <a href="#contact" data-i18n="nav_contact" data-close-menu>Contact</a>
-  <div class="lang-switch" role="group" aria-label="Language">
-    <button type="button" class="lang-btn" data-lang="ar">العربية</button>
-    <span class="lang-sep">|</span>
-    <button type="button" class="lang-btn is-active" data-lang="en">English</button>
+  <div style="display:flex;align-items:center;gap:18px;margin-top:10px;">
+    <button type="button" class="theme-toggle-btn" id="themeToggleMobile" aria-label="Toggle dark/light theme" title="تبديل الوضع الليلي / النهاري">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-btn is-active" data-lang="ar">العربية</button>
+      <span class="lang-sep">|</span>
+      <button type="button" class="lang-btn" data-lang="en">English</button>
+    </div>
   </div>
 </div>
 
@@ -458,102 +545,130 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     <div class="scroll-hint" aria-hidden="true"><span></span></div>
   </section>
 
-  <!-- WORK -->
+  <!-- WORK / PORTFOLIO CAROUSEL -->
   <section id="work" class="section portfolio">
     <div class="container">
       <div class="section-head reveal">
         <p class="kicker" data-i18n="work_kicker">Selected Work</p>
         <h2 data-i18n="work_title">Projects built to perform</h2>
       </div>
-      <div class="portfolio-grid">
 
-        <!-- Project 1 — Featured -->
-        <article class="project-card project-featured reveal">
-          <div class="project-preview preview-featured" id="proj1-preview">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div><div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj1_cat">Business Website</span>
-            <h3 data-i18n="proj1_title">Al-Haytham Electric Workshop</h3>
-            <p data-i18n="proj1_desc">A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers.</p>
-            <a href="#" id="proj1-link" class="project-link" target="_blank" rel="noopener">
-              <span data-i18n="proj_btn">View Project</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-        </article>
+      <div class="portfolio-carousel-wrapper reveal" id="portfolioCarousel" role="region" aria-label="Projects Showcase Carousel">
+        <div class="portfolio-track-container" id="carouselTrackContainer">
+          <div class="portfolio-track" id="carouselTrack">
 
-        <!-- Project 2 -->
-        <article class="project-card reveal">
-          <div class="project-preview preview-2" id="proj2-preview">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div><div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
+            <!-- Slide 1 -->
+            <div class="portfolio-slide" role="group" aria-roledescription="slide" aria-label="1 of 4">
+              <article class="project-card">
+                <div class="project-preview preview-featured" id="proj1-preview">
+                  <div class="mock-browser" aria-hidden="true">
+                    <div class="mock-bar"><span></span><span></span><span></span></div>
+                    <div class="mock-body">
+                      <div class="mock-nav"></div><div class="mock-hero"></div>
+                      <div class="mock-grid"><div></div><div></div><div></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <span class="project-cat" data-i18n="proj1_cat">Business Website</span>
+                  <h3 data-i18n="proj1_title">Al-Haytham Electric Workshop</h3>
+                  <p data-i18n="proj1_desc">A clean, professional online presence for an electrical contracting workshop — built to earn trust and bring in new customers.</p>
+                  <a href="#" id="proj1-link" class="project-link" target="_blank" rel="noopener">
+                    <span data-i18n="proj_btn">View Project</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                </div>
+              </article>
             </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj2_cat">Coming Soon</span>
-            <h3 data-i18n="proj2_title">E-Commerce Store</h3>
-            <p data-i18n="proj2_desc">A new project will be featured here soon.</p>
-            <a href="#" id="proj2-link" class="project-link" target="_blank" rel="noopener" style="display:none">
-              <span data-i18n="proj_btn">View Project</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-        </article>
 
-        <!-- Project 3 -->
-        <article class="project-card reveal">
-          <div class="project-preview preview-3" id="proj3-preview">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div><div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
+            <!-- Slide 2 -->
+            <div class="portfolio-slide" role="group" aria-roledescription="slide" aria-label="2 of 4">
+              <article class="project-card">
+                <div class="project-preview preview-2" id="proj2-preview">
+                  <div class="mock-browser" aria-hidden="true">
+                    <div class="mock-bar"><span></span><span></span><span></span></div>
+                    <div class="mock-body">
+                      <div class="mock-nav"></div><div class="mock-hero"></div>
+                      <div class="mock-grid"><div></div><div></div><div></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <span class="project-cat" data-i18n="proj2_cat">Coming Soon</span>
+                  <h3 data-i18n="proj2_title">E-Commerce Store</h3>
+                  <p data-i18n="proj2_desc">A new project will be featured here soon.</p>
+                  <a href="#" id="proj2-link" class="project-link" target="_blank" rel="noopener" style="display:none">
+                    <span data-i18n="proj_btn">View Project</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                </div>
+              </article>
             </div>
-          </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj3_cat">Coming Soon</span>
-            <h3 data-i18n="proj3_title">Restaurant & Hospitality</h3>
-            <p data-i18n="proj3_desc">A new project will be featured here soon.</p>
-            <a href="#" id="proj3-link" class="project-link" target="_blank" rel="noopener" style="display:none">
-              <span data-i18n="proj_btn">View Project</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-        </article>
 
-        <!-- Project 4 -->
-        <article class="project-card reveal">
-          <div class="project-preview preview-4" id="proj4-preview">
-            <div class="mock-browser" aria-hidden="true">
-              <div class="mock-bar"><span></span><span></span><span></span></div>
-              <div class="mock-body">
-                <div class="mock-nav"></div><div class="mock-hero"></div>
-                <div class="mock-grid"><div></div><div></div><div></div></div>
-              </div>
+            <!-- Slide 3 -->
+            <div class="portfolio-slide" role="group" aria-roledescription="slide" aria-label="3 of 4">
+              <article class="project-card">
+                <div class="project-preview preview-3" id="proj3-preview">
+                  <div class="mock-browser" aria-hidden="true">
+                    <div class="mock-bar"><span></span><span></span><span></span></div>
+                    <div class="mock-body">
+                      <div class="mock-nav"></div><div class="mock-hero"></div>
+                      <div class="mock-grid"><div></div><div></div><div></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <span class="project-cat" data-i18n="proj3_cat">Coming Soon</span>
+                  <h3 data-i18n="proj3_title">Restaurant & Hospitality</h3>
+                  <p data-i18n="proj3_desc">A new project will be featured here soon.</p>
+                  <a href="#" id="proj3-link" class="project-link" target="_blank" rel="noopener" style="display:none">
+                    <span data-i18n="proj_btn">View Project</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                </div>
+              </article>
             </div>
+
+            <!-- Slide 4 -->
+            <div class="portfolio-slide" role="group" aria-roledescription="slide" aria-label="4 of 4">
+              <article class="project-card">
+                <div class="project-preview preview-4" id="proj4-preview">
+                  <div class="mock-browser" aria-hidden="true">
+                    <div class="mock-bar"><span></span><span></span><span></span></div>
+                    <div class="mock-body">
+                      <div class="mock-nav"></div><div class="mock-hero"></div>
+                      <div class="mock-grid"><div></div><div></div><div></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <span class="project-cat" data-i18n="proj4_cat">Coming Soon</span>
+                  <h3 data-i18n="proj4_title">Personal Portfolio</h3>
+                  <p data-i18n="proj4_desc">A new project will be featured here soon.</p>
+                  <a href="#" id="proj4-link" class="project-link" target="_blank" rel="noopener" style="display:none">
+                    <span data-i18n="proj_btn">View Project</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                </div>
+              </article>
+            </div>
+
           </div>
-          <div class="project-info">
-            <span class="project-cat" data-i18n="proj4_cat">Coming Soon</span>
-            <h3 data-i18n="proj4_title">Personal Portfolio</h3>
-            <p data-i18n="proj4_desc">A new project will be featured here soon.</p>
-            <a href="#" id="proj4-link" class="project-link" target="_blank" rel="noopener" style="display:none">
-              <span data-i18n="proj_btn">View Project</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
+        </div>
+
+        <!-- Carousel Navigation Controls -->
+        <div class="carousel-controls">
+          <div class="carousel-arrows">
+            <button class="carousel-arrow" id="carouselPrev" aria-label="Previous project slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-arrow" id="carouselNext" aria-label="Next project slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
           </div>
-        </article>
+          <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Select project slide"></div>
+          <div class="carousel-counter" id="carouselCounter">01 / 04</div>
+        </div>
 
       </div>
     </div>
@@ -615,7 +730,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
           <p class="kicker" data-i18n="price1_title">Professional Website</p>
           <div class="price-amount">
             <span class="prefix" data-i18n="price1_prefix">Starting from</span>
-            <span class="num">$100</span>
+            <span class="num">$250</span>
           </div>
           <p class="price-desc" data-i18n="price1_desc">A complete, professionally designed website.</p>
           <ul class="price-features">
@@ -761,7 +876,7 @@ var translations = {
     svc5_title:"SEO",svc5_desc:"Structured, optimized foundations that help you get found.",
     svc6_title:"Website Maintenance",svc6_desc:"Ongoing support to keep your site fast, secure and current.",
     pricing_kicker:"Pricing",pricing_title:"Simple, transparent pricing",
-    pricing_sub:"One clear starting price. No hidden surprises.",
+    pricing_sub:"Starting prices from $250+. No hidden surprises.",
     price1_title:"Professional Website",price1_prefix:"Starting from",
     price1_desc:"A complete, professionally designed website — responsive, fast, and ready to represent your business online.",
     price1_f1:"Custom design",price1_f2:"Mobile responsive",price1_f3:"Fast performance",
@@ -798,7 +913,7 @@ var translations = {
     svc5_title:"تحسين محركات البحث",svc5_desc:"أسس منظمة ومحسّنة تساعدك على الظهور.",
     svc6_title:"صيانة المواقع",svc6_desc:"دعم مستمر ليبقى موقعك سريعًا وآمنًا ومحدثًا.",
     pricing_kicker:"الأسعار",pricing_title:"أسعار بسيطة وواضحة",
-    pricing_sub:"سعر واضح للانطلاق، بدون مفاجآت.",
+    pricing_sub:"تبدأ الأسعار من 250$، بدون مفاجآت.",
     price1_title:"موقع احترافي",price1_prefix:"يبدأ من",
     price1_desc:"موقع إلكتروني كامل ومصمم باحترافية، متجاوب وسريع وجاهز لتمثيل عملك على الإنترنت.",
     price1_f1:"تصميم مخصص",price1_f2:"متجاوب مع الجوال",price1_f3:"أداء سريع",
@@ -906,7 +1021,8 @@ function applyProject(num, url, imageUrl){
 /* ── Language ── */
 function applyLanguage(lang){
   currentLang = lang;
-  var dict = translations[lang];
+  try { localStorage.setItem("aboudweb_lang", lang); } catch(e){}
+  var dict = translations[lang] || translations["ar"];
   document.documentElement.lang = lang;
   document.documentElement.dir = (lang==="ar") ? "rtl" : "ltr";
   document.title = (lang==="ar")
@@ -921,7 +1037,7 @@ function applyLanguage(lang){
   });
   // Rebuild WhatsApp URL with current lang message
   var waNum  = siteSettings['whatsapp_number'] || WHATSAPP_NUMBER;
-  var waText = encodeURIComponent(whatsappMsg[lang]);
+  var waText = encodeURIComponent(whatsappMsg[lang] || whatsappMsg["ar"]);
   var waUrl  = "https://wa.me/"+waNum+"?text="+waText;
   var waBtn  = document.getElementById("whatsappBtn");
   var waFoot = document.getElementById("whatsappFooterLink");
@@ -933,6 +1049,35 @@ function initLangSwitch(){
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.addEventListener("click", function(){ applyLanguage(this.getAttribute("data-lang")); });
   });
+}
+
+/* ── Theme Toggle ── */
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme", theme);
+  try { localStorage.setItem("aboudweb_theme", theme); } catch(e){}
+}
+
+function initThemeToggle(){
+  var savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("aboudweb_theme");
+  } catch(e){}
+  if(!savedTheme){
+    savedTheme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  applyTheme(savedTheme);
+
+  var navBtn = document.getElementById("themeToggleNav");
+  var mobBtn = document.getElementById("themeToggleMobile");
+
+  function toggle(){
+    var current = document.documentElement.getAttribute("data-theme") || "light";
+    var next = (current === "dark") ? "light" : "dark";
+    applyTheme(next);
+  }
+
+  if(navBtn) navBtn.addEventListener("click", toggle);
+  if(mobBtn) mobBtn.addEventListener("click", toggle);
 }
 
 /* ── Loader ── */
@@ -1114,6 +1259,155 @@ function initHero3D(){
   }catch(err){if(fallback)fallback.classList.add("is-active");if(window.console)console.warn("Hero 3D error:",err);}
 }
 
+/* ── Portfolio Carousel Implementation ── */
+function initPortfolioCarousel(){
+  var wrapper = document.getElementById("portfolioCarousel");
+  var trackContainer = document.getElementById("carouselTrackContainer");
+  var track = document.getElementById("carouselTrack");
+  var prevBtn = document.getElementById("carouselPrev");
+  var nextBtn = document.getElementById("carouselNext");
+  var dotsContainer = document.getElementById("carouselDots");
+  var counterEl = document.getElementById("carouselCounter");
+
+  if(!wrapper || !track || !prevBtn || !nextBtn) return;
+
+  var slides = Array.prototype.slice.call(track.children);
+  var totalSlides = slides.length;
+  if(totalSlides === 0) return;
+
+  var currentIndex = 0;
+  var isPlaying = true;
+  var timer = null;
+  var startX = 0, currentX = 0, isSwiping = false;
+
+  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Build dots
+  dotsContainer.innerHTML = "";
+  slides.forEach(function(_, idx){
+    var dot = document.createElement("button");
+    dot.className = "carousel-dot" + (idx === 0 ? " is-active" : "");
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-label", "Go to slide " + (idx + 1));
+    dot.addEventListener("click", function(){ goToSlide(idx); });
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateCarousel(){
+    var isRTL = document.documentElement.dir === "rtl";
+    var offset = currentIndex * 100;
+    track.style.transform = "translateX(" + (isRTL ? offset : -offset) + "%)";
+
+    // Update dots
+    var dots = dotsContainer.querySelectorAll(".carousel-dot");
+    dots.forEach(function(dot, idx){
+      dot.classList.toggle("is-active", idx === currentIndex);
+    });
+
+    // Update counter
+    if(counterEl){
+      var currentFormatted = (currentIndex + 1 < 10 ? "0" : "") + (currentIndex + 1);
+      var totalFormatted = (totalSlides < 10 ? "0" : "") + totalSlides;
+      counterEl.textContent = currentFormatted + " / " + totalFormatted;
+    }
+
+    // Prev / Next button state
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+  }
+
+  function goToSlide(index){
+    currentIndex = (index + totalSlides) % totalSlides;
+    updateCarousel();
+  }
+
+  function nextSlide(){
+    goToSlide(currentIndex + 1);
+  }
+
+  function prevSlide(){
+    goToSlide(currentIndex - 1);
+  }
+
+  prevBtn.addEventListener("click", function(){ prevSlide(); stopTimer(); startTimer(); });
+  nextBtn.addEventListener("click", function(){ nextSlide(); stopTimer(); startTimer(); });
+
+  // Keyboard navigation
+  wrapper.addEventListener("keydown", function(e){
+    if(e.key === "ArrowLeft"){
+      document.documentElement.dir === "rtl" ? nextSlide() : prevSlide();
+      stopTimer(); startTimer();
+    } else if(e.key === "ArrowRight"){
+      document.documentElement.dir === "rtl" ? prevSlide() : nextSlide();
+      stopTimer(); startTimer();
+    }
+  });
+
+  // Touch & Swipe gestures
+  trackContainer.addEventListener("touchstart", function(e){
+    if(e.touches && e.touches[0]){
+      startX = e.touches[0].clientX;
+      isSwiping = true;
+      stopTimer();
+    }
+  }, {passive:true});
+
+  trackContainer.addEventListener("touchmove", function(e){
+    if(!isSwiping || !e.touches || !e.touches[0]) return;
+    currentX = e.touches[0].clientX;
+  }, {passive:true});
+
+  trackContainer.addEventListener("touchend", function(){
+    if(!isSwiping) return;
+    var diff = startX - currentX;
+    var isRTL = document.documentElement.dir === "rtl";
+    if(Math.abs(diff) > 40){
+      if(diff > 0){
+        isRTL ? prevSlide() : nextSlide();
+      } else {
+        isRTL ? nextSlide() : prevSlide();
+      }
+    }
+    isSwiping = false;
+    startTimer();
+  });
+
+  // Pause on hover & focus (UI UX Pro Max requirement)
+  function stopTimer(){
+    if(timer){ clearInterval(timer); timer = null; }
+  }
+
+  function startTimer(){
+    stopTimer();
+    if(!reducedMotion && isPlaying){
+      timer = setInterval(nextSlide, 5000);
+    }
+  }
+
+  wrapper.addEventListener("mouseenter", stopTimer);
+  wrapper.addEventListener("mouseleave", startTimer);
+  wrapper.addEventListener("focusin", stopTimer);
+  wrapper.addEventListener("focusout", startTimer);
+
+  // IntersectionObserver to pause offscreen
+  if("IntersectionObserver" in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          startTimer();
+        } else {
+          stopTimer();
+        }
+      });
+    }, {threshold: 0.2});
+    observer.observe(wrapper);
+  } else {
+    startTimer();
+  }
+
+  updateCarousel();
+}
+
 /* ── Footer year ── */
 function initFooterYear(){
   var el=document.getElementById("footerYear");
@@ -1122,8 +1416,11 @@ function initFooterYear(){
 
 /* ── Init ── */
 document.addEventListener("DOMContentLoaded",function(){
+  var savedLang = "ar";
+  try { savedLang = localStorage.getItem("aboudweb_lang") || "ar"; } catch(e){}
   loadSiteContent();
-  applyLanguage("en");
+  applyLanguage(savedLang);
+  initThemeToggle();
   initLangSwitch();
   initLoader();
   initCursor();
@@ -1136,6 +1433,7 @@ document.addEventListener("DOMContentLoaded",function(){
   initReveal();
   initSpotlight();
   initHero3D();
+  initPortfolioCarousel();
   initFooterYear();
 });
 
