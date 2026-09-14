@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta name="google-site-verification" content="vbHP3zSXlePXVuGt4Rrc6VrKDNY3zoINKX1QdlFuUCM" />
 <meta charset="UTF-8">
@@ -55,6 +55,27 @@ html{scroll-behavior:smooth;}
   --font-body:'Inter','Segoe UI',sans-serif;
   --font-ar:'IBM Plex Sans Arabic','Segoe UI',sans-serif;
   --nav-h:84px;
+}
+
+[data-theme="dark"] {
+  --canvas:#0A0D18;
+  --canvas-raised:#121729;
+  --canvas-sunken:#060812;
+  --ink:#F3F4F6;
+  --ink-dim:#9CA3AF;
+  --ink-faint:#6B7280;
+  --line:rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.18);
+  --azure:#60A5FA;
+  --iris:#A78BFA;
+  --bloom:#F472B6;
+  --amber:#FBBF24;
+  --glass-bg:rgba(18,23,41,.65);
+  --glass-bg-strong:rgba(18,23,41,.88);
+  --glass-border:rgba(255,255,255,.12);
+  --glass-hi:rgba(255,255,255,.22);
+  --shadow-soft:0 24px 64px -20px rgba(0,0,0,.55);
+  --shadow-lift:0 36px 96px -24px rgba(0,0,0,.75);
 }
 
 body{
@@ -188,6 +209,18 @@ body.has-custom-cursor,body.has-custom-cursor a,body.has-custom-cursor button{cu
 .nav-links a::after{content:"";position:absolute;inset-inline-start:0;bottom:0;height:1.5px;width:0;background:linear-gradient(90deg,var(--azure),var(--iris));transition:width .4s var(--ease);}
 .nav-links a:hover{color:var(--ink);}.nav-links a:hover::after{width:100%;}
 .nav-actions{display:flex;align-items:center;gap:16px;}
+.theme-toggle-btn{
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--glass-bg);border:1px solid var(--glass-border);border-top-color:var(--glass-hi);
+  color:var(--ink);transition:all .3s var(--ease);padding:0;cursor:pointer;
+}
+.theme-toggle-btn:hover{background:var(--glass-bg-strong);color:var(--iris);transform:scale(1.06);}
+.theme-toggle-btn svg{width:18px;height:18px;}
+.theme-toggle-btn .sun-icon{display:block;}
+.theme-toggle-btn .moon-icon{display:none;}
+[data-theme="dark"] .theme-toggle-btn .sun-icon{display:none;}
+[data-theme="dark"] .theme-toggle-btn .moon-icon{display:block;}
+
 .lang-switch{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;}
 .lang-btn{color:var(--ink-faint);transition:color .3s ease;padding:4px 2px;}
 .lang-btn.is-active{color:var(--ink);}
@@ -287,6 +320,12 @@ html[dir="rtl"] .hero-stage{transform:translateX(-6%);}
 .project-link:hover svg{transform:translateX(4px);}
 html[dir="rtl"] .project-link svg{transform:scaleX(-1);}
 html[dir="rtl"] .project-link:hover svg{transform:scaleX(-1) translateX(4px);}
+
+/* RTL/LTR Mirroring & Adaptations */
+html[dir="rtl"] .carousel-arrow svg{transform:scaleX(-1);}
+html[dir="ltr"] .carousel-arrow svg{transform:none;}
+html[dir="rtl"] .btn-arrow{transform:scaleX(-1);}
+html[dir="ltr"] .btn-arrow{transform:none;}
 
 /* Carousel Controls */
 .carousel-controls{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:20px;flex-wrap:wrap;}
@@ -449,10 +488,14 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       <a href="#contact" data-i18n="nav_contact">Contact</a>
     </nav>
     <div class="nav-actions">
+      <button type="button" class="theme-toggle-btn" id="themeToggleNav" aria-label="Toggle dark/light theme" title="تبديل الوضع الليلي / النهاري">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
       <div class="lang-switch" role="group" aria-label="Language">
-        <button type="button" class="lang-btn" data-lang="ar">العربية</button>
+        <button type="button" class="lang-btn is-active" data-lang="ar">العربية</button>
         <span class="lang-sep">|</span>
-        <button type="button" class="lang-btn is-active" data-lang="en">English</button>
+        <button type="button" class="lang-btn" data-lang="en">English</button>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -467,10 +510,16 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   <a href="#services" data-i18n="nav_services" data-close-menu>Services</a>
   <a href="#about"   data-i18n="nav_about" data-close-menu>About</a>
   <a href="#contact" data-i18n="nav_contact" data-close-menu>Contact</a>
-  <div class="lang-switch" role="group" aria-label="Language">
-    <button type="button" class="lang-btn" data-lang="ar">العربية</button>
-    <span class="lang-sep">|</span>
-    <button type="button" class="lang-btn is-active" data-lang="en">English</button>
+  <div style="display:flex;align-items:center;gap:18px;margin-top:10px;">
+    <button type="button" class="theme-toggle-btn" id="themeToggleMobile" aria-label="Toggle dark/light theme" title="تبديل الوضع الليلي / النهاري">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-btn is-active" data-lang="ar">العربية</button>
+      <span class="lang-sep">|</span>
+      <button type="button" class="lang-btn" data-lang="en">English</button>
+    </div>
   </div>
 </div>
 
@@ -972,7 +1021,8 @@ function applyProject(num, url, imageUrl){
 /* ── Language ── */
 function applyLanguage(lang){
   currentLang = lang;
-  var dict = translations[lang];
+  try { localStorage.setItem("aboudweb_lang", lang); } catch(e){}
+  var dict = translations[lang] || translations["ar"];
   document.documentElement.lang = lang;
   document.documentElement.dir = (lang==="ar") ? "rtl" : "ltr";
   document.title = (lang==="ar")
@@ -987,7 +1037,7 @@ function applyLanguage(lang){
   });
   // Rebuild WhatsApp URL with current lang message
   var waNum  = siteSettings['whatsapp_number'] || WHATSAPP_NUMBER;
-  var waText = encodeURIComponent(whatsappMsg[lang]);
+  var waText = encodeURIComponent(whatsappMsg[lang] || whatsappMsg["ar"]);
   var waUrl  = "https://wa.me/"+waNum+"?text="+waText;
   var waBtn  = document.getElementById("whatsappBtn");
   var waFoot = document.getElementById("whatsappFooterLink");
@@ -999,6 +1049,35 @@ function initLangSwitch(){
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.addEventListener("click", function(){ applyLanguage(this.getAttribute("data-lang")); });
   });
+}
+
+/* ── Theme Toggle ── */
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme", theme);
+  try { localStorage.setItem("aboudweb_theme", theme); } catch(e){}
+}
+
+function initThemeToggle(){
+  var savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("aboudweb_theme");
+  } catch(e){}
+  if(!savedTheme){
+    savedTheme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  applyTheme(savedTheme);
+
+  var navBtn = document.getElementById("themeToggleNav");
+  var mobBtn = document.getElementById("themeToggleMobile");
+
+  function toggle(){
+    var current = document.documentElement.getAttribute("data-theme") || "light";
+    var next = (current === "dark") ? "light" : "dark";
+    applyTheme(next);
+  }
+
+  if(navBtn) navBtn.addEventListener("click", toggle);
+  if(mobBtn) mobBtn.addEventListener("click", toggle);
 }
 
 /* ── Loader ── */
@@ -1337,8 +1416,11 @@ function initFooterYear(){
 
 /* ── Init ── */
 document.addEventListener("DOMContentLoaded",function(){
+  var savedLang = "ar";
+  try { savedLang = localStorage.getItem("aboudweb_lang") || "ar"; } catch(e){}
   loadSiteContent();
-  applyLanguage("en");
+  applyLanguage(savedLang);
+  initThemeToggle();
   initLangSwitch();
   initLoader();
   initCursor();
