@@ -980,26 +980,9 @@ var whatsappMsg = {
 };
 var currentLang = "en";
 
-/* ── Load site settings from Supabase ── */
-[currentLang] || whatsappMsg['ar']);
-  var waUrl  = "https://wa.me/" + waNum + "?text=" + waText;
-  var waBtn  = document.getElementById("whatsappBtn");
-  var waFoot = document.getElementById("whatsappFooterLink");
-  if(waBtn)  waBtn.setAttribute("href", waUrl);
-  if(waFoot) waFoot.setAttribute("href", waUrl);
 
-  // Social links (show only if URL is set)
-  applyLink("instagramLink",    siteSettings['instagram_url_en']);
-  applyLink("behanceLink",      siteSettings['behance_url_en']);
-  applyLink("linkedinLink",     siteSettings['linkedin_url_en']);
-  applyLink("instagramFooterLink", siteSettings['instagram_url_en']);
-  applyLink("behanceFooterLink",   siteSettings['behance_url_en']);
-  applyLink("linkedinFooterLink",  siteSettings['linkedin_url_en']);
-
-  // Developer credit
-  var devWrap = document.getElementById("devCreditWrap");
-  var devLink = document.getElementById("devCreditLink");
-  if(deasync function loadSiteContent(){
+       /* ── Load site settings from Supabase ── */
+async function loadSiteContent(){
   try{
     const { data, error } = await supabaseClient
       .from("site_settings")
@@ -1062,6 +1045,8 @@ var currentLang = "en";
     console.error("Site settings error:", err);
   }
 }
+
+
 /* ── Load services from Supabase ── */
 async function loadServices(){
   try{
@@ -1100,6 +1085,7 @@ async function loadServices(){
       if(descEl && description) descEl.textContent = description;
 
       const numEl = card.querySelector(".service-num");
+
       if(numEl){
         numEl.textContent = String(index + 1).padStart(2, "0");
       }
@@ -1114,60 +1100,7 @@ async function loadServices(){
   }catch(err){
     console.error("Services error:", err);
   }
-  }
-
-  async function loadServices(){
-  try{
-    const { data, error } = await supabaseClient
-      .from("services")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true });
-
-    if(error){
-      console.error("Services error:", error);
-      return;
-    }
-
-    if(!data || !data.length) return;
-
-    const cards = document.querySelectorAll(".services-grid .service-card");
-
-    data.forEach(function(service, index){
-      if(!cards[index]) return;
-
-      const card = cards[index];
-
-      const title = currentLang === "ar"
-        ? service.title_ar
-        : service.title_en;
-
-      const description = currentLang === "ar"
-        ? service.description_ar
-        : service.description_en;
-
-      const titleEl = card.querySelector("h3");
-      const descEl = card.querySelector("p");
-
-      if(titleEl && title) titleEl.textContent = title;
-      if(descEl && description) descEl.textContent = description;
-
-      const numEl = card.querySelector(".service-num");
-      if(numEl){
-        numEl.textContent = String(index + 1).padStart(2, "0");
-      }
-
-      card.style.display = "";
-    });
-
-    for(let i = data.length; i < cards.length; i++){
-      cards[i].style.display = "none";
-    }
-
-  }catch(err){
-    console.error("Services error:", err);
-  }
-  }
+}
   
 /* ── Apply SEO & Meta Tags ── */
 function applySEOSettings(){
