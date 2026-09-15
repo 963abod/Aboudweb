@@ -2,59 +2,2383 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ABOUD WEB — Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABOUD WEB — Admin</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#f4f5fb;--card:#fff;--ink:#101322;--muted:#68708b;--line:#e7e9f1;--blue:#4f46e5;--red:#ef4444;--green:#10b981;--shadow:0 18px 50px rgba(20,25,55,.08);--r:18px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{min-height:100vh}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card,.panel,.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}.login-card{width:min(420px,100%);padding:32px}.logo{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#4f46e5,#9333ea);color:#fff;display:grid;place-items:center;font-weight:800;font-size:24px;margin:auto}.login h1{text-align:center;margin:14px 0 6px}.login p{text-align:center;color:var(--muted);margin:0 0 24px}.form{display:grid;gap:14px}.field{display:grid;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:600}.input,.textarea,.select{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;outline:none}.input:focus,.textarea:focus,.select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #4f46e51c}.textarea{min-height:100px;resize:vertical}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700}.primary{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff}.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}.danger{background:#fff1f2;color:var(--red);border:1px solid #fecdd3}.sidebar{position:fixed;inset:0 auto 0 0;width:255px;padding:16px;z-index:20}.side{height:100%;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--line)}.brand .logo{margin:0;width:40px;height:40px;font-size:18px}.brand b{font-family:Inter,sans-serif}.brand small{display:block;color:var(--muted);font-size:10px}.nav{padding-top:15px;display:grid;gap:5px;overflow:auto}.nav button{border:0;background:transparent;text-align:start;padding:11px 12px;border-radius:11px;color:var(--muted)}.nav button.active,.nav button:hover{background:#eef0ff;color:var(--blue);font-weight:700}.bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:12px}.main{margin-left:255px;padding:24px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.top h2{margin:0}.actions{display:flex;gap:8px}.view{display:none}.view.active{display:block}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font:800 30px Inter;margin-top:5px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}.panel{padding:20px;margin-bottom:18px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.head h3{margin:0}.head p{margin:4px 0 0;color:var(--muted);font-size:12px}.item{border:1px solid var(--line);border-radius:15px;padding:15px;background:#fff}.item h4{margin:0 0 7px}.item p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.item .row{display:flex;gap:7px;margin-top:12px}.row{display:flex;gap:12px}.row>*{flex:1}.toolbar{display:flex;gap:10px;margin-bottom:15px}.modal{position:fixed;inset:0;background:#0b102099;display:none;place-items:center;padding:18px;z-index:100}.modal.show{display:grid}.modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-head h3{margin:0}.form-grid{display:grid;gap:12px}.form-grid.two{grid-template-columns:1fr 1fr}.switch{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);padding:12px;border-radius:12px}.switch input{width:20px;height:20px}.error{color:var(--red);font-size:12px;text-align:center}.toast{position:fixed;bottom:20px;right:20px;background:#111827;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:200}.toast.show{display:block}@media(max-width:900px){.sidebar{transform:translateX(100%);left:auto;right:0;width:280px}.sidebar.open{transform:translateX(0)}.main{margin:0;padding:16px}.stats{grid-template-columns:1fr 1fr}.form-grid.two{grid-template-columns:1fr}.mobile{display:inline-flex!important}}@media(min-width:901px){.mobile{display:none!important}}
+:root{
+  --bg:#080808;
+  --panel:#111;
+  --panel2:#171717;
+  --border:#282828;
+  --text:#fff;
+  --muted:#999;
+  --accent:#fff;
+  --danger:#ef4444;
+  --success:#22c55e;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,"Noto Sans Arabic",sans-serif;
+}
+
+body{overflow-x:hidden}
+
+button,input,textarea,select{font:inherit}
+
+button{cursor:pointer}
+
+.hidden{display:none!important}
+
+/* LOGIN */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.loginBox{
+  width:100%;
+  max-width:420px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:30px;
+  box-shadow:0 30px 80px #000;
+}
+
+.logo{
+  text-align:center;
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+
+.loginSub{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:28px;
+}
+
+.field{
+  margin-bottom:16px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  color:#bbb;
+  margin-bottom:7px;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  border:1px solid var(--border);
+  background:#0b0b0b;
+  color:#fff;
+  border-radius:11px;
+  padding:12px;
+  outline:none;
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:#666;
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 16px;
+  font-weight:700;
+}
+
+.btnPrimary{
+  background:#fff;
+  color:#000;
+}
+
+.btnSecondary{
+  background:#1d1d1d;
+  color:#fff;
+  border:1px solid var(--border);
+}
+
+.btnDanger{
+  background:#351414;
+  color:#ff7777;
+}
+
+.btnSuccess{
+  background:#12351f;
+  color:#6ee7a0;
+}
+
+.loginBtn{
+  width:100%;
+  margin-top:5px;
+}
+
+.error{
+  color:#ff6b6b;
+  font-size:12px;
+  margin-top:12px;
+  line-height:1.6;
+}
+
+/* APP */
+
+#adminApp{
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  top:0;
+  right:0;
+  width:260px;
+  height:100vh;
+  background:#0d0d0d;
+  border-left:1px solid var(--border);
+  padding:22px 15px;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+}
+
+.brand{
+  padding:8px 10px 24px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:15px;
+}
+
+.brandTitle{
+  font-size:21px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.brandSub{
+  color:#777;
+  font-size:10px;
+  margin-top:5px;
+}
+
+.nav{
+  display:grid;
+  gap:6px;
+}
+
+.nav button{
+  width:100%;
+  text-align:right;
+  border:0;
+  background:transparent;
+  color:#aaa;
+  padding:12px 13px;
+  border-radius:10px;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#1b1b1b;
+  color:#fff;
+}
+
+.sidebarBottom{
+  margin-top:auto;
+}
+
+.main{
+  margin-right:260px;
+  min-height:100vh;
+  padding:25px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.topTitle{
+  font-size:25px;
+  font-weight:900;
+}
+
+.topSub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.mobileMenu{
+  display:none;
+}
+
+/* PANELS */
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+}
+
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+}
+
+.statLabel{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:9px;
+}
+
+.statValue{
+  font-size:30px;
+  font-weight:900;
+}
+
+.sectionHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+
+.sectionHead h2{
+  margin:0;
+  font-size:18px;
+}
+
+/* TABLE */
+
+.tableWrap{
+  overflow:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  text-align:right;
+  font-size:12px;
+  vertical-align:top;
+}
+
+th{
+  color:#aaa;
+  background:#151515;
+}
+
+td{
+  color:#ddd;
+}
+
+.actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+/* MODAL */
+
+#modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.modalBox{
+  width:100%;
+  max-width:720px;
+  max-height:90vh;
+  overflow:auto;
+  background:#111;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+}
+
+.modalHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.modalHead h2{
+  margin:0;
+  font-size:19px;
+}
+
+.modalActions{
+  display:flex;
+  gap:8px;
+  justify-content:flex-start;
+  margin-top:20px;
+}
+
+/* CHECK */
+
+.check{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 0;
+}
+
+.check input{
+  width:18px;
+  height:18px;
+}
+
+/* EMPTY */
+
+.empty{
+  color:#777;
+  text-align:center;
+  padding:35px 10px;
+  border:1px dashed var(--border);
+  border-radius:12px;
+}
+
+/* NOTICE */
+
+.notice{
+  padding:13px;
+  border-radius:11px;
+  background:#181818;
+  border:1px solid var(--border);
+  color:#aaa;
+  font-size:12px;
+  line-height:1.7;
+  margin-bottom:15px;
+}
+
+.notice.success{
+  color:#7ee2a7;
+}
+
+.notice.error{
+  color:#ff7777;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px){
+
+  .sidebar{
+    transform:translateX(100%);
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-right:0;
+    padding:15px;
+  }
+
+  .mobileMenu{
+    display:inline-flex;
+  }
+
+  .topbar{
+    align-items:flex-start;
+  }
+}
 </style>
 </head>
+
 <body>
-<div id="loginScreen" class="login"><div class="login-card"><div class="logo">A</div><h1>ABOUD WEB</h1><p>لوحة تحكم الموقع</p><div class="form"><div class="field"><label>البريد الإلكتروني</label><input id="loginEmail" class="input" type="email" dir="ltr"></div><div class="field"><label>كلمة المرور</label><input id="loginPass" class="input" type="password" dir="ltr"></div><button class="btn primary" onclick="handleLogin()">تسجيل الدخول</button><div id="loginError" class="error hidden"></div></div></div></div>
-<div id="adminApp" class="app hidden">
-<aside id="sidebar" class="sidebar"><div class="side"><div class="brand"><div class="logo">A</div><div><b>ABOUD WEB</b><small>ADMIN DASHBOARD</small></div></div><nav class="nav"><button class="active" data-view="overview">نظرة عامة</button><button data-view="settings">إعدادات الموقع</button><button data-view="services">الخدمات</button><button data-view="projects">المشاريع</button><button data-view="testimonials">آراء العملاء</button><button data-view="records">سجلات البيانات</button></nav><div class="bottom"><button class="btn danger" style="width:100%" onclick="handleLogout()">تسجيل الخروج</button></div></div></aside>
-<main class="main"><header class="top"><div><button class="btn secondary mobile" onclick="toggleSidebar()">☰</button><h2 id="title">نظرة عامة</h2><div style="color:var(--muted);font-size:12px">Supabase — بدون site_content</div></div><div class="actions"><button class="btn secondary" onclick="toggleTheme()">◐</button><a class="btn primary" href="index.html" target="_blank">معاينة الموقع</a></div></header>
-<section id="overview" class="view active"><div class="stats"><div class="stat"><small>إعدادات الموقع</small><strong id="sSettings">0</strong></div><div class="stat"><small>الخدمات</small><strong id="sServices">0</strong></div><div class="stat"><small>المشاريع</small><strong id="sProjects">0</strong></div><div class="stat"><small>التقييمات</small><strong id="sTestimonials">0</strong></div></div><div class="panel" style="margin-top:18px"><div class="head"><div><h3>حالة قاعدة البيانات</h3><p>هذه اللوحة تستخدم الجداول الجديدة فقط.</p></div><button class="btn secondary" onclick="loadAll()">تحديث</button></div><div id="health" style="color:var(--muted)">جاري الفحص...</div></div></section>
-<section id="settings" class="view"><div class="panel"><div class="head"><div><h3>إعدادات الموقع</h3><p>تُحفظ مباشرة داخل site_settings.</p></div><button class="btn primary" onclick="saveSettings()">حفظ الإعدادات</button></div><div id="settingsForm" class="form-grid two"></div></div></section>
-<section id="services" class="view"><div class="panel"><div class="head"><div><h3>الخدمات</h3><p>جدول services</p></div><button class="btn primary" onclick="openRecord('services')">+ إضافة خدمة</button></div><div id="servicesGrid" class="grid"></div></div></section>
-<section id="projects" class="view"><div class="panel"><div class="head"><div><h3>المشاريع</h3><p>جدول projects</p></div><button class="btn primary" onclick="openRecord('projects')">+ إضافة مشروع</button></div><div id="projectsGrid" class="grid"></div></div></section>
-<section id="testimonials" class="view"><div class="panel"><div class="head"><div><h3>آراء العملاء</h3><p>جدول testimonials</p></div><button class="btn primary" onclick="openRecord('testimonials')">+ إضافة تقييم</button></div><div id="testimonialsGrid" class="grid"></div></div></section>
-<section id="records" class="view"><div class="panel"><div class="head"><div><h3>سجلات البيانات</h3><p>عرض الجداول الأربعة فقط</p></div></div><div class="toolbar"><select id="recordTable" class="select" onchange="renderRecords()"><option value="site_settings">site_settings</option><option value="services">services</option><option value="projects">projects</option><option value="testimonials">testimonials</option></select><input id="recordSearch" class="input" placeholder="بحث..." oninput="renderRecords()"></div><div id="recordsGrid" class="grid"></div></div></section>
-</main></div>
-<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">تعديل</h3><button class="btn secondary" onclick="closeModal()">✕</button></div><div id="modalForm" class="form-grid"></div><div class="row" style="margin-top:16px"><button class="btn primary" onclick="saveRecord()">حفظ</button><button class="btn secondary" onclick="closeModal()">إلغاء</button></div></div></div><div id="toast" class="toast"></div>
+
+<!-- LOGIN -->
+
+<section id="loginScreen">
+
+  <div class="loginBox">
+
+    <div class="logo">ABOUD WEB</div>
+
+    <div class="loginSub">
+      لوحة التحكم
+    </div>
+
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input
+        id="loginEmail"
+        type="email"
+        autocomplete="username"
+        dir="ltr"
+      >
+    </div>
+
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input
+        id="loginPass"
+        type="password"
+        autocomplete="current-password"
+        dir="ltr"
+      >
+    </div>
+
+    <button
+      class="btn btnPrimary loginBtn"
+      onclick="handleLogin()"
+    >
+      تسجيل الدخول
+    </button>
+
+    <div id="loginError" class="error"></div>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="adminApp" class="hidden">
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      <div class="brandTitle">ABOUD WEB</div>
+      <div class="brandSub">ADMIN DASHBOARD</div>
+    </div>
+
+    <nav class="nav">
+
+      <button
+        class="active"
+        data-page="overview"
+      >
+        نظرة عامة
+      </button>
+
+      <button data-page="settings">
+        إعدادات الموقع
+      </button>
+
+      <button data-page="services">
+        الخدمات
+      </button>
+
+      <button data-page="projects">
+        المشاريع
+      </button>
+
+      <button data-page="testimonials">
+        آراء العملاء
+      </button>
+
+    </nav>
+
+    <div class="sidebarBottom">
+
+      <button
+        class="btn btnDanger"
+        style="width:100%"
+        onclick="handleLogout()"
+      >
+        تسجيل الخروج
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+
+        <button
+          class="btn btnSecondary mobileMenu"
+          onclick="toggleSidebar()"
+        >
+          ☰
+        </button>
+
+        <div
+          id="pageTitle"
+          class="topTitle"
+        >
+          نظرة عامة
+        </div>
+
+        <div class="topSub">
+          إدارة محتوى موقع ABOUD WEB
+        </div>
+
+      </div>
+
+      <button
+        class="btn btnSecondary"
+        onclick="refreshAll()"
+      >
+        تحديث
+      </button>
+
+    </header>
+
+
+    <!-- OVERVIEW -->
+
+    <section
+      id="page-overview"
+      class="page"
+    >
+
+      <div class="grid">
+
+        <div class="stat">
+          <div class="statLabel">
+            إعدادات الموقع
+          </div>
+          <div
+            id="statSettings"
+            class="statValue"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="statLabel">
+            الخدمات
+          </div>
+          <div
+            id="statServices"
+            class="statValue"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="statLabel">
+            المشاريع
+          </div>
+          <div
+            id="statProjects"
+            class="statValue"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="statLabel">
+            آراء العملاء
+          </div>
+          <div
+            id="statTestimonials"
+            class="statValue"
+          >
+            0
+          </div>
+        </div>
+
+      </div>
+
+
+      <div
+        class="panel"
+        style="margin-top:18px"
+      >
+
+        <div class="sectionHead">
+          <h2>حالة النظام</h2>
+        </div>
+
+        <div
+          id="systemStatus"
+          class="notice"
+        >
+          جاري الاتصال بـ Supabase...
+        </div>
+
+        <div class="notice">
+          لوحة الإدارة هذه تستخدم فقط الجداول:
+          <b>site_settings</b>،
+          <b>services</b>،
+          <b>projects</b>،
+          <b>testimonials</b>.
+          <br>
+          لا يوجد أي اعتماد على جدول
+          <b>site_content</b>.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section
+      id="page-settings"
+      class="page hidden"
+    >
+
+      <div class="panel">
+
+        <div class="sectionHead">
+
+          <h2>إعدادات الموقع</h2>
+
+          <button
+            class="btn btnPrimary"
+            onclick="saveSiteSettings()"
+          >
+            حفظ الإعدادات
+          </button>
+
+        </div>
+
+        <div
+          id="settingsNotice"
+          class="notice hidden"
+        ></div>
+
+        <div
+          id="settingsForm"
+          class="grid"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SERVICES -->
+
+    <section
+      id="page-services"
+      class="page hidden"
+    >
+
+      <div class="panel">
+
+        <div class="sectionHead">
+
+          <h2>الخدمات</h2>
+
+          <button
+            class="btn btnPrimary"
+            onclick="openEditor('services')"
+          >
+            + إضافة خدمة
+          </button>
+
+        </div>
+
+        <div id="servicesTable"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+
+    <section
+      id="page-projects"
+      class="page hidden"
+    >
+
+      <div class="panel">
+
+        <div class="sectionHead">
+
+          <h2>المشاريع</h2>
+
+          <button
+            class="btn btnPrimary"
+            onclick="openEditor('projects')"
+          >
+            + إضافة مشروع
+          </button>
+
+        </div>
+
+        <div id="projectsTable"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TESTIMONIALS -->
+
+    <section
+      id="page-testimonials"
+      class="page hidden"
+    >
+
+      <div class="panel">
+
+        <div class="sectionHead">
+
+          <h2>آراء العملاء</h2>
+
+          <button
+            class="btn btnPrimary"
+            onclick="openEditor('testimonials')"
+          >
+            + إضافة رأي
+          </button>
+
+        </div>
+
+        <div id="testimonialsTable"></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</section>
+
+
+<!-- MODAL -->
+
+<div id="modal">
+
+  <div class="modalBox">
+
+    <div class="modalHead">
+
+      <h2 id="modalTitle">
+        تعديل
+      </h2>
+
+      <button
+        class="btn btnSecondary"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div id="modalBody"></div>
+
+    <div class="modalActions">
+
+      <button
+        class="btn btnPrimary"
+        onclick="saveEditor()"
+      >
+        حفظ
+      </button>
+
+      <button
+        class="btn btnSecondary"
+        onclick="closeModal()"
+      >
+        إلغاء
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
-const SUPABASE_URL='https://pblbdxocvnkmakrpomsb.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp';
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let cache={site_settings:[],services:[],projects:[],testimonials:[]};let editing={table:null,id:null,row:null};
-const settingsFields=['hero_kicker_ar','hero_kicker_en','hero_sub_ar','hero_sub_en','work_kicker_ar','work_kicker_en','work_title_ar','work_title_en','services_kicker_ar','services_kicker_en','services_title_ar','services_title_en','services_sub_ar','services_sub_en','pricing_kicker_ar','pricing_kicker_en','pricing_title_ar','pricing_title_en','pricing_sub_ar','pricing_sub_en','about_role_ar','about_role_en','about_title_ar','about_title_en','about_body_ar','about_body_en','contact_kicker_ar','contact_kicker_en','contact_title_ar','contact_title_en','contact_sub_ar','contact_sub_en','footer_tagline_ar','footer_tagline_en','price1_amount','price1_title_ar','price1_title_en','price1_desc_ar','price1_desc_en','price2_title_ar','price2_title_en','price2_desc_ar','price2_desc_en','whatsapp','whatsapp_number','instagram_url','behance_url','linkedin_url','show_hero','show_work','show_services','show_pricing','show_about','show_contact','show_testimonials','show_dev_credit','dev_credit_url','seo_title_ar','seo_title_en','seo_desc_ar','seo_desc_en','seo_description_ar','seo_description_en','seo_og_image','seo_og_image_en','seo_favicon','seo_favicon_en','favicon_url','location_address_ar','location_address_en','location_hours_ar','location_hours_en','location_maps_url'];
-const labels={title_ar:'العنوان العربي',title_en:'العنوان الإنكليزي',description_ar:'الوصف العربي',description_en:'الوصف الإنكليزي',category_ar:'التصنيف العربي',category_en:'التصنيف الإنكليزي',url:'الرابط',image_url:'رابط الصورة',is_active:'نشط',sort_order:'الترتيب',name_ar:'الاسم العربي',name_en:'الاسم الإنكليزي',text_ar:'النص العربي',text_en:'النص الإنكليزي',rating:'التقييم'};
-function $(x){return document.getElementById(x)}function toast(x){$('toast').textContent=x;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2800)}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function val(row,key){return row&&row[key]!==undefined?row[key]:''}
-async function handleLogin(){const email=$('loginEmail').value.trim(),password=$('loginPass').value;const e=$('loginError');e.classList.add('hidden');if(!email||!password){e.textContent='أدخل البريد وكلمة المرور';e.classList.remove('hidden');return}const {error}=await db.auth.signInWithPassword({email,password});if(error){e.textContent=error.message;e.classList.remove('hidden');return}showApp()}
-async function handleLogout(){await db.auth.signOut();location.reload()}function showApp(){$('loginScreen').classList.add('hidden');$('adminApp').classList.remove('hidden');loadAll()}
-async function fetchTable(t){const r=await db.from(t).select('*').order('created_at',{ascending:false});if(r.error){console.error(t,r.error);return []}return r.data||[]}
-async function loadAll(){const results=await Promise.all(['site_settings','services','projects','testimonials'].map(fetchTable));cache.site_settings=results[0];cache.services=results[1];cache.projects=results[2];cache.testimonials=results[3];$('sSettings').textContent=cache.site_settings.length;$('sServices').textContent=cache.services.length;$('sProjects').textContent=cache.projects.length;$('sTestimonials').textContent=cache.testimonials.length;$('health').textContent='تم الاتصال بالجداول الأربعة بنجاح.';renderSettings();renderList('services');renderList('projects');renderList('testimonials');renderRecords()}
-function renderSettings(){const row=cache.site_settings[0]||{};$('settingsForm').innerHTML=settingsFields.map(k=>{let type=(k.startsWith('show_')?'checkbox':(k.includes('body')||k.includes('sub')||k.includes('desc')?'textarea':'text'));if(!(k in row)&&cache.site_settings.length&&k!=='whatsapp')return '';const l=k.replaceAll('_',' ');if(type==='checkbox')return `<div class="switch"><span>${esc(labels[k]||l)}</span><input id="set_${k}" type="checkbox" ${row[k]===true||row[k]==='true'?'checked':''}></div>`;return `<div class="field"><label>${esc(labels[k]||l)}</label>${type==='textarea'?`<textarea id="set_${k}" class="textarea">${esc(row[k]??'')}</textarea>`:`<input id="set_${k}" class="input" value="${esc(row[k]??'')}" ${/url|whatsapp|phone|amount/.test(k)?'dir="ltr"':''}>`}</div>`}).join('')||'<div style="color:var(--muted)">لا توجد حقول معروفة.</div>'}
-function buildSettingsPayload(){const row=cache.site_settings[0]||{};const p={};for(const k of settingsFields){const el=$('set_'+k);if(!el)continue;p[k]=el.type==='checkbox'?el.checked:el.value}return p}
-function getId(row){return row&&row.id!=null?row.id:null}
-async function cleanErrorPayload(table,payload,mode,id){let p={...payload};for(let i=0;i<8;i++){let q;if(mode==='update')q=db.from(table).update(p).eq('id',id);else q=db.from(table).insert(p);const r=await q;if(!r.error)return true;const m=r.error.message||'';const match=m.match(/column ['"]?([a-zA-Z0-9_]+)['"]?/i)||m.match(/'([a-zA-Z0-9_]+)' column/i);if(match&&p[match[1]]!==undefined){delete p[match[1]];continue}throw r.error}throw new Error('تعذر حفظ البيانات')}
-async function saveSettings(){const payload=buildSettingsPayload();const row=cache.site_settings[0];try{if(row&&row.id!=null)await cleanErrorPayload('site_settings',payload,'update',row.id);else await cleanErrorPayload('site_settings',payload,'insert');toast('تم حفظ إعدادات الموقع');await loadAll()}catch(e){console.error(e);toast('خطأ: '+e.message)}}
-function human(k){return labels[k]||k.replaceAll('_',' ')}
-function mainText(r){return r?.title_ar||r?.name_ar||r?.title_en||r?.name_en||r?.description_ar||r?.text_ar||r?.id||'—'}
-function renderList(table){const grid=$(table+'Grid');if(!grid)return;const q=(table==='services'?($('serviceSearch')?.value||''):'').toLowerCase();grid.innerHTML=cache[table].filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)).map(r=>{const img=r.image_url||r.image||'';return `<div class="item">${img?`<img src="${esc(img)}" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin-bottom:10px">`:''}<h4>${esc(mainText(r))}</h4><p>${esc(r.description_ar||r.text_ar||r.category_ar||r.description_en||r.text_en||'')}</p><div class="row"><button class="btn secondary" onclick="openRecord('${table}',${JSON.stringify(r.id)})">تعديل</button><button class="btn danger" onclick="deleteRecord('${table}',${JSON.stringify(r.id)})">حذف</button></div></div>`}).join('')||'<div style="color:var(--muted)">لا توجد بيانات.</div>'}
-function renderRecords(){const t=$('recordTable').value,q=($('recordSearch').value||'').toLowerCase();$('recordsGrid').innerHTML=cache[t].filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)).map(r=>`<div class="item"><h4>#${esc(r.id)}</h4><p>${esc(JSON.stringify(r,null,2))}</p><div class="row"><button class="btn secondary" onclick="openRecord('${t}',${JSON.stringify(r.id)})">تعديل</button><button class="btn danger" onclick="deleteRecord('${t}',${JSON.stringify(r.id)})">حذف</button></div></div>`).join('')||'<div style="color:var(--muted)">لا توجد بيانات.</div>'}
-function openRecord(table,id=null){editing={table,id,row:id!=null?cache[table].find(x=>String(x.id)===String(id)):null};$('modalTitle').textContent=(id!=null?'تعديل ':'إضافة ')+(table==='services'?'خدمة':table==='projects'?'مشروع':table==='testimonials'?'تقييم':'سجل');const row=editing.row||{};let keys;if(row)keys=Object.keys(row).filter(k=>!['id','created_at','updated_at'].includes(k));else keys=table==='services'?['title_ar','title_en','description_ar','description_en','is_active','sort_order']:table==='projects'?['title_ar','title_en','description_ar','description_en','category_ar','category_en','url','image_url','is_active','sort_order']:['name_ar','name_en','text_ar','text_en','rating','is_active','sort_order'];$('modalForm').innerHTML=keys.map(k=>{const v=val(row,k);if(typeof v==='boolean'||k==='is_active')return `<div class="switch"><span>${esc(human(k))}</span><input data-key="${k}" type="checkbox" ${v===true||v==='true'?'checked':''}></div>`;const ta=/description|text|body/.test(k);return `<div class="field"><label>${esc(human(k))}</label>${ta?`<textarea data-key="${k}" class="textarea">${esc(v)}</textarea>`:`<input data-key="${k}" class="input" value="${esc(v)}" ${/url|image|sort|rating/.test(k)?'dir="ltr"':''}>`}</div>`}).join('');$('modal').classList.add('show')}
-function closeModal(){$('modal').classList.remove('show');editing={table:null,id:null,row:null}}
-async function saveRecord(){const p={};document.querySelectorAll('#modalForm [data-key]').forEach(el=>{p[el.dataset.key]=el.type==='checkbox'?el.checked:el.value});try{if(editing.id!=null)await cleanErrorPayload(editing.table,p,'update',editing.id);else await cleanErrorPayload(editing.table,p,'insert');toast('تم الحفظ بنجاح');closeModal();await loadAll()}catch(e){console.error(e);toast('خطأ: '+e.message)}}
-async function deleteRecord(table,id){if(!confirm('متأكد من الحذف؟'))return;const {error}=await db.from(table).delete().eq('id',id);if(error){toast('خطأ: '+error.message);return}toast('تم الحذف');loadAll()}
-function toggleTheme(){const dark=document.body.dataset.theme==='dark';document.body.dataset.theme=dark?'':'dark';document.documentElement.style.setProperty('--bg',dark?'#f4f5fb':'#0b1020');document.documentElement.style.setProperty('--card',dark?'#fff':'#121827');document.documentElement.style.setProperty('--ink',dark?'#101322':'#f3f4f6');document.documentElement.style.setProperty('--muted',dark?'#68708b':'#9aa3bd');document.documentElement.style.setProperty('--line',dark?'#e7e9f1':'#273044');try{localStorage.setItem('aboud_admin_dark',dark?'0':'1')}catch(e){}}
-function toggleSidebar(){$('sidebar').classList.toggle('open')}
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');$('title').textContent=b.textContent.trim();if(innerWidth<901)toggleSidebar()}));
-$('serviceSearch')?.addEventListener('input',()=>renderList('services'));
-(async()=>{try{if(localStorage.getItem('aboud_admin_dark')==='1')toggleTheme()}catch(e){}const {data}=await db.auth.getSession();if(data.session)showApp()})();
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  "https://pblbdxocvnkmakrpomsb.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_SMPHMkAbnBzFg6qxuNx3uw__o-CMXlp";
+
+const db = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const state = {
+
+  settings: [],
+
+  services: [],
+
+  projects: [],
+
+  testimonials: [],
+
+  editorTable: null,
+
+  editorId: null
+
+};
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+const fieldLabels = {
+
+  hero_kicker_ar:"Hero Kicker عربي",
+  hero_kicker_en:"Hero Kicker English",
+
+  hero_sub_ar:"Hero Subtitle عربي",
+  hero_sub_en:"Hero Subtitle English",
+
+  work_kicker_ar:"Work Kicker عربي",
+  work_kicker_en:"Work Kicker English",
+
+  work_title_ar:"Work Title عربي",
+  work_title_en:"Work Title English",
+
+  services_kicker_ar:"Services Kicker عربي",
+  services_kicker_en:"Services Kicker English",
+
+  services_title_ar:"Services Title عربي",
+  services_title_en:"Services Title English",
+
+  services_sub_ar:"Services Subtitle عربي",
+  services_sub_en:"Services Subtitle English",
+
+  pricing_kicker_ar:"Pricing Kicker عربي",
+  pricing_kicker_en:"Pricing Kicker English",
+
+  pricing_title_ar:"Pricing Title عربي",
+  pricing_title_en:"Pricing Title English",
+
+  pricing_sub_ar:"Pricing Subtitle عربي",
+  pricing_sub_en:"Pricing Subtitle English",
+
+  about_role_ar:"About Role عربي",
+  about_role_en:"About Role English",
+
+  about_title_ar:"About Title عربي",
+  about_title_en:"About Title English",
+
+  about_body_ar:"About Body عربي",
+  about_body_en:"About Body English",
+
+  contact_kicker_ar:"Contact Kicker عربي",
+  contact_kicker_en:"Contact Kicker English",
+
+  contact_title_ar:"Contact Title عربي",
+  contact_title_en:"Contact Title English",
+
+  contact_sub_ar:"Contact Subtitle عربي",
+  contact_sub_en:"Contact Subtitle English",
+
+  footer_tagline_ar:"Footer Tagline عربي",
+  footer_tagline_en:"Footer Tagline English",
+
+  price1_amount:"السعر الأول",
+
+  price1_title_ar:"عنوان الباقة الأولى عربي",
+  price1_title_en:"عنوان الباقة الأولى English",
+
+  price1_desc_ar:"وصف الباقة الأولى عربي",
+  price1_desc_en:"وصف الباقة الأولى English",
+
+  price2_title_ar:"عنوان الباقة الثانية عربي",
+  price2_title_en:"عنوان الباقة الثانية English",
+
+  price2_desc_ar:"وصف الباقة الثانية عربي",
+  price2_desc_en:"وصف الباقة الثانية English",
+
+  whatsapp:"رقم واتساب",
+
+  instagram_url:"رابط Instagram",
+
+  behance_url:"رابط Behance",
+
+  linkedin_url:"رابط LinkedIn",
+
+  show_hero:"إظهار Hero",
+
+  show_work:"إظهار المشاريع",
+
+  show_services:"إظهار الخدمات",
+
+  show_pricing:"إظهار الأسعار",
+
+  show_about:"إظهار About",
+
+  show_contact:"إظهار التواصل",
+
+  show_testimonials:"إظهار آراء العملاء",
+
+  title_ar:"العنوان العربي",
+
+  title_en:"العنوان الإنجليزي",
+
+  description_ar:"الوصف العربي",
+
+  description_en:"الوصف الإنجليزي",
+
+  category_ar:"التصنيف العربي",
+
+  category_en:"التصنيف الإنجليزي",
+
+  name_ar:"الاسم العربي",
+
+  name_en:"الاسم الإنجليزي",
+
+  text_ar:"النص العربي",
+
+  text_en:"النص الإنجليزي",
+
+  url:"الرابط",
+
+  image_url:"رابط الصورة",
+
+  rating:"التقييم",
+
+  sort_order:"الترتيب",
+
+  is_active:"نشط"
+
+};
+
+
+function labelFor(key){
+
+  return fieldLabels[key] ||
+    key
+      .replaceAll("_"," ")
+      .replace(/\b\w/g,c=>c.toUpperCase());
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function handleLogin(){
+
+  const email =
+    document.getElementById("loginEmail")
+      .value
+      .trim();
+
+  const password =
+    document.getElementById("loginPass")
+      .value;
+
+  const error =
+    document.getElementById("loginError");
+
+  error.textContent = "";
+
+  if(!email || !password){
+
+    error.textContent =
+      "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+
+    return;
+
+  }
+
+  const { error:loginError } =
+    await db.auth.signInWithPassword({
+
+      email:email,
+
+      password:password
+
+    });
+
+  if(loginError){
+
+    error.textContent =
+      loginError.message;
+
+    return;
+
+  }
+
+  showAdmin();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function handleLogout(){
+
+  await db.auth.signOut();
+
+  location.reload();
+
+}
+
+
+/* =========================================================
+   SHOW ADMIN
+========================================================= */
+
+function showAdmin(){
+
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminApp")
+    .classList.remove("hidden");
+
+  refreshAll();
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar(){
+
+  document
+    .getElementById("sidebar")
+    .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document
+  .querySelectorAll(".nav button")
+  .forEach(button=>{
+
+    button.addEventListener("click",()=>{
+
+      document
+        .querySelectorAll(".nav button")
+        .forEach(item =>
+          item.classList.remove("active")
+        );
+
+      button.classList.add("active");
+
+      document
+        .querySelectorAll(".page")
+        .forEach(page =>
+          page.classList.add("hidden")
+        );
+
+      const page =
+        button.dataset.page;
+
+      document
+        .getElementById("page-"+page)
+        .classList.remove("hidden");
+
+      document
+        .getElementById("pageTitle")
+        .textContent =
+        button.textContent.trim();
+
+      document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+    });
+
+  });
+
+
+/* =========================================================
+   REFRESH ALL
+========================================================= */
+
+async function refreshAll(){
+
+  setStatus(
+    "جاري الاتصال بـ Supabase..."
+  );
+
+  try{
+
+    await Promise.all([
+
+      loadSettings(),
+
+      loadServices(),
+
+      loadProjects(),
+
+      loadTestimonials()
+
+    ]);
+
+    document
+      .getElementById("statSettings")
+      .textContent =
+      state.settings.length;
+
+    document
+      .getElementById("statServices")
+      .textContent =
+      state.services.length;
+
+    document
+      .getElementById("statProjects")
+      .textContent =
+      state.projects.length;
+
+    document
+      .getElementById("statTestimonials")
+      .textContent =
+      state.testimonials.length;
+
+    renderSettings();
+    renderServices();
+    renderProjects();
+    renderTestimonials();
+
+    setStatus(
+      "تم الاتصال بـ Supabase بنجاح."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "خطأ: " + error.message,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(message,isError=false){
+
+  const el =
+    document.getElementById("systemStatus");
+
+  el.textContent = message;
+
+  el.className =
+    "notice" + (isError ? " error" : "");
+
+}
+
+
+/* =========================================================
+   SETTINGS LOAD
+========================================================= */
+
+async function loadSettings(){
+
+  const {data,error} =
+    await db
+      .from("site_settings")
+      .select("*")
+      .limit(1);
+
+  if(error){
+
+    throw new Error(
+      "site_settings: " + error.message
+    );
+
+  }
+
+  state.settings =
+    data || [];
+
+  return state.settings;
+
+}
+
+
+/* =========================================================
+   SERVICES LOAD
+========================================================= */
+
+async function loadServices(){
+
+  const {data,error} =
+    await db
+      .from("services")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending:true
+        }
+      );
+
+  if(error){
+
+    throw new Error(
+      "services: " + error.message
+    );
+
+  }
+
+  state.services =
+    data || [];
+
+  return state.services;
+
+}
+
+
+/* =========================================================
+   PROJECTS LOAD
+========================================================= */
+
+async function loadProjects(){
+
+  const {data,error} =
+    await db
+      .from("projects")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending:true
+        }
+      );
+
+  if(error){
+
+    throw new Error(
+      "projects: " + error.message
+    );
+
+  }
+
+  state.projects =
+    data || [];
+
+  return state.projects;
+
+}
+
+
+/* =========================================================
+   TESTIMONIALS LOAD
+========================================================= */
+
+async function loadTestimonials(){
+
+  const {data,error} =
+    await db
+      .from("testimonials")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending:true
+        }
+      );
+
+  if(error){
+
+    throw new Error(
+      "testimonials: " + error.message
+    );
+
+  }
+
+  state.testimonials =
+    data || [];
+
+  return state.testimonials;
+
+}
+
+
+/* =========================================================
+   SETTINGS RENDER
+========================================================= */
+
+function renderSettings(){
+
+  const box =
+    document.getElementById(
+      "settingsForm"
+    );
+
+  const notice =
+    document.getElementById(
+      "settingsNotice"
+    );
+
+  if(!state.settings.length){
+
+    notice.classList.remove("hidden");
+
+    notice.textContent =
+      "لا يوجد صف داخل site_settings حالياً. أنشئ صفاً واحداً من Supabase Table Editor، وبعدها ستظهر الحقول هنا.";
+
+    box.innerHTML = "";
+
+    return;
+
+  }
+
+  notice.classList.add("hidden");
+
+  const row =
+    state.settings[0];
+
+  const keys =
+    Object.keys(row)
+      .filter(key =>
+        ![
+          "id",
+          "created_at",
+          "updated_at"
+        ].includes(key)
+      );
+
+  box.innerHTML =
+    keys.map(key=>{
+
+      const value =
+        row[key];
+
+      if(typeof value === "boolean"){
+
+        return `
+          <div class="check">
+
+            <input
+              type="checkbox"
+              id="setting_${escapeHtml(key)}"
+              ${value ? "checked" : ""}
+            >
+
+            <label>
+              ${escapeHtml(
+                labelFor(key)
+              )}
+            </label>
+
+          </div>
+        `;
+
+      }
+
+      const multiline =
+        /body|desc|sub|text/i
+          .test(key);
+
+      return `
+        <div class="field">
+
+          <label>
+            ${escapeHtml(
+              labelFor(key)
+            )}
+          </label>
+
+          ${
+            multiline
+            ?
+            `
+              <textarea
+                id="setting_${escapeHtml(key)}"
+              >${escapeHtml(value)}</textarea>
+            `
+            :
+            `
+              <input
+                id="setting_${escapeHtml(key)}"
+                value="${escapeHtml(value)}"
+                ${
+                  /url|whatsapp|phone/i.test(key)
+                  ? 'dir="ltr"'
+                  : ''
+                }
+              >
+            `
+          }
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   SETTINGS SAVE
+========================================================= */
+
+async function saveSiteSettings(){
+
+  if(!state.settings.length){
+
+    alert(
+      "لا يوجد صف في site_settings."
+    );
+
+    return;
+
+  }
+
+  const row =
+    state.settings[0];
+
+  const payload = {};
+
+  Object.keys(row)
+    .filter(key =>
+      ![
+        "id",
+        "created_at",
+        "updated_at"
+      ].includes(key)
+    )
+    .forEach(key=>{
+
+      const input =
+        document.getElementById(
+          "setting_" + key
+        );
+
+      if(!input) return;
+
+      if(input.type === "checkbox"){
+
+        payload[key] =
+          input.checked;
+
+      }else{
+
+        payload[key] =
+          input.value;
+
+      }
+
+    });
+
+  const {error} =
+    await db
+      .from("site_settings")
+      .update(payload)
+      .eq("id",row.id);
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+  alert(
+    "تم حفظ إعدادات الموقع بنجاح."
+  );
+
+  await refreshAll();
+
+}
+
+
+/* =========================================================
+   SERVICES RENDER
+========================================================= */
+
+function renderServices(){
+
+  const box =
+    document.getElementById(
+      "servicesTable"
+    );
+
+  const rows =
+    state.services || [];
+
+  if(!rows.length){
+
+    box.innerHTML =
+      '<div class="empty">لا توجد خدمات حالياً.</div>';
+
+    return;
+
+  }
+
+  const columns =
+    Object.keys(rows[0])
+      .filter(key =>
+        ![
+          "created_at",
+          "updated_at"
+        ].includes(key)
+      );
+
+  let html = `
+    <div class="tableWrap">
+      <table>
+
+        <thead>
+          <tr>
+  `;
+
+  columns.forEach(column=>{
+
+    html += `
+      <th>
+        ${escapeHtml(
+          labelFor(column)
+        )}
+      </th>
+    `;
+
+  });
+
+  html += `
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+  `;
+
+  rows.forEach(row=>{
+
+    html += "<tr>";
+
+    columns.forEach(column=>{
+
+      let value =
+        row[column];
+
+      if(typeof value === "boolean"){
+
+        value =
+          value
+          ? "نعم"
+          : "لا";
+
+      }
+
+      html += `
+        <td>
+          ${escapeHtml(value)}
+        </td>
+      `;
+
+    });
+
+    html += `
+      <td>
+
+        <div class="actions">
+
+          <button
+            class="btn btnSecondary"
+            onclick="openEditor('services','${escapeHtml(row.id)}')"
+          >
+            تعديل
+          </button>
+
+          <button
+            class="btn btnDanger"
+            onclick="deleteRow('services','${escapeHtml(row.id)}')"
+          >
+            حذف
+          </button>
+
+        </div>
+
+      </td>
+    `;
+
+    html += "</tr>";
+
+  });
+
+  html += `
+        </tbody>
+
+      </table>
+    </div>
+  `;
+
+  box.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   PROJECTS RENDER
+========================================================= */
+
+function renderProjects(){
+
+  const box =
+    document.getElementById(
+      "projectsTable"
+    );
+
+  const rows =
+    state.projects || [];
+
+  if(!rows.length){
+
+    box.innerHTML =
+      '<div class="empty">لا توجد مشاريع حالياً.</div>';
+
+    return;
+
+  }
+
+  const columns =
+    Object.keys(rows[0])
+      .filter(key =>
+        ![
+          "created_at",
+          "updated_at"
+        ].includes(key)
+      );
+
+  let html = `
+    <div class="tableWrap">
+      <table>
+
+        <thead>
+          <tr>
+  `;
+
+  columns.forEach(column=>{
+
+    html += `
+      <th>
+        ${escapeHtml(
+          labelFor(column)
+        )}
+      </th>
+    `;
+
+  });
+
+  html += `
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+  `;
+
+  rows.forEach(row=>{
+
+    html += "<tr>";
+
+    columns.forEach(column=>{
+
+      let value =
+        row[column];
+
+      if(typeof value === "boolean"){
+
+        value =
+          value
+          ? "نعم"
+          : "لا";
+
+      }
+
+      html += `
+        <td>
+          ${escapeHtml(value)}
+        </td>
+      `;
+
+    });
+
+    html += `
+      <td>
+
+        <div class="actions">
+
+          <button
+            class="btn btnSecondary"
+            onclick="openEditor('projects','${escapeHtml(row.id)}')"
+          >
+            تعديل
+          </button>
+
+          <button
+            class="btn btnDanger"
+            onclick="deleteRow('projects','${escapeHtml(row.id)}')"
+          >
+            حذف
+          </button>
+
+        </div>
+
+      </td>
+    `;
+
+    html += "</tr>";
+
+  });
+
+  html += `
+        </tbody>
+
+      </table>
+    </div>
+  `;
+
+  box.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   TESTIMONIALS RENDER
+========================================================= */
+
+function renderTestimonials(){
+
+  const box =
+    document.getElementById(
+      "testimonialsTable"
+    );
+
+  const rows =
+    state.testimonials || [];
+
+  if(!rows.length){
+
+    box.innerHTML =
+      '<div class="empty">لا توجد آراء عملاء حالياً.</div>';
+
+    return;
+
+  }
+
+  const columns =
+    Object.keys(rows[0])
+      .filter(key =>
+        ![
+          "created_at",
+          "updated_at"
+        ].includes(key)
+      );
+
+  let html = `
+    <div class="tableWrap">
+      <table>
+
+        <thead>
+          <tr>
+  `;
+
+  columns.forEach(column=>{
+
+    html += `
+      <th>
+        ${escapeHtml(
+          labelFor(column)
+        )}
+      </th>
+    `;
+
+  });
+
+  html += `
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+  `;
+
+  rows.forEach(row=>{
+
+    html += "<tr>";
+
+    columns.forEach(column=>{
+
+      let value =
+        row[column];
+
+      if(typeof value === "boolean"){
+
+        value =
+          value
+          ? "نعم"
+          : "لا";
+
+      }
+
+      html += `
+        <td>
+          ${escapeHtml(value)}
+        </td>
+      `;
+
+    });
+
+    html += `
+      <td>
+
+        <div class="actions">
+
+          <button
+            class="btn btnSecondary"
+            onclick="openEditor('testimonials','${escapeHtml(row.id)}')"
+          >
+            تعديل
+          </button>
+
+          <button
+            class="btn btnDanger"
+            onclick="deleteRow('testimonials','${escapeHtml(row.id)}')"
+          >
+            حذف
+          </button>
+
+        </div>
+
+      </td>
+    `;
+
+    html += "</tr>";
+
+  });
+
+  html += `
+        </tbody>
+
+      </table>
+    </div>
+  `;
+
+  box.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   EDITOR DEFAULT FIELDS
+========================================================= */
+
+const defaultFields = {
+
+  services:[
+    "title_ar",
+    "title_en",
+    "description_ar",
+    "description_en",
+    "is_active",
+    "sort_order"
+  ],
+
+  projects:[
+    "title_ar",
+    "title_en",
+    "category_ar",
+    "category_en",
+    "description_ar",
+    "description_en",
+    "url",
+    "image_url",
+    "is_active",
+    "sort_order"
+  ],
+
+  testimonials:[
+    "name_ar",
+    "name_en",
+    "text_ar",
+    "text_en",
+    "rating",
+    "is_active",
+    "sort_order"
+  ]
+
+};
+
+
+/* =========================================================
+   OPEN EDITOR
+========================================================= */
+
+function openEditor(table,id=null){
+
+  state.editorTable =
+    table;
+
+  state.editorId =
+    id;
+
+  let row = null;
+
+  if(id){
+
+    row =
+      (state[table] || [])
+        .find(item =>
+          String(item.id) ===
+          String(id)
+        );
+
+  }
+
+  document
+    .getElementById("modalTitle")
+    .textContent =
+    id
+    ? "تعديل"
+    : "إضافة جديد";
+
+  const modalBody =
+    document.getElementById(
+      "modalBody"
+    );
+
+  let fields = [];
+
+  if(row){
+
+    fields =
+      Object.keys(row)
+        .filter(key =>
+          ![
+            "id",
+            "created_at",
+            "updated_at"
+          ].includes(key)
+        );
+
+  }else{
+
+    fields =
+      defaultFields[table] || [];
+
+  }
+
+  modalBody.innerHTML =
+    fields.map(key=>{
+
+      const value =
+        row
+        ? row[key]
+        : "";
+
+      if(
+        typeof value === "boolean" ||
+        key === "is_active"
+      ){
+
+        return `
+          <div class="check">
+
+            <input
+              type="checkbox"
+              id="editor_${escapeHtml(key)}"
+              ${value ? "checked" : ""}
+            >
+
+            <label>
+              ${escapeHtml(
+                labelFor(key)
+              )}
+            </label>
+
+          </div>
+        `;
+
+      }
+
+      const isTextarea =
+        /description|text|body/i
+          .test(key);
+
+      const direction =
+        /url|image|sort|rating/i
+          .test(key)
+          ? 'dir="ltr"'
+          : '';
+
+      if(isTextarea){
+
+        return `
+          <div class="field">
+
+            <label>
+              ${escapeHtml(
+                labelFor(key)
+              )}
+            </label>
+
+            <textarea
+              id="editor_${escapeHtml(key)}"
+              ${direction}
+            >${escapeHtml(value)}</textarea>
+
+          </div>
+        `;
+
+      }
+
+      return `
+        <div class="field">
+
+          <label>
+            ${escapeHtml(
+              labelFor(key)
+            )}
+          </label>
+
+          <input
+            id="editor_${escapeHtml(key)}"
+            value="${escapeHtml(value)}"
+            ${direction}
+          >
+
+        </div>
+      `;
+
+    }).join("");
+
+  document
+    .getElementById("modal")
+    .style.display =
+    "flex";
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal(){
+
+  document
+    .getElementById("modal")
+    .style.display =
+    "none";
+
+  state.editorTable =
+    null;
+
+  state.editorId =
+    null;
+
+}
+
+
+/* =========================================================
+   SAVE EDITOR
+========================================================= */
+
+async function saveEditor(){
+
+  const table =
+    state.editorTable;
+
+  if(!table)
+    return;
+
+  let existingRow = null;
+
+  if(state.editorId){
+
+    existingRow =
+      (state[table] || [])
+        .find(item =>
+          String(item.id) ===
+          String(state.editorId)
+        );
+
+  }
+
+  let fields = [];
+
+  if(existingRow){
+
+    fields =
+      Object.keys(existingRow)
+        .filter(key =>
+          ![
+            "id",
+            "created_at",
+            "updated_at"
+          ].includes(key)
+        );
+
+  }else{
+
+    fields =
+      defaultFields[table] || [];
+
+  }
+
+  const payload = {};
+
+  fields.forEach(key=>{
+
+    const element =
+      document.getElementById(
+        "editor_"+key
+      );
+
+    if(!element)
+      return;
+
+    if(element.type === "checkbox"){
+
+      payload[key] =
+        element.checked;
+
+      return;
+
+    }
+
+    let value =
+      element.value;
+
+    if(
+      key === "sort_order" ||
+      key === "rating"
+    ){
+
+      if(value === ""){
+
+        payload[key] = null;
+
+      }else{
+
+        payload[key] =
+          Number(value);
+
+      }
+
+    }else{
+
+      payload[key] =
+        value;
+
+    }
+
+  });
+
+  let result;
+
+  if(state.editorId){
+
+    result =
+      await db
+        .from(table)
+        .update(payload)
+        .eq(
+          "id",
+          state.editorId
+        );
+
+  }else{
+
+    result =
+      await db
+        .from(table)
+        .insert(payload);
+
+  }
+
+  if(result.error){
+
+    alert(
+      result.error.message
+    );
+
+    console.error(
+      result.error
+    );
+
+    return;
+
+  }
+
+  closeModal();
+
+  await refreshAll();
+
+}
+
+
+/* =========================================================
+   DELETE ROW
+========================================================= */
+
+async function deleteRow(
+  table,
+  id
+){
+
+  const confirmed =
+    confirm(
+      "هل أنت متأكد من حذف هذا العنصر؟"
+    );
+
+  if(!confirmed)
+    return;
+
+  const {error} =
+    await db
+      .from(table)
+      .delete()
+      .eq("id",id);
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    console.error(
+      error
+    );
+
+    return;
+
+  }
+
+  await refreshAll();
+
+}
+
+
+/* =========================================================
+   AUTH SESSION
+========================================================= */
+
+(async function(){
+
+  const {
+    data,
+    error
+  } =
+    await db.auth.getSession();
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    return;
+
+  }
+
+  if(data.session){
+
+    showAdmin();
+
+  }
+
+})();
+
 </script>
-</body></html>
+
+</body>
+</html>
